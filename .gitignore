@@ -30,3 +30,7 @@
 *.exe
 *.out
 *.app
+
+Kalc.pro.*
+*.pro.user
+*.autosave

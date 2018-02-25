@@ -4,11 +4,11 @@ public class SquareMatrix extends Matrix {
 	
 	//constructors
 	
-	public SquareMatrix(int dim) {
+	public SquareMatrix(int dim) throws NegativeArraySizeException {
 		super(dim, dim);
 	}
 	
-	public SquareMatrix(int dim, Double value) {
+	public SquareMatrix(int dim, Double value) throws NegativeArraySizeException {
 		super(dim, dim, value);
 	}
 	
@@ -25,8 +25,9 @@ public class SquareMatrix extends Matrix {
 	                get(0,2) * get(1,1) * get(2,0) -
 	                get(0,1) * get(1,0) * get(2,2) -
 	                get(0,0) * get(1,2) * get(2,1);
-	    }   
-	    return 0.0; //n x n?
+	    }
+	    
+	    return 0.0; //TODO n x n?
 	}
 	
 	//is matrix infTriangular?

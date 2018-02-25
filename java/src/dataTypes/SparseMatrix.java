@@ -5,7 +5,7 @@ public class SparseMatrix extends Matrix {
 	private boolean dirtyBit; //matrice modificata?
 	private Double sparsity;
 	
-	public SparseMatrix(int row, int col) {
+	public SparseMatrix(int row, int col) throws NegativeArraySizeException {
 		super(row, col);
 		this.sparsity = -1.0;
 		this.dirtyBit = false;
@@ -30,9 +30,9 @@ public class SparseMatrix extends Matrix {
 	}
 	
 	@Override
-	public void set(int row, int col, Double value) {
-		dirtyBit = true; //modified
+	public void set(int row, int col, Double value) throws IndexOutOfBoundsException {
 		super.set(row, col, value);
+		dirtyBit = true; //modified
 	}
 	
 	//DA CONTROLLARE j = i+1

@@ -31,6 +31,14 @@ public class Matrix extends DataType {
 		fill(defaultValue);
 	}
 	
+	//Forse non serve
+	
+	public Matrix(Matrix mat) {
+		this.row = mat.row;
+		this.col = mat.col;
+		this.matrix = mat.matrix;
+	}
+	
 	//get matrix[i,j]
 	public Double get(int row, int col) {
 		return matrix.get(row * getCol() + col);

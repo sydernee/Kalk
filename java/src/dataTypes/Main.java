@@ -12,6 +12,5 @@ public class Main {
 		a.set(1, 1, 6.0);
 		a.set(2, 2, 7.0);
 		System.out.println(a);
-
 	}
 }

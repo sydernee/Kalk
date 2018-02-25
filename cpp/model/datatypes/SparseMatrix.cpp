@@ -28,13 +28,14 @@ double& SparseMatrix::get(unsigned int row, unsigned int col) {
     return Matrix::get(row, col);
 }
 
+//DA CONTROLLARE j = i+1
 bool SparseMatrix::isSymmetric() const {
     if (getRow() != getCol())
         return false;
     unsigned int n = getRow();
     for (unsigned int i = 0; i < n; i++)
-        for (unsigned int j = 0; j < n; j++)
-            if (j > i && Matrix::get(i,j) != Matrix::get(j,i))
+        for (unsigned int j = i+1; j < n; j++)
+            if (Matrix::get(i,j) != Matrix::get(j,i))
                 return false;
     return true;
 }

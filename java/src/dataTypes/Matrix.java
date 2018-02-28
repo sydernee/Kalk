@@ -2,7 +2,7 @@ package dataTypes;
 
 import java.util.ArrayList;
 import java.lang.NegativeArraySizeException;
-import kalkException.InvalidMatrixIndex;
+import kalkException.*;
 
 public class Matrix extends DataType {
 	//fields
@@ -35,6 +35,25 @@ public class Matrix extends DataType {
 		this.row = mat.row;
 		this.col = mat.col;
 		this.matrix = mat.matrix;
+	}
+	
+	public Matrix(int row, int col, double... numbers) 
+		throws 	NegativeArraySizeException,
+				TooFewArgumentsException, 
+				TooManyArgumentsException 
+	{
+		this(row, col);
+		
+		int i = 0;
+		for (double d : numbers) {
+			if (i >= row * col)
+				throw new TooManyArgumentsException("Matrix(): Too many arguments given.");
+			matrix.set(i, Double.valueOf(d));
+			i++;
+		}
+		
+		if (i < row * col)
+			throw new TooFewArgumentsException("Matrix(): Too few arguments given. Set " + (col*row-i) + " more values.");
 	}
 	
 	//get matrix[i,j]

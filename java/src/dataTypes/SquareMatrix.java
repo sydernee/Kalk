@@ -1,5 +1,8 @@
 package dataTypes;
 
+import kalkException.TooFewArgumentsException;
+import kalkException.TooManyArgumentsException;
+
 public class SquareMatrix extends Matrix {
 	
 	//constructors
@@ -10,6 +13,14 @@ public class SquareMatrix extends Matrix {
 	
 	public SquareMatrix(int dim, Double value) throws NegativeArraySizeException {
 		super(dim, dim, value);
+	}
+	
+	public SquareMatrix(int dim, double... numbers)
+		throws 	NegativeArraySizeException,
+				TooFewArgumentsException, 
+				TooManyArgumentsException
+	{
+		super(dim, dim, numbers);
 	}
 	
 	//matrix determinant
@@ -38,7 +49,7 @@ public class SquareMatrix extends Matrix {
 	    		cumulator += get(0,i) * ((i % 2 == 0) ? 1 : -1) * getMinor(0,i).determinant();
 	    }
 	    
-	    return cumulator; //TODO n x n?
+	    return cumulator;
 	}
 	
 	//is matrix infTriangular?

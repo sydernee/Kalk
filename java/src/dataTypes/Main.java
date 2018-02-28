@@ -1,7 +1,5 @@
 package dataTypes;
 
-import kalkException.InvalidMatrixIndex;
-
 public class Main {
 	public static void main(String[] args) {
 		try {
@@ -38,47 +36,27 @@ public class Main {
 //			
 //			System.out.println(d.determinant());
 			
-			SquareMatrix b = new SquareMatrix(3);
-			b.fill(1.0, 1.0);
-			System.out.println(b);
-			b.set(1, 0, 2);
-			b.set(1, 1, -1);
-			b.set(1, 2, 1);
-			b.set(2, 0, 1);
-			b.set(2, 1, 1);
-			b.set(2, 2, 2);
-			System.out.println(b.determinant());
-			
-			SquareMatrix c = new SquareMatrix(4);
+			SquareMatrix c = 
+					new SquareMatrix(12,
+							0,1,1,2,1,2,3,4,23,1,2,3,
+							4,5,6,3,2,-1,4,4,1,2,3,4,
+							5,6,7,34,2,-1,3,2,1,5,1,1,
+							1,1,1,1,2,3,4,2,1,-1,2,1,
+							3,0,2,3,4,5,6,3,12,12,3,2,
+							3,-1,4,5,1,2,3,2,1,-5,-12,
+							1,1,-4,1,2,-5,-5,2,3,4,-8,-8,-8,
+							-8,-8,-8,-8,-8,3,2,1,5,1,1,1,
+							1,1,1,2,3,4,2,1,4,3,3,-8,
+							3,2,1,5,1,1,1,1,1,1,2,3,
+							4,2,1,4,3,3,-8,2,3,-1,4,5,
+							1,2,3,2,1,-8,-8,-8,-8,-8,-8,12);
 
-			c.set(0, 0, 2);
-			c.set(0, 1, 5);
-			c.set(0, 2, -3);
-			c.set(0, 3, -2);
-			c.set(1, 0, -2);
-			c.set(1, 1, -3);
-			c.set(1, 2, 2);
-			c.set(1, 3, -5);
-			c.set(2, 0, 1);
-			c.set(2, 1, 3);
-			c.set(2, 2, -2);
-			c.set(2, 3, 0);
-			c.set(3, 0, -1);
-			c.set(3, 1, -6);
-			c.set(3, 2, 4);
-			c.set(3, 3, 0);
 			System.out.println(c);
 			
 			System.out.println(c.determinant());
 		}
-		catch(NegativeArraySizeException exc) {
-			System.err.println("NegativeArraySizeException in " + exc.getMessage());
-		}
-		catch(IndexOutOfBoundsException exc) {
-			System.err.println("IndexOutOfBoundException in " + exc.getMessage());
-		}
-		catch(InvalidMatrixIndex exc) {
-			System.err.println("InvalidMatrixException in " + exc.getMessage());	
+		catch(RuntimeException exc) {
+			System.err.println(exc.getClass().getName() + " -> " + exc.getMessage());
 		}
 	}
 }

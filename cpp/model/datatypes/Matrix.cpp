@@ -6,6 +6,16 @@ Matrix::Matrix(unsigned int a, unsigned int b) :
 Matrix::Matrix(unsigned int a, unsigned int b, double val) :
     row(a), col(b), matrix(row * col, val) {}
 
+//  se la lista di inizializzazione è troppo grande, i dati extra vengono ignorati
+//  se troppo piccola, i restanti dati rimangono inizializzati a 0    
+Matrix::Matrix(unsigned int a, unsigned int b, std::initializer_list<double> l) :
+    row(a), col(b), matrix(row * col, 0) {
+    unsigned int tableSize = a*b;
+    unsigned int numEle = (tableSize > l.size()) ? l.size() : tableSize;
+    
+    copy(l.begin(), std::next(l.begin(),numEle), matrix.begin());
+}
+
 Matrix::~Matrix() {}
 
 Matrix::Matrix(const Matrix& mat) :
@@ -94,6 +104,7 @@ Matrix Matrix::transposed() const {
             res.get(i,j) = get(j,i);
     return res;
 }
+
 
 //operatori booleani di confronto
 

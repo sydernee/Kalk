@@ -4,6 +4,8 @@
 #include "../DataType.h"
 #include <vector>
 #include <iostream>
+#include <initializer_list>
+//#include <iterator>
 
 class Matrix : public DataType {
 
@@ -38,6 +40,7 @@ private:
 public:
     Matrix(unsigned int, unsigned int);
     Matrix(unsigned int, unsigned int, double); //costruttore che inizializza tutti i campi al valore passato come parametro
+    Matrix(unsigned int, unsigned int, std::initializer_list<double>);
 
     virtual ~Matrix();
     Matrix(const Matrix&); ///better default?
@@ -48,7 +51,7 @@ public:
 
     Matrix operator *(double) const; //prodotto per uno scalare
     Matrix transposed() const; //trasposta della matrice di invocazione
-
+    
     //operatori booleani
     bool operator==(const Matrix&) const;
     bool operator!=(const Matrix&) const;
@@ -57,7 +60,7 @@ public:
     virtual const double& get(unsigned int, unsigned int) const; //versione costante di get()
 
     Row operator[](unsigned int);
-    CRow operator[](unsigned int) const; ///TODO
+   CRow operator[](unsigned int) const; ///TODO
 };
 
 std::ostream& operator<<(std::ostream&, const Matrix&); //output operator overload

@@ -1,4 +1,4 @@
-#include "squarematrix.h"
+#include "SquareMatrix.h"
 
 SquareMatrix::SquareMatrix(unsigned int n) :
     Matrix(n, n) {}
@@ -8,6 +8,9 @@ SquareMatrix::SquareMatrix(unsigned int n, double val) :
 
 SquareMatrix::SquareMatrix(const SquareMatrix& mat) :
     Matrix(mat) {}
+
+SquareMatrix::SquareMatrix(unsigned int n, std::initializer_list<double> l) :
+    Matrix(n, n, l) {}
 
 bool SquareMatrix::isDiagonal() const {
     for (unsigned int i = 0; i < getRow(); i++)
@@ -24,19 +27,49 @@ SquareMatrix SquareMatrix::identityMatrix(unsigned int n) {
     return res;
 }
 
-double SquareMatrix::det() const {
-    if (getCol() == 2)
-        return get(0,0) * get(1,1) - get(0,1) * get(1,0);
+SquareMatrix SquareMatrix::getMinor(unsigned int x, unsigned int y) const {
+    unsigned int N = getCol();
+    SquareMatrix res = SquareMatrix(N-1);
+    
+    unsigned int i,j,resX,resY; //i riga, j colonna di  matrix; 
+    i = j = resX = resY = 0;
+    while (i < N) {
+        if (j == N) {j = 0; ++i; resY = 0; ++resX; continue;}
+        if (i == x) { ++i; continue; }
+        if (j == y) { ++j; continue; }
+        
+        res.get(resX,resY)=get(i,j);
+        
+        ++resY; ++j;
+    }
+    return res;
+}
 
-    if (getCol() == 3) { //Sarrus rule
+
+double SquareMatrix::determinant() const {  
+    unsigned int N = getCol();
+
+    if (N == 1)
+        return get(0,0);
+    if (N == 2)
+        return get(0,0) * get(1,1) - get(0,1) * get(1,0);
+    if (getCol() == 3) { 
         return get(0,0) * get(1,1) * get(2,2) +
                 get(0,1) * get(1,2) * get(2,0) +
                 get(0,2) * get(1,0) * get(2,1) -
                 get(0,2) * get(1,1) * get(2,0) -
                 get(0,1) * get(1,0) * get(2,2) -
                 get(0,0) * get(1,2) * get(2,1);
+    }     
+    
+    double res = 0;
+    for (unsigned int i = 0; i < N; ++i) {
+    	if (get(0,i) != 0) {
+    		res += get(0,i) * ((i % 2 == 0) ? 1 : -1) * getMinor(0,i).determinant();
+        }
     }
-    return 0; //n x n?
+	    
+    return res;
 }
 
 bool SquareMatrix::infTriangular() const {
@@ -54,3 +87,4 @@ bool SquareMatrix::supTriangular() const {
                 return false;
     return true;
 }
+

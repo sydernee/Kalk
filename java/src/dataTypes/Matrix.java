@@ -2,7 +2,7 @@ package dataTypes;
 
 import java.util.ArrayList;
 import java.lang.NegativeArraySizeException;
-import kalkException.InvalidMatrixIndex;
+import kalkException.*;
 
 public class Matrix extends DataType {
 	//fields
@@ -35,6 +35,25 @@ public class Matrix extends DataType {
 		this.row = mat.row;
 		this.col = mat.col;
 		this.matrix = mat.matrix;
+	}
+	
+	public Matrix(int row, int col, double... numbers) 
+		throws 	NegativeArraySizeException,
+				TooFewArgumentsException, 
+				TooManyArgumentsException 
+	{
+		this(row, col);
+		
+		int i = 0;
+		for (double d : numbers) {
+			if (i >= row * col)
+				throw new TooManyArgumentsException("Matrix(): Too many arguments given.");
+			matrix.set(i, Double.valueOf(d));
+			i++;
+		}
+		
+		if (i < row * col)
+			throw new TooFewArgumentsException("Matrix(): Too few arguments given. Set " + (col*row-i) + " more values.");
 	}
 	
 	//get matrix[i,j]
@@ -118,6 +137,49 @@ public class Matrix extends DataType {
 		fill(value, 0.0);
 	}
 	
+	//restituisce un reference a un Matrix costruito dall'oggetto di invocazione senza la colonna i
+	public Matrix removeCol(int i) throws NegativeArraySizeException, IndexOutOfBoundsException {
+		if (i < 0)
+			throw new NegativeArraySizeException("removeCol() method: invalid matrix index.");
+		
+		if (i >= getCol())
+			throw new IndexOutOfBoundsException("removeCol() method: out of bound matrix index.");
+		
+		int val = 0; //variabile fittizia per impostare le celle correttamente dopo aver saltato la colonna i
+		Matrix res = new Matrix(getRow(), getCol()-1); //Matrix da restituire
+		for (int j = 0; j < getRow(); j++) {
+			for (int k = 0; k < getCol(); k++) {
+				if (k == i) 
+					val = 1;
+				else 
+					res.set(j, k-val, get(j, k));
+			}
+			val = 0;
+		}
+		return res;
+	}
+	
+	//restituisce un reference a un Matrix costruito dall'oggetto di invocazione senza la riga i
+	public Matrix removeRow(int i) throws NegativeArraySizeException, IndexOutOfBoundsException {
+		if (i < 0)
+			throw new NegativeArraySizeException("removeRow() method: invalid matrix index.");
+		
+		if (i >= getCol())
+			throw new IndexOutOfBoundsException("removeRow() method: out of bound matrix index.");
+		
+		int val = 0; //variabile fittizia per impostare le celle correttamente dopo aver saltato la colonna i
+		Matrix res = new Matrix(getRow()-1, getCol()); //Matrix da restituire
+		for (int j = 0; j < getRow(); j++) {
+			if (j == i)
+				val++;
+			else
+				for (int k = 0; k < getCol(); k++) {
+					res.set(j-val, k, get(j,k));
+				}
+		}
+		return res;
+	}
+	
 	//operations
 	
 	public Matrix add(Matrix mat) throws InvalidMatrixIndex {
@@ -130,7 +192,6 @@ public class Matrix extends DataType {
 		return res;
 	}
 	
-	//TODO exceptions
 	public Matrix sub(Matrix mat) throws InvalidMatrixIndex {
 		if (getRow() != mat.getRow() || getCol() != mat.getCol())
 			throw new InvalidMatrixIndex("sub() method: Matrixes dimensions don't match.");
@@ -140,8 +201,6 @@ public class Matrix extends DataType {
 			res.matrix.set(i, matrix.get(i) - mat.matrix.get(i));
 		return res;
 	}
-	
-	//
 	
 	//Matrix transposed
 	public Matrix transposed() {

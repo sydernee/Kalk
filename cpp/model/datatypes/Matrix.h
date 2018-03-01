@@ -36,7 +36,10 @@ private:
     public:
         const double& operator[](unsigned int) const;
     };
-
+    
+    double& getReference(unsigned int, unsigned int);
+    const double& getReference(unsigned int _row, unsigned int _col) const;
+    
 public:
     Matrix(unsigned int, unsigned int);
     Matrix(unsigned int, unsigned int, double); //costruttore che inizializza tutti i campi al valore passato come parametro
@@ -50,17 +53,17 @@ public:
     unsigned int getCol() const; //matrix height
 
     Matrix operator *(double) const; //prodotto per uno scalare
-    Matrix transposed() const; //trasposta della matrice di invocazione
+    Matrix* transposed() const; //trasposta della matrice di invocazione
     
     //operatori booleani
     bool operator==(const Matrix&) const;
     bool operator!=(const Matrix&) const;
 
-    virtual double& get(unsigned int, unsigned int);
-    virtual const double& get(unsigned int, unsigned int) const; //versione costante di get()
+    virtual double get(unsigned int, unsigned int) const;
+    virtual void set(unsigned int, unsigned int, double);
 
     Row operator[](unsigned int);
-   CRow operator[](unsigned int) const; ///TODO
+   CRow operator[](unsigned int) const;
 };
 
 std::ostream& operator<<(std::ostream&, const Matrix&); //output operator overload
@@ -69,6 +72,4 @@ Matrix operator +(const Matrix&, const Matrix&); //somma tra matrici
 Matrix operator -(const Matrix&, const Matrix&); //differenza tra matrici
 Matrix operator *(const Matrix&, const Matrix&); //prodotto scalare tra matrici
 
-#endif // MATRIX_H
-
-//TODO : sistemare transposed()
+#endif // MATRIX_Hs

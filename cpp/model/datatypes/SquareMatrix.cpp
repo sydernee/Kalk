@@ -23,7 +23,7 @@ bool SquareMatrix::isDiagonal() const {
 SquareMatrix SquareMatrix::identityMatrix(unsigned int n) {
     SquareMatrix res(n, 0);
     for (unsigned int i = 0; i < n; i++)
-        res.get(i,i) = 1;
+        res.set(i,i, 1);
     return res;
 }
 
@@ -38,11 +38,15 @@ SquareMatrix SquareMatrix::getMinor(unsigned int x, unsigned int y) const {
         if (i == x) { ++i; continue; }
         if (j == y) { ++j; continue; }
         
-        res.get(resX,resY)=get(i,j);
+        res.set(resX, resY, get(i,j));
         
         ++resY; ++j;
     }
     return res;
+}
+
+SquareMatrix* SquareMatrix::transposed() const {
+    return static_cast<SquareMatrix*>(Matrix::transposed());
 }
 
 

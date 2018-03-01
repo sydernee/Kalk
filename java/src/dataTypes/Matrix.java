@@ -125,7 +125,6 @@ public class Matrix extends DataType {
 	
 	//utility methods
 	
-	//private?
 	public void fill(Double value, Double range) {
 		matrix.clear();
 		for (int i = 0; i < getRow()*getCol(); i++) {
@@ -200,6 +199,32 @@ public class Matrix extends DataType {
 		for (int i = 0; i < matrix.size(); i++)
 			res.matrix.set(i, matrix.get(i) - mat.matrix.get(i));
 		return res;
+	}
+	
+	//prodotto per uno scalare
+	public Matrix multiply(double value) {
+	    Matrix res = new Matrix(row, col);
+	    for (int i = 0; i < row; i++)
+	        for (int j = 0; j < col; j++)
+	            res.set(i,j,get(i,j) * value);
+
+	    return res;
+	}
+	
+	//prodotto scalare
+	public Matrix multiply(Matrix mat) throws InvalidMatrixIndex {
+		if (getCol() != mat.getRow())
+			throw new InvalidMatrixIndex("multiply() method: invalid matrixes' indexes.");
+		
+		Matrix res = new Matrix(getRow(), mat.getCol());
+	    for (int i = 0; i < getRow(); i++)
+	        for (int j = 0; j < mat.getCol(); j++) {
+	            double sum = 0; //accumulatore
+	            for (int k = 0; k < getCol(); k++)
+	                sum += get(i,k) * mat.get(k, j);
+	            res.set(i,j,sum);
+	    }
+	    return res;
 	}
 	
 	//Matrix transposed

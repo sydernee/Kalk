@@ -53,7 +53,18 @@ public class Main {
 
 			System.out.println(c);
 			
-			System.out.println(c.determinant());
+			Matrix p1 = new Matrix(2,3,
+					0, 1, 2,
+					2, 3, 4);
+			
+			Matrix p2 = new Matrix(3, 2,
+					1, 4,
+					3, 2,
+					1, 2);
+			
+			Matrix res = p1.multiply(p2);
+			System.out.println(res);
+//			System.out.println(c.determinant());
 		}
 		catch(RuntimeException exc) {
 			System.err.println(exc.getClass().getName() + " -> " + exc.getMessage());

@@ -1,5 +1,6 @@
 package dataTypes;
 
+import kalkException.InvalidMatrixIndex;
 import kalkException.TooFewArgumentsException;
 import kalkException.TooManyArgumentsException;
 
@@ -77,6 +78,33 @@ public class SquareMatrix extends Matrix {
 	            if (i != j && get(i,j) != 0)
 	                return false;
 	    return true;
+	}
+	
+	//operations 
+	
+	//prodotto per uno scalare
+	public SquareMatrix multiply(double value) {
+	    SquareMatrix res = new SquareMatrix(getRow());
+	    for (int i = 0; i < getRow(); i++)
+	        for (int j = 0; j < getCol(); j++)
+	            res.set(i,j,get(i,j) * value);
+	    return res;
+	}
+	
+	//prodotto scalare
+	public SquareMatrix multiply(Matrix mat) throws InvalidMatrixIndex {
+		if (mat.getRow() != mat.getCol() || getCol() != mat.getRow())
+			throw new InvalidMatrixIndex("multiply() method: invalid matrixes' indexes.");
+		
+		SquareMatrix res = new SquareMatrix(getRow());
+	    for (int i = 0; i < getRow(); i++)
+	        for (int j = 0; j < mat.getCol(); j++) {
+	            double sum = 0; //accumulatore
+	            for (int k = 0; k < getCol(); k++)
+	                sum += get(i,k) * mat.get(k, j);
+	            res.set(i,j,sum);
+	    }
+	    return res;
 	}
 	
 	public SquareMatrix getMinor(int i, int j) throws NegativeArraySizeException, IndexOutOfBoundsException {

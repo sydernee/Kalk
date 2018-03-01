@@ -26,7 +26,6 @@ Matrix& Matrix::operator =(const Matrix& mat) {
         col = mat.col;
         row = mat.row;
         matrix = mat.matrix;
-
     }
     return *this;
 }

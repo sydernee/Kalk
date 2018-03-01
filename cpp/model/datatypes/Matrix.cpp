@@ -56,7 +56,7 @@ Matrix operator +(const Matrix& mat1, const Matrix& mat2) { //THROW
     Matrix res(mat1.getRow(), mat1.getCol());
     for (unsigned int i = 0; i < mat1.getRow(); i++)
         for (unsigned int j = 0; j < mat1.getCol(); j++)
-            res.get(i,j) = mat1.get(i,j) + mat2.get(i,j);
+            res.set(i,j, mat1.get(i,j) + mat2.get(i,j));
     return res;
 }
 
@@ -69,7 +69,7 @@ Matrix operator -(const Matrix& mat1, const Matrix& mat2) { //THROW
     Matrix res(mat1.getRow(), mat1.getCol());
     for (unsigned int i = 0; i < mat1.getRow(); i++)
         for (unsigned int j = 0; j < mat1.getCol(); j++)
-            res.get(i,j) = mat1.get(i,j) - mat2.get(i,j);
+            res.set(i,j, mat1.get(i,j) - mat2.get(i,j));
     return res;
 }
 
@@ -78,7 +78,7 @@ Matrix Matrix::operator *(double value) const {
     Matrix res(row, col);
     for (unsigned int i = 0; i < row; i++)
         for (unsigned int j = 0; j < col; j++)
-            res.get(i,j) = get(i,j) * value;
+            res.set(i,j, get(i,j) * value);
 
     return res;
 }
@@ -95,17 +95,17 @@ Matrix operator *(const Matrix& mat1, const Matrix& mat2) { //THROW
             double sum = 0; //accumulatore
             for (unsigned int k = 0; k < mat1.getCol(); k++)
                 sum += mat1.get(i,k) * mat2.get(k, j);
-            res.get(i,j) = sum;
+            res.set(i,j, sum);
     }
     return res;
 }
 
 //trasposta
-Matrix Matrix::transposed() const {
-    Matrix res(col, row);
+Matrix* Matrix::transposed() const {
+    Matrix* res = new Matrix(col, row);
     for (unsigned int i = 0; i < col; i++)
         for (unsigned int j = 0; j < row; j++)
-            res.get(i,j) = get(j,i);
+            res->set(i,j, get(j,i));
     return res;
 }
 
@@ -127,13 +127,21 @@ bool Matrix::operator !=(const Matrix& mat) const {
     return !(*this == mat);
 }
 
-//funzioni accesso a membro get()
+//metodi setter/getter (più efficenti di usare l'operatore di subscripting [][])
 
-double& Matrix::get(unsigned int _row, unsigned int _col) {
+double Matrix::get(unsigned int _row, unsigned int _col) const {
     return matrix[_row * col + _col];
 }
 
-const double& Matrix::get(unsigned int _row, unsigned int _col) const {
+void Matrix::set(unsigned int _row, unsigned int _col, double val) {
+    matrix[_row * col + _col] = val;
+}
+
+double& Matrix::getReference(unsigned int _row, unsigned int _col) {
+    return matrix[_row * col + _col];
+}
+
+const double& Matrix::getReference(unsigned int _row, unsigned int _col) const {
     return matrix[_row * col + _col];
 }
 
@@ -154,7 +162,7 @@ Matrix::Row::Row(Matrix& _parent, unsigned int _row) :
     parent(_parent), row(_row) {}
 
 double& Matrix::Row::operator [](unsigned int _col) {
-    return parent.get(row, _col);
+    return parent.getReference(row, _col);
 }
 
 //class CRow
@@ -163,7 +171,7 @@ Matrix::CRow::CRow(const Matrix& _parent, unsigned int _row) :
     parent(_parent), row(_row) {}
 
 const double& Matrix::CRow::operator [](unsigned int _col) const {
-    return parent.get(row, _col);
+    return parent.getReference(row, _col);
 }
 
 

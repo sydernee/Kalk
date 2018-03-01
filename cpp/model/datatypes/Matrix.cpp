@@ -21,6 +21,11 @@ Matrix::~Matrix() {}
 Matrix::Matrix(const Matrix& mat) :
     row(mat.getRow()), col(mat.getCol()), matrix(mat.matrix) {}
 
+void Matrix::fill(double value, double range) {
+    for (int i = 0; i < getRow() * getCol(); i++)
+        matrix[i] += value + i * range;
+}
+
 Matrix& Matrix::operator =(const Matrix& mat) {
     if (this != &mat) {
         col = mat.col;

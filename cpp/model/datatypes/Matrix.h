@@ -26,7 +26,7 @@ private:
     };
 
     class CRow { //versione costante di Row
-    friend class Matrix;
+        friend class Matrix;
 
     private:
         CRow(const Matrix&, unsigned int); //costruttore privato, non è di interesse dell'utente istanziare oggetti Row
@@ -42,9 +42,11 @@ public:
     Matrix(unsigned int, unsigned int, double); //costruttore che inizializza tutti i campi al valore passato come parametro
     Matrix(unsigned int, unsigned int, std::initializer_list<double>);
 
+    void fill(double, double = 0); 
+
     virtual ~Matrix();
-    Matrix(const Matrix&); ///better default?
-    Matrix& operator=(const Matrix&); ///better default?
+    Matrix(const Matrix&); 
+    Matrix& operator=(const Matrix&); 
 
     unsigned int getRow() const; //matrix length
     unsigned int getCol() const; //matrix height

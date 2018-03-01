@@ -12,6 +12,7 @@ public class Main {
 			a.set(1, 1, 6.0);
 			a.set(2, 2, 7.0);
 			System.out.println(a);
+			System.out.println(a.transposed());
 			
 //			SparseMatrix b = new SparseMatrix(4,5);
 //			
@@ -51,7 +52,9 @@ public class Main {
 							4,2,1,4,3,3,-8,2,3,-1,4,5,
 							1,2,3,2,1,-8,-8,-8,-8,-8,-8,12);
 
+			SquareMatrix e = c.transposed();
 			System.out.println(c);
+			System.out.println(e.getClass().getName() + e);
 			
 			Matrix p1 = new Matrix(2,3,
 					0, 1, 2,
@@ -62,8 +65,14 @@ public class Main {
 					3, 2,
 					1, 2);
 			
-			Matrix res = p1.multiply(p2);
-			System.out.println(res);
+			SquareMatrix p3 = new SquareMatrix(3,
+					2, 0, 0,
+					1, 4, 0,
+					0, 3, 1);
+			if (p3.infTriangular())
+				System.out.println("ok");
+//			Matrix res = p1.multiply(p2);
+//			System.out.println(res);
 //			System.out.println(c.determinant());
 		}
 		catch(RuntimeException exc) {

@@ -22,7 +22,7 @@ Matrix::Matrix(const Matrix& mat) :
     row(mat.getRow()), col(mat.getCol()), matrix(mat.matrix) {}
 
 void Matrix::fill(double value, double range) {
-    for (int i = 0; i < getRow() * getCol(); i++)
+    for (unsigned int i = 0; i < getRow() * getCol(); i++)
         matrix[i] += value + i * range;
 }
 

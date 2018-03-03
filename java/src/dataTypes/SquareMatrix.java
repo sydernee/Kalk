@@ -31,6 +31,9 @@ public class SquareMatrix extends Matrix {
 	
 	//Matrix determinant
 	public Double determinant() {
+		if (getCol() == 1)
+			return get(0,0);
+		
 	    if (getCol() == 2)
 	        return get(0,0) * get(1,1) - get(0,1) * get(1,0);
 

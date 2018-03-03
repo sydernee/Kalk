@@ -45,6 +45,16 @@ int main(){
     Matrix* m4t = m4->transposed();
     std::cout << "Trasposta:" << std::endl << *m4t;    
     
+    //matrice identità
+    std::cout << "Test Matrice identità: " << std::endl;
+    SquareMatrix m5 = SquareMatrix::identityMatrix(5);
+    std::cout << "Originale:" << std::endl << m5;
+
+    //matrice di zeri
+    std::cout << "Test Matrice di zeri: " << std::endl;
+    SquareMatrix m6 = SquareMatrix::zeroMatrix(5);
+    std::cout << "Originale:" << std::endl << m6;
+
     return 0;
 }
 

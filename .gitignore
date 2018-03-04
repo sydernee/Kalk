@@ -35,4 +35,7 @@
 Kalc.pro.*
 *.pro.user
 *.autosave
+.qmake.stash
+Kalk
 
+Makefile

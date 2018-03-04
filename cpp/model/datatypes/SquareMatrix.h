@@ -17,7 +17,7 @@ public:
     bool isDiagonal() const;
 
     static SquareMatrix identityMatrix(unsigned int);
-
+    static SquareMatrix zeroMatrix(unsigned int);
 };
 
 #endif // SQUAREMATRIX_H

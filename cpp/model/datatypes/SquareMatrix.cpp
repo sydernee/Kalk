@@ -20,13 +20,6 @@ bool SquareMatrix::isDiagonal() const {
     return true;
 }
 
-SquareMatrix SquareMatrix::identityMatrix(unsigned int n) {
-    SquareMatrix res(n, 0);
-    for (unsigned int i = 0; i < n; i++)
-        res.set(i,i, 1);
-    return res;
-}
-
 SquareMatrix SquareMatrix::getMinor(unsigned int x, unsigned int y) const {
     unsigned int N = getCol();
     SquareMatrix res = SquareMatrix(N-1);
@@ -92,3 +85,15 @@ bool SquareMatrix::supTriangular() const {
     return true;
 }
 
+// Matrice identità
+SquareMatrix SquareMatrix::identityMatrix(unsigned int n) {
+    SquareMatrix res(n, 0);
+    for (unsigned int i = 0; i < n; i++)
+        res.set(i,i, 1);
+    return res;
+}
+
+// Matrice di zeri
+SquareMatrix SquareMatrix::zeroMatrix(unsigned int n) {
+    return SquareMatrix(n, 0);
+}

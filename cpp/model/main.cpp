@@ -45,6 +45,7 @@ int main(){
     Matrix* m4t = m4->transposed();
     std::cout << "Trasposta:" << std::endl << *m4t;    
     
+<<<<<<< HEAD
     // 3 operazioni elementari
     SquareMatrix m5r = *m3;
     std::cout << "Originale:" << std::endl << m5r;
@@ -57,6 +58,18 @@ int main(){
     SquareMatrix mswap = *m3; 
     mswap.substituteRow(0,2,0.5);
     std::cout << "Scambio prima con il doppio della terza" << std::endl << mswap;
+=======
+    //matrice identità
+    std::cout << "Test Matrice identità: " << std::endl;
+    SquareMatrix m5 = SquareMatrix::identityMatrix(5);
+    std::cout << "Originale:" << std::endl << m5;
+
+    //matrice di zeri
+    std::cout << "Test Matrice di zeri: " << std::endl;
+    SquareMatrix m6 = SquareMatrix::zeroMatrix(5);
+    std::cout << "Originale:" << std::endl << m6;
+
+>>>>>>> eab6f84f4557ced9b59a16a5b6e78fe5833fdc51
     return 0;
 }
 

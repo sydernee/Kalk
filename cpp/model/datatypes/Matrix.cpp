@@ -179,3 +179,30 @@ Matrix::Row Matrix::operator [](unsigned int _row) {
 Matrix::CRow Matrix::operator [](unsigned int _row) const {
     return CRow(*this, _row);
 }
+
+//3 operazioni elementari
+void Matrix::swapRows(unsigned int rowA, unsigned int rowB) {
+    if (rowA == rowB) { return; } //non ho nulla da scambiare
+    for (unsigned int c = 0; c < getCol(); ++c) {
+        double aux = get(rowA,c);
+        set(rowA,c, get(rowB,c));
+        set(rowB,c, aux);
+    }
+}
+
+void Matrix::swapCols(unsigned int colA, unsigned int colB) {
+    if (colA == colB) { return; } //non ho nulla da scambiare
+    for (unsigned int r = 0; r < getRow(); ++r) {
+        double aux = get(r,colA);
+        set(r,colA, get(r,colB));
+        set(r,colB, aux);
+    }    
+}
+
+void Matrix::substituteRow(unsigned int destRow, unsigned int sourceRow, double factor) {
+    //if (factor == 0) // eccezione TODO
+    if (sourceRow == destRow && factor==1) { return; } //non ho nulla da scambiare
+    for (unsigned int c = 0; c < getCol(); ++c) {
+        set(destRow,c, get(sourceRow,c) * factor);
+    }
+}

@@ -45,6 +45,18 @@ int main(){
     Matrix* m4t = m4->transposed();
     std::cout << "Trasposta:" << std::endl << *m4t;    
     
+    // 3 operazioni elementari
+    SquareMatrix m5r = *m3;
+    std::cout << "Originale:" << std::endl << m5r;
+    m5r.swapRows(0,2);
+    std::cout << "Scambio prima e terza riga:" << std::endl << m5r;
+    SquareMatrix m5c = *m3;
+    std::cout << "Originale:" << std::endl << m5c;
+    m5r.swapCols(0,2);
+    std::cout << "Scambio prima e terza colonna:" << std::endl << m5c;
+    SquareMatrix mswap = *m3; 
+    mswap.substituteRow(0,2,0.5);
+    std::cout << "Scambio prima con il doppio della terza" << std::endl << mswap;
     return 0;
 }
 

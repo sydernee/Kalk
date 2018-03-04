@@ -64,6 +64,11 @@ public:
 
     Row operator[](unsigned int);
    CRow operator[](unsigned int) const;
+   
+   //3 operazioni elementari
+   void swapRows(unsigned int,unsigned int);
+   void swapCols(unsigned int,unsigned int);
+   void substituteRow(unsigned int, unsigned int, double);
 };
 
 std::ostream& operator<<(std::ostream&, const Matrix&); //output operator overload

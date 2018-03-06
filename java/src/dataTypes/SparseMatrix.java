@@ -1,15 +1,28 @@
 package dataTypes;
 
+import kalkException.TooFewArgumentsException;
+import kalkException.TooManyArgumentsException;
+
 public class SparseMatrix extends Matrix {
 	//fields
 	private boolean dirtyBit; //matrice modificata?
 	private Double sparsity;
 	
-	public SparseMatrix(int row, int col) throws NegativeArraySizeException {
-		super(row, col);
+	public SparseMatrix(int rows, int cols) throws NegativeArraySizeException {
+		super(rows, cols);
 		this.sparsity = -1.0;
 		this.dirtyBit = false;
 	}
+	
+	public SparseMatrix(int rows, int cols, double... numbers)
+			throws 	NegativeArraySizeException,
+					TooFewArgumentsException, 
+					TooManyArgumentsException
+		{
+			super(rows, cols, numbers);
+			this.sparsity = -1.0;
+			this.dirtyBit = false;
+		}
 	
 	public void clear() {
 		fill(0.0);

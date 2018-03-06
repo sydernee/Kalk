@@ -10,5 +10,5 @@ CONFIG += c++11
 
 
 # Input
-HEADERS += DataType.h datatypes/Matrix.h datatypes/SquareMatrix.h
-SOURCES += DataType.cpp main.cpp datatypes/Matrix.cpp datatypes/SquareMatrix.cpp
+HEADERS += DataType.h datatypes/Matrix.h datatypes/SquareMatrix.h datatypes/SparseMatrix.h
+SOURCES += DataType.cpp main.cpp datatypes/Matrix.cpp datatypes/SquareMatrix.cpp datatypes/SparseMatrix.cpp

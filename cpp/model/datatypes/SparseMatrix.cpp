@@ -2,14 +2,18 @@
 
 SparseMatrix::SparseMatrix(unsigned int a, unsigned int b) :
     Matrix(a, b, 0), dirtyBit(false), sparsity(-1) {}
+    
+SparseMatrix::SparseMatrix(const SparseMatrix& mat) :
+	Matrix(mat), dirtyBit(-1), sparsity(-1) {}
 
+SparseMatrix::SparseMatrix(unsigned int a, unsigned int b, std::initializer_list<double> l) :
+	Matrix(a, b, l), dirtyBit(false), sparsity(-1) {}
+    
 void SparseMatrix::clear() {
-    for (unsigned int i = 0; i < getRow(); i++)
-        for (unsigned int j = 0; j < getCol(); j++)
-            get(i,j) = 0;
+    fill(0);
 }
 
-double SparseMatrix::getSparsity() {
+double SparseMatrix::getSparsity() const {
     if (!dirtyBit && sparsity != -1)
         return sparsity;
 
@@ -23,9 +27,9 @@ double SparseMatrix::getSparsity() {
     return sparsity;
 }
 
-double& SparseMatrix::get(unsigned int row, unsigned int col) {
+double& SparseMatrix::getReference(unsigned int row, unsigned int col) {
     dirtyBit = true;
-    return Matrix::get(row, col);
+    return (*this)[row][col]; //Matrix::getReference() protected?
 }
 
 //DA CONTROLLARE j = i+1
@@ -35,12 +39,12 @@ bool SparseMatrix::isSymmetric() const {
     unsigned int n = getRow();
     for (unsigned int i = 0; i < n; i++)
         for (unsigned int j = i+1; j < n; j++)
-            if (Matrix::get(i,j) != Matrix::get(j,i))
+            if ((*this)[i][j] != (*this)[j][i])
                 return false;
     return true;
 }
 
-bool SparseMatrix::isDense() {
+bool SparseMatrix::isDense() const {
     if (getSparsity() <= 0.5)
         return true;
     return false;

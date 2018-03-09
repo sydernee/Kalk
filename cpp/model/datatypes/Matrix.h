@@ -37,7 +37,7 @@ private:
         const double& operator[](unsigned int) const;
     };
     
-    virtual double& getReference(unsigned int, unsigned int); //per SparseMatrix
+    double& getReference(unsigned int, unsigned int); //per SparseMatrix
     const double& getReference(unsigned int _row, unsigned int _col) const;
     
 public:

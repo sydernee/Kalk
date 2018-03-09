@@ -27,9 +27,9 @@ double SparseMatrix::getSparsity() const {
     return sparsity;
 }
 
-double& SparseMatrix::getReference(unsigned int row, unsigned int col) {
+void SparseMatrix::set(unsigned int row, unsigned int col, double value) {
     dirtyBit = true;
-    return (*this)[row][col]; //Matrix::getReference() protected?
+    Matrix::set(row, col, value);
 }
 
 //DA CONTROLLARE j = i+1
@@ -39,7 +39,7 @@ bool SparseMatrix::isSymmetric() const {
     unsigned int n = getRow();
     for (unsigned int i = 0; i < n; i++)
         for (unsigned int j = i+1; j < n; j++)
-            if ((*this)[i][j] != (*this)[j][i])
+            if (get(i,j) != get(j,i))
                 return false;
     return true;
 }

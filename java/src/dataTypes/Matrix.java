@@ -6,89 +6,89 @@ import kalkException.*;
 
 public class Matrix extends DataType {
 	//fields
-	private int row;
-	private int col;
+	private int rows;
+	private int cols;
 	private ArrayList<Double> matrix;
 	
 	//constructors
 	
-	public Matrix(int row, int col) throws NegativeArraySizeException {
-		if (row <= 0 || col <= 0)
+	public Matrix(int rows, int cols) throws NegativeArraySizeException {
+		if (rows <= 0 || cols <= 0)
 			throw new NegativeArraySizeException("Matrix constructor: Invalid matrix dimensions.");
-		this.row = row;
-		this.col = col;
-		this.matrix = new ArrayList<Double>(row * col);
+		this.rows = rows;
+		this.cols = cols;
+		this.matrix = new ArrayList<Double>(rows * cols);
 		fill(0.0);
 	}
 	
-	public Matrix(int row, int col, int defaultValue) throws NegativeArraySizeException {
-		this(row, col);
+	public Matrix(int rows, int cols, int defaultValue) throws NegativeArraySizeException {
+		this(rows, cols);
 		fill(Double.valueOf(defaultValue));
 	}
 	
-	public Matrix(int row, int col, Double defaultValue) throws NegativeArraySizeException {
-		this(row, col);
+	public Matrix(int rows, int cols, Double defaultValue) throws NegativeArraySizeException {
+		this(rows, cols);
 		fill(defaultValue);
 	}
 	
 	public Matrix(Matrix mat) {
-		this.row = mat.row;
-		this.col = mat.col;
+		this.rows = mat.rows;
+		this.cols = mat.cols;
 		this.matrix = mat.matrix;
 	}
 	
-	public Matrix(int row, int col, double... numbers) 
+	public Matrix(int rows, int cols, double... numbers) 
 		throws 	NegativeArraySizeException,
 				TooFewArgumentsException, 
 				TooManyArgumentsException 
 	{
-		this(row, col);
+		this(rows, cols);
 		
 		int i = 0;
 		for (double d : numbers) {
-			if (i >= row * col)
+			if (i >= rows * cols)
 				throw new TooManyArgumentsException("Matrix(): Too many arguments given.");
 			matrix.set(i, Double.valueOf(d));
 			i++;
 		}
 		
-		if (i < row * col)
-			throw new TooFewArgumentsException("Matrix(): Too few arguments given. Set " + (col*row-i) + " more values.");
+		if (i < rows * cols)
+			throw new TooFewArgumentsException("Matrix(): Too few arguments given. Set " + (cols*rows-i) + " more values.");
 	}
 	
 	//get matrix[i,j]
-	public Double get(int row, int col) throws IndexOutOfBoundsException {
-		if (row >= getRow() || col >= getCol())
+	public Double get(int rows, int cols) throws IndexOutOfBoundsException {
+		if (rows >= getRows() || cols >= getCols())
 			throw new IndexOutOfBoundsException("get(): Invalid matrix indexes.");
 		
-		return matrix.get(row * getCol() + col);
+		return matrix.get(rows * getCols() + cols);
 	}
 	
 	//set matrix[i,j] to value
 	
-	public void set(int row, int col, Double value) throws IndexOutOfBoundsException {
-		if (row >= getRow() || col >= getCol())
+	public void set(int rows, int cols, Double value) throws IndexOutOfBoundsException {
+		if (rows >= getRows() || cols >= getCols())
 			throw new IndexOutOfBoundsException("set(): Invalid matrix indexes.");
 		
-		matrix.set(row * getCol() + col, value);
+		matrix.set(rows * getCols() + cols, value);
 	}
 	
 	//set matrix[i,j] to value
-	public void set(int row, int col, double value) throws IndexOutOfBoundsException {
-		if (row >= getRow() || col >= getCol())
+	public void set(int rows, int cols, double value) throws IndexOutOfBoundsException {
+		if (rows >= getRows() || cols >= getCols())
 			throw new IndexOutOfBoundsException("set(): Invalid matrix indexes.");
 		
-		matrix.set(row * getCol() + col, Double.valueOf(value));
+		matrix.set(rows * getCols() + cols, Double.valueOf(value));
 	}
 	
 	//getters
 	
-	public int getRow() {
-		return row;
+	public int getRows() {
+		return rows;
 	}
 	
-	public int getCol() {
-		return col;
+	public int getCols() {
+		return cols;
 	}
 	
 	//Object overriding
@@ -96,8 +96,8 @@ public class Matrix extends DataType {
 	@Override
 	public String toString() {
 		String res = "";
-		for (int i = 0; i < getRow(); i++) {
-			for (int j = 0; j < getCol(); j++) {
+		for (int i = 0; i < getRows(); i++) {
+			for (int j = 0; j < getCols(); j++) {
 				res += "\t" + get(i,j).toString();
 			}
 			res += "\n";
@@ -111,12 +111,12 @@ public class Matrix extends DataType {
 			return false;
 		Matrix mat = (Matrix)obj;
 		
-		if (getRow() != mat.getRow() || getCol() != mat.getCol())
+		if (getRows() != mat.getRows() || getCols() != mat.getCols())
 			return false;
 		
 		//check matrix cells
-		for (int i = 0; i < getRow(); i++)
-			for (int j = 0; j < getCol(); j++)
+		for (int i = 0; i < getRows(); i++)
+			for (int j = 0; j < getCols(); j++)
 				if (get(i,j) != mat.get(i,j))
 					return false;
 		
@@ -127,7 +127,7 @@ public class Matrix extends DataType {
 	
 	public void fill(Double value, Double range) {
 		matrix.clear();
-		for (int i = 0; i < getRow()*getCol(); i++) {
+		for (int i = 0; i < getRows()*getCols(); i++) {
 			matrix.add(value + Double.valueOf(i)*range);
 		}
 	}
@@ -141,13 +141,13 @@ public class Matrix extends DataType {
 		if (i < 0)
 			throw new NegativeArraySizeException("removeCol() method: invalid matrix index.");
 		
-		if (i >= getCol())
+		if (i >= getCols())
 			throw new InvalidMatrixIndex("removeCol() method: invalid matrix index.");
 		
 		int val = 0; //variabile fittizia per impostare le celle correttamente dopo aver saltato la colonna i
-		Matrix res = new Matrix(getRow(), getCol()-1); //Matrix da restituire
-		for (int j = 0; j < getRow(); j++) {
-			for (int k = 0; k < getCol(); k++) {
+		Matrix res = new Matrix(getRows(), getCols()-1); //Matrix da restituire
+		for (int j = 0; j < getRows(); j++) {
+			for (int k = 0; k < getCols(); k++) {
 				if (k == i) 
 					val = 1;
 				else 
@@ -163,16 +163,16 @@ public class Matrix extends DataType {
 		if (i < 0)
 			throw new NegativeArraySizeException("removeRow() method: invalid matrix index.");
 		
-		if (i >= getCol())
+		if (i >= getCols())
 			throw new InvalidMatrixIndex("removeRow() method: invalid matrix index.");
 		
 		int val = 0; //variabile fittizia per impostare le celle correttamente dopo aver saltato la colonna i
-		Matrix res = new Matrix(getRow()-1, getCol()); //Matrix da restituire
-		for (int j = 0; j < getRow(); j++) {
+		Matrix res = new Matrix(getRows()-1, getCols()); //Matrix da restituire
+		for (int j = 0; j < getRows(); j++) {
 			if (j == i)
 				val++;
 			else
-				for (int k = 0; k < getCol(); k++) {
+				for (int k = 0; k < getCols(); k++) {
 					res.set(j-val, k, get(j,k));
 				}
 		}
@@ -187,10 +187,10 @@ public class Matrix extends DataType {
 		if (i < 0 || j < 0)
 			throw new NegativeArraySizeException("swapRows() method: invalid negative matrix index.");
 		
-		if (i >= getRow() || j >= getRow())
+		if (i >= getRows() || j >= getRows())
 			throw new InvalidMatrixIndex("swapRows() method: invalid matrix index.");
 		
-		for (int k = 0; k < getRow(); k++) {
+		for (int k = 0; k < getRows(); k++) {
 			Double temp = get(i,k);
 			set(i, k, get(j,k));
 			set(j, k, temp);
@@ -202,10 +202,10 @@ public class Matrix extends DataType {
 		if (i < 0 || j < 0)
 			throw new NegativeArraySizeException("swapCols() method: invalid negative matrix index.");
 		
-		if (i >= getCol() || j >= getCol())
+		if (i >= getCols() || j >= getCols())
 			throw new InvalidMatrixIndex("swapCols() method: invalid matrix index.");
 		
-		for (int k = 0; k < getCol(); k++) {
+		for (int k = 0; k < getCols(); k++) {
 			Double temp = get(k,i);
 			set(k, i, get(k,j));
 			set(k, j, temp);
@@ -217,13 +217,13 @@ public class Matrix extends DataType {
 		if (i < 0)
 			throw new NegativeArraySizeException("multiplyRow() method: invalid negative matrix index.");
 		
-		if (i >= getRow())
+		if (i >= getRows())
 			throw new InvalidMatrixIndex("multiplyRow() method: invalid matrix index.");
 		
 		if (val == 0)
 			throw new ZeroMultiplierException("multiplyRow() method: cannot multiply per 0.");
 		
-		for (int j = 0; j < getRow(); j++) {
+		for (int j = 0; j < getRows(); j++) {
 			set(i, j, val * get(i,j));
 		}
 	}
@@ -233,13 +233,13 @@ public class Matrix extends DataType {
 		if (j < 0)
 			throw new NegativeArraySizeException("multiplyRow() method: invalid negative matrix index.");
 		
-		if (j >= getCol())
+		if (j >= getCols())
 			throw new InvalidMatrixIndex("multiplyRow() method: invalid matrix index.");
 		
 		if (val == 0)
 			throw new ZeroMultiplierException("multiplyRow() method: cannot multiply per 0.");
 		
-		for (int i = 0; i < getRow(); i++) {
+		for (int i = 0; i < getRows(); i++) {
 			set(i, j, val * get(i,j));
 		}
 	}
@@ -248,11 +248,11 @@ public class Matrix extends DataType {
 		if (sourceRow < 0 || destRow < 0)
 			throw new NegativeArraySizeException("substituteRow() method: invalid negative matrix index.");
 		
-		if (sourceRow >= getRow() || sourceRow >= getRow())
+		if (sourceRow >= getRows() || sourceRow >= getRows())
 			throw new InvalidMatrixIndex("substituteRow() method: invalid matrix index.");
 		
 		if (factor != 0)
-			for (int i = 0; i < getRow(); i++) {
+			for (int i = 0; i < getRows(); i++) {
 				set(sourceRow, i, get(sourceRow,i) + get(destRow,i) * factor);
 			}
 	}
@@ -260,20 +260,20 @@ public class Matrix extends DataType {
 	//Operations
 	
 	public Matrix add(Matrix mat) throws InvalidMatrixIndex {
-		if (getRow() != mat.getRow() || getCol() != mat.getCol())
+		if (getRows() != mat.getRows() || getCols() != mat.getCols())
 			throw new InvalidMatrixIndex("add() method: Matrixes dimensions don't match.");
 		
-		Matrix res = new Matrix(getRow(), getCol());
+		Matrix res = new Matrix(getRows(), getCols());
 		for (int i = 0; i < matrix.size(); i++)
 			res.matrix.set(i, matrix.get(i) + mat.matrix.get(i));
 		return res;
 	}
 	
 	public Matrix sub(Matrix mat) throws InvalidMatrixIndex {
-		if (getRow() != mat.getRow() || getCol() != mat.getCol())
+		if (getRows() != mat.getRows() || getCols() != mat.getCols())
 			throw new InvalidMatrixIndex("sub() method: Matrixes dimensions don't match.");
 		
-		Matrix res = new Matrix(getRow(), getCol());
+		Matrix res = new Matrix(getRows(), getCols());
 		for (int i = 0; i < matrix.size(); i++)
 			res.matrix.set(i, matrix.get(i) - mat.matrix.get(i));
 		return res;
@@ -281,9 +281,9 @@ public class Matrix extends DataType {
 	
 	//prodotto per uno scalare
 	public Matrix multiply(double value) {
-	    Matrix res = new Matrix(row, col);
-	    for (int i = 0; i < row; i++)
-	        for (int j = 0; j < col; j++)
+	    Matrix res = new Matrix(rows, cols);
+	    for (int i = 0; i < rows; i++)
+	        for (int j = 0; j < cols; j++)
 	            res.set(i,j,get(i,j) * value);
 
 	    return res;
@@ -291,14 +291,14 @@ public class Matrix extends DataType {
 	
 	//prodotto scalare
 	public Matrix multiply(Matrix mat) throws InvalidMatrixIndex {
-		if (getCol() != mat.getRow())
+		if (getCols() != mat.getRows())
 			throw new InvalidMatrixIndex("multiply() method: invalid matrixes' indexes.");
 		
-		Matrix res = new Matrix(getRow(), mat.getCol());
-	    for (int i = 0; i < getRow(); i++)
-	        for (int j = 0; j < mat.getCol(); j++) {
+		Matrix res = new Matrix(getRows(), mat.getCols());
+	    for (int i = 0; i < getRows(); i++)
+	        for (int j = 0; j < mat.getCols(); j++) {
 	            double sum = 0; //accumulatore
-	            for (int k = 0; k < getCol(); k++)
+	            for (int k = 0; k < getCols(); k++)
 	                sum += get(i,k) * mat.get(k, j);
 	            res.set(i,j,sum);
 	    }
@@ -307,9 +307,9 @@ public class Matrix extends DataType {
 	
 	//Matrix transposed
 	public Matrix transposed() {
-		Matrix res = new Matrix(col, row);
-		for (int i = 0; i < getCol(); i++)
-			for (int j = 0; j < getRow(); j++)
+		Matrix res = new Matrix(cols, rows);
+		for (int i = 0; i < getCols(); i++)
+			for (int j = 0; j < getRows(); j++)
 				res.set(i, j, get(j,i));
 		return res;
 	}

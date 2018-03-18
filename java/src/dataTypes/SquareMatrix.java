@@ -31,13 +31,13 @@ public class SquareMatrix extends Matrix {
 	
 	//Matrix determinant
 	public Double determinant() {
-		if (getCol() == 1)
+		if (getCols() == 1)
 			return get(0,0);
 		
-	    if (getCol() == 2)
+	    if (getCols() == 2)
 	        return get(0,0) * get(1,1) - get(0,1) * get(1,0);
 
-	    if (getCol() == 3) { //Sarrus rule
+	    if (getCols() == 3) { //Sarrus rule
 	        return 	get(0,0) * get(1,1) * get(2,2) +
 	                get(0,1) * get(1,2) * get(2,0) +
 	                get(0,2) * get(1,0) * get(2,1) -
@@ -47,7 +47,7 @@ public class SquareMatrix extends Matrix {
 	    }
 	    
 	    Double cumulator = 0.0;
-	    for (int i = 0; i < getRow(); i++) {
+	    for (int i = 0; i < getRows(); i++) {
 	    	//a00 * c00 * getMinor(0,0).determinant() +
 	    	//a01 * c01 * getMinor(0,1).determinant() +
 	    	//a02 * c02 * getMinor(0,2).determinant() +
@@ -62,8 +62,8 @@ public class SquareMatrix extends Matrix {
 	
 	//is matrix infTriangular?
 	public boolean infTriangular() {
-	    for (int i = 0; i < getRow(); i++)
-	        for (int j = 0; j < getCol(); j++)
+	    for (int i = 0; i < getRows(); i++)
+	        for (int j = 0; j < getCols(); j++)
 	            if ((i == j && get(i,i) == 0) || (i < j && get(i,j) != 0))
 	                return false;
 	    return true;
@@ -71,8 +71,8 @@ public class SquareMatrix extends Matrix {
 	
 	//is matrix supTriangular?
 	public boolean supTriangular() {
-	    for (int i = 0; i < getRow(); i++)
-	        for (int j = 0; j < getCol(); j++)
+	    for (int i = 0; i < getRows(); i++)
+	        for (int j = 0; j < getCols(); j++)
 	            if ((i == j && get(i,i) == 0) || (i > j && get(i,j) != 0))
 	                return false;
 	    return true;
@@ -80,8 +80,8 @@ public class SquareMatrix extends Matrix {
 	
 	//diagonal matrix?
 	public boolean isDiagonal() {
-	    for (int i = 0; i < getRow(); i++)
-	        for (int j = 0; j < getCol(); j++)
+	    for (int i = 0; i < getRows(); i++)
+	        for (int j = 0; j < getCols(); j++)
 	            if (i != j && get(i,j) != 0)
 	                return false;
 	    return true;
@@ -91,12 +91,12 @@ public class SquareMatrix extends Matrix {
 	
 	@Override
 	public SquareMatrix add(Matrix mat) throws InvalidMatrixIndex {
-		if (!(mat instanceof SquareMatrix) || getRow() != mat.getRow())
+		if (!(mat instanceof SquareMatrix) || getRows() != mat.getRows())
 			throw new InvalidMatrixIndex("add() method: Matrixes dimensions don't match.");
 		
-		SquareMatrix res = new SquareMatrix(getRow());
-		for (int i = 0; i < getRow(); i++) {
-			for (int j = 0; j < getCol(); j++)
+		SquareMatrix res = new SquareMatrix(getRows());
+		for (int i = 0; i < getRows(); i++) {
+			for (int j = 0; j < getCols(); j++)
 				res.set(i, j, get(i,j) + mat.get(i, j));
 		}
 		return res;
@@ -104,12 +104,12 @@ public class SquareMatrix extends Matrix {
 	
 	@Override
 	public SquareMatrix sub(Matrix mat) throws InvalidMatrixIndex {
-		if (!(mat instanceof SquareMatrix) || getRow() != mat.getRow())
+		if (!(mat instanceof SquareMatrix) || getRows() != mat.getRows())
 			throw new InvalidMatrixIndex("sub() method: Matrixes dimensions don't match.");
 		
-		SquareMatrix res = new SquareMatrix(getRow());
-		for (int i = 0; i < getRow(); i++) {
-			for (int j = 0; j < getCol(); j++)
+		SquareMatrix res = new SquareMatrix(getRows());
+		for (int i = 0; i < getRows(); i++) {
+			for (int j = 0; j < getCols(); j++)
 				res.set(i, j, get(i,j) - mat.get(i, j));
 		}
 		return res;
@@ -118,9 +118,9 @@ public class SquareMatrix extends Matrix {
 	//prodotto per uno scalare
 	@Override
 	public SquareMatrix multiply(double value) {
-	    SquareMatrix res = new SquareMatrix(getRow());
-	    for (int i = 0; i < getRow(); i++)
-	        for (int j = 0; j < getCol(); j++)
+	    SquareMatrix res = new SquareMatrix(getRows());
+	    for (int i = 0; i < getRows(); i++)
+	        for (int j = 0; j < getCols(); j++)
 	            res.set(i,j,get(i,j) * value);
 	    return res;
 	}
@@ -128,14 +128,14 @@ public class SquareMatrix extends Matrix {
 	//prodotto scalare
 	@Override
 	public SquareMatrix multiply(Matrix mat) throws InvalidMatrixIndex {
-		if (mat.getRow() != mat.getCol() || getCol() != mat.getRow())
+		if (mat.getRows() != mat.getCols() || getCols() != mat.getRows())
 			throw new InvalidMatrixIndex("multiply() method: invalid matrixes' indexes.");
 		
-		SquareMatrix res = new SquareMatrix(getRow());
-	    for (int i = 0; i < getRow(); i++)
-	        for (int j = 0; j < mat.getCol(); j++) {
+		SquareMatrix res = new SquareMatrix(getRows());
+	    for (int i = 0; i < getRows(); i++)
+	        for (int j = 0; j < mat.getCols(); j++) {
 	            double sum = 0; //accumulatore
-	            for (int k = 0; k < getCol(); k++)
+	            for (int k = 0; k < getCols(); k++)
 	                sum += get(i,k) * mat.get(k, j);
 	            res.set(i,j,sum);
 	    }
@@ -143,25 +143,25 @@ public class SquareMatrix extends Matrix {
 	}
 	
 	public SquareMatrix getMinor(int i, int j) throws NegativeArraySizeException, IndexOutOfBoundsException {
-		/** Estrae la sottomatrice mat = new SquareMatrix(getRow()-1) tale che mat è this a cui sono state rimosse 
+		/** Estrae la sottomatrice mat = new SquareMatrix(getRows()-1) tale che mat è this a cui sono state rimosse 
 		 la riga i e la colonna j */
 		
 		if (i < 0 || j < 0)
 			throw new NegativeArraySizeException("getMinor() method: invalid matrix indexes.");
 		
-		if (i >= getRow() || j >= getRow())
+		if (i >= getRows() || j >= getRows())
 			throw new IndexOutOfBoundsException("getMinor() method: out of bound matrix indexes.");
 		
 		
-		SquareMatrix res = new SquareMatrix(getRow()-1); //SquareMatrix da restituire
+		SquareMatrix res = new SquareMatrix(getRows()-1); //SquareMatrix da restituire
 		int rowSkipFlag = 0;
 		int colSkipFlag = 0;
 		
-		for (int k = 0; k < getRow(); k++) {
+		for (int k = 0; k < getRows(); k++) {
 			if (k == i)
 				rowSkipFlag = 1;
 			else
-				for (int l = 0; l < getCol(); l++) {
+				for (int l = 0; l < getCols(); l++) {
 					if (l == j)
 						colSkipFlag = 1;
 					else
@@ -175,9 +175,9 @@ public class SquareMatrix extends Matrix {
 	//SquareMatrix transposed
 	@Override
 	public SquareMatrix transposed() {
-		SquareMatrix res = new SquareMatrix(getRow());
-		for (int i = 0; i < getRow(); i++)
-			for (int j = 0; j < getCol(); j++)
+		SquareMatrix res = new SquareMatrix(getRows());
+		for (int i = 0; i < getRows(); i++)
+			for (int j = 0; j < getCols(); j++)
 				res.set(i, j, get(j,i));
 //		SquareMatrix res = (SquareMatrix)super.transposed();
 		return res;

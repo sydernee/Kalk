@@ -34,11 +34,11 @@ public class SparseMatrix extends Matrix {
 		
 		dirtyBit = false;
 		Double cumulator = 0.0;
-		for (int i = 0; i < getRow(); i++)
-			for (int j = 0; j < getCol(); j++)
+		for (int i = 0; i < getRows(); i++)
+			for (int j = 0; j < getCols(); j++)
 				if (get(i,j) == 0)
 					cumulator++;
-		sparsity = cumulator / Double.valueOf(getRow() * getCol());
+		sparsity = cumulator / Double.valueOf(getRows() * getCols());
 		return sparsity;
 	}
 	
@@ -50,9 +50,9 @@ public class SparseMatrix extends Matrix {
 	
 	//DA CONTROLLARE j = i+1
 	public boolean isSymmetric() {
-	    if (getRow() != getCol())
+	    if (getRows() != getCols())
 	        return false;
-	    int n = getRow();
+	    int n = getRows();
 	    for (int i = 0; i < n; i++)
 	        for (int j = i+1; j < n; j++)
 	            if (j > i && get(i,j) != get(j,i))

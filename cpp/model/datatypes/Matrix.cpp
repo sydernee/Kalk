@@ -41,10 +41,10 @@ Matrix::Matrix(unsigned int a, unsigned int b, std::vector<std::initializer_list
 Matrix::~Matrix() {}
 
 Matrix::Matrix(const Matrix& mat) :
-    row(mat.getRow()), col(mat.getCol()), matrix(mat.matrix) {}
+    row(mat.rowCount()), col(mat.colCount()), matrix(mat.matrix) {}
 
 void Matrix::fill(double value, double range) {
-    for (unsigned int i = 0; i < getRow() * getCol(); i++)
+    for (unsigned int i = 0; i < rowCount() * colCount(); i++)
         matrix[i] += value + i * range;
 }
 
@@ -59,11 +59,11 @@ Matrix& Matrix::operator =(const Matrix& mat) {
 
 //getter methods
 
-unsigned int Matrix::getRow() const {
+unsigned int Matrix::rowCount() const {
     return row;
 }
 
-unsigned int Matrix::getCol() const {
+unsigned int Matrix::colCount() const {
     return col;
 }
 
@@ -71,26 +71,26 @@ unsigned int Matrix::getCol() const {
 
 //somma
 Matrix operator +(const Matrix& mat1, const Matrix& mat2) { //THROW
-    if (mat1.getRow() != mat2.getRow() || mat1.getCol() != mat2.getCol()) {
+    if (mat1.rowCount() != mat2.rowCount() || mat1.colCount() != mat2.colCount()) {
         //throw MatrixException();
     }
 
-    Matrix res(mat1.getRow(), mat1.getCol());
-    for (unsigned int i = 0; i < mat1.getRow(); i++)
-        for (unsigned int j = 0; j < mat1.getCol(); j++)
+    Matrix res(mat1.rowCount(), mat1.colCount());
+    for (unsigned int i = 0; i < mat1.rowCount(); i++)
+        for (unsigned int j = 0; j < mat1.colCount(); j++)
             res.set(i,j, mat1.get(i,j) + mat2.get(i,j));
     return res;
 }
 
 //differenza
 Matrix operator -(const Matrix& mat1, const Matrix& mat2) { //THROW
-    if (mat1.getRow() != mat2.getRow() || mat1.getCol() != mat2.getCol()) {
+    if (mat1.rowCount() != mat2.rowCount() || mat1.colCount() != mat2.colCount()) {
         //throw MatrixException();
     }
 
-    Matrix res(mat1.getRow(), mat1.getCol());
-    for (unsigned int i = 0; i < mat1.getRow(); i++)
-        for (unsigned int j = 0; j < mat1.getCol(); j++)
+    Matrix res(mat1.rowCount(), mat1.colCount());
+    for (unsigned int i = 0; i < mat1.rowCount(); i++)
+        for (unsigned int j = 0; j < mat1.colCount(); j++)
             res.set(i,j, mat1.get(i,j) - mat2.get(i,j));
     return res;
 }
@@ -107,15 +107,15 @@ Matrix Matrix::operator *(double value) const {
 
 //Prodotto scalare
 Matrix operator *(const Matrix& mat1, const Matrix& mat2) { //THROW
-    if (mat1.getCol() != mat2.getRow()) {
+    if (mat1.colCount() != mat2.rowCount()) {
         //throw MatrixException();
      }
 
-    Matrix res(mat1.getRow(), mat2.getCol());
-    for (unsigned int i = 0; i < mat1.getRow(); i++)
-        for (unsigned int j = 0; j < mat2.getCol(); j++) {
+    Matrix res(mat1.rowCount(), mat2.colCount());
+    for (unsigned int i = 0; i < mat1.rowCount(); i++)
+        for (unsigned int j = 0; j < mat2.colCount(); j++) {
             double sum = 0; //accumulatore
-            for (unsigned int k = 0; k < mat1.getCol(); k++)
+            for (unsigned int k = 0; k < mat1.colCount(); k++)
                 sum += mat1.get(i,k) * mat2.get(k, j);
             res.set(i,j, sum);
     }
@@ -135,11 +135,11 @@ Matrix* Matrix::transposed() const {
 //operatori booleani di confronto
 
 bool Matrix::operator ==(const Matrix& mat) const {
-    if (getRow() != mat.getRow() || getCol() != mat.getCol())
+    if (rowCount() != mat.rowCount() || colCount() != mat.colCount())
         return false;
 
-    for (unsigned int i = 0; i < getRow(); i++)
-        for (unsigned int j = 0; j < getCol(); j++)
+    for (unsigned int i = 0; i < rowCount(); i++)
+        for (unsigned int j = 0; j < colCount(); j++)
             if (get(i,j) != mat.get(i,j))
                 return false;
     return true;
@@ -169,10 +169,10 @@ const double& Matrix::getReference(unsigned int _row, unsigned int _col) const {
 
 //output operator overload
 std::ostream& operator<<(std::ostream& out, const Matrix& mat) {
-    for (unsigned int i = 0; i < mat.getRow(); i++)
-        for (unsigned int j = 0; j < mat.getCol(); j++) {
+    for (unsigned int i = 0; i < mat.rowCount(); i++)
+        for (unsigned int j = 0; j < mat.colCount(); j++) {
             out << mat.get(i,j) << " ";
-            if (j == (mat.getCol() - 1))
+            if (j == (mat.colCount() - 1))
                 out << "\n";
         }
     return out;
@@ -209,7 +209,7 @@ Matrix::CRow Matrix::operator [](unsigned int _row) const {
 //3 operazioni elementari
 void Matrix::swapRows(unsigned int rowA, unsigned int rowB) {
     if (rowA == rowB) { return; } //non ho nulla da scambiare
-    for (unsigned int c = 0; c < getCol(); ++c) {
+    for (unsigned int c = 0; c < colCount(); ++c) {
         double aux = get(rowA,c);
         set(rowA,c, get(rowB,c));
         set(rowB,c, aux);
@@ -218,7 +218,7 @@ void Matrix::swapRows(unsigned int rowA, unsigned int rowB) {
 
 void Matrix::swapCols(unsigned int colA, unsigned int colB) {
     if (colA == colB) { return; } //non ho nulla da scambiare
-    for (unsigned int r = 0; r < getRow(); ++r) {
+    for (unsigned int r = 0; r < rowCount(); ++r) {
         double aux = get(r,colA);
         set(r,colA, get(r,colB));
         set(r,colB, aux);
@@ -228,7 +228,7 @@ void Matrix::swapCols(unsigned int colA, unsigned int colB) {
 void Matrix::substituteRow(unsigned int destRow, unsigned int sourceRow, double factor) {
     //if (factor == 0) // eccezione TODO
     if (sourceRow == destRow && factor==1) { return; } //non ho nulla da scambiare
-    for (unsigned int c = 0; c < getCol(); ++c) {
+    for (unsigned int c = 0; c < colCount(); ++c) {
         set(destRow,c, get(sourceRow,c) * factor);
     }
 }

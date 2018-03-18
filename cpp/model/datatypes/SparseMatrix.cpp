@@ -22,11 +22,11 @@ double SparseMatrix::getSparsity() const {
 
     dirtyBit = false;
     double cumulator = 0;
-    for (unsigned int i = 0; i < getRow(); i++)
-        for (unsigned int j = 0; j < getCol(); j++)
+    for (unsigned int i = 0; i < rowCount(); i++)
+        for (unsigned int j = 0; j < colCount(); j++)
             if (get(i,j) == 0)
                 cumulator++;
-    sparsity = cumulator / static_cast<double>(getRow() * getCol());
+    sparsity = cumulator / static_cast<double>(rowCount() * colCount());
     return sparsity;
 }
 
@@ -37,9 +37,9 @@ void SparseMatrix::set(unsigned int row, unsigned int col, double value) {
 
 //DA CONTROLLARE j = i+1
 bool SparseMatrix::isSymmetric() const {
-    if (getRow() != getCol())
+    if (rowCount() != colCount())
         return false;
-    unsigned int n = getRow();
+    unsigned int n = rowCount();
     for (unsigned int i = 0; i < n; i++)
         for (unsigned int j = i+1; j < n; j++)
             if (get(i,j) != get(j,i))

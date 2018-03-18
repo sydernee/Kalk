@@ -16,15 +16,15 @@ SquareMatrix::SquareMatrix(unsigned int n, std::vector<std::initializer_list<dou
     Matrix(n, n, l) {}
 
 bool SquareMatrix::isDiagonal() const {
-    for (unsigned int i = 0; i < getRow(); i++)
-        for (unsigned int j = 0; j < getCol(); i++)
+    for (unsigned int i = 0; i < rowCount(); i++)
+        for (unsigned int j = 0; j < colCount(); i++)
             if (i != j && get(i,j) != 0)
                 return false;
     return true;
 }
 
 SquareMatrix SquareMatrix::getMinor(unsigned int x, unsigned int y) const {
-    unsigned int N = getCol();
+    unsigned int N = colCount();
     SquareMatrix res = SquareMatrix(N-1);
     
     unsigned int i,j,resX,resY; //i riga, j colonna di  matrix; 
@@ -47,13 +47,13 @@ SquareMatrix* SquareMatrix::transposed() const {
 
 
 double SquareMatrix::determinant() const {  
-    unsigned int N = getCol();
+    unsigned int N = colCount();
 
     if (N == 1)
         return get(0,0);
     if (N == 2)
         return get(0,0) * get(1,1) - get(0,1) * get(1,0);
-    if (getCol() == 3) { 
+    if (colCount() == 3) { 
         return get(0,0) * get(1,1) * get(2,2) +
                 get(0,1) * get(1,2) * get(2,0) +
                 get(0,2) * get(1,0) * get(2,1) -
@@ -73,16 +73,16 @@ double SquareMatrix::determinant() const {
 }
 
 bool SquareMatrix::infTriangular() const {
-    for (unsigned int i = 0; i < getRow(); i++)
-        for (unsigned int j = 0; j < getCol(); j++)
+    for (unsigned int i = 0; i < rowCount(); i++)
+        for (unsigned int j = 0; j < colCount(); j++)
             if ((i == j && get(i,i) != 1) || (i < j && get(i,j) != 0))
                 return false;
     return true;
 }
 
 bool SquareMatrix::supTriangular() const {
-    for (unsigned int i = 0; i < getRow(); i++)
-        for (unsigned int j = 0; j < getCol(); j++)
+    for (unsigned int i = 0; i < rowCount(); i++)
+        for (unsigned int j = 0; j < colCount(); j++)
             if ((i == j && get(i,i) != 1) || (i > j && get(i,j) != 0))
                 return false;
     return true;

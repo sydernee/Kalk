@@ -52,8 +52,8 @@ public:
     Matrix(const Matrix&); 
     Matrix& operator=(const Matrix&); 
 
-    unsigned int getRow() const; //matrix length
-    unsigned int getCol() const; //matrix height
+    unsigned int rowCount() const; //matrix length
+    unsigned int colCount() const; //matrix height
 
     Matrix operator *(double) const; //prodotto per uno scalare
     Matrix* transposed() const; //trasposta della matrice di invocazione

@@ -12,6 +12,9 @@ SquareMatrix::SquareMatrix(const SquareMatrix& mat) :
 SquareMatrix::SquareMatrix(unsigned int n, std::initializer_list<double> l) :
     Matrix(n, n, l) {}
 
+SquareMatrix::SquareMatrix(unsigned int n, std::vector<std::initializer_list<double>> l) :
+    Matrix(n, n, l) {}
+
 bool SquareMatrix::isDiagonal() const {
     for (unsigned int i = 0; i < getRow(); i++)
         for (unsigned int j = 0; j < getCol(); i++)

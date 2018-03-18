@@ -8,7 +8,10 @@ SparseMatrix::SparseMatrix(const SparseMatrix& mat) :
 
 SparseMatrix::SparseMatrix(unsigned int a, unsigned int b, std::initializer_list<double> l) :
 	Matrix(a, b, l), dirtyBit(false), sparsity(-1) {}
-    
+
+SparseMatrix::SparseMatrix(unsigned int a, unsigned int b, std::vector<std::initializer_list<double>> l) :
+    Matrix(a, b, l), dirtyBit(false), sparsity(-1) {}
+
 void SparseMatrix::clear() {
     fill(0);
 }

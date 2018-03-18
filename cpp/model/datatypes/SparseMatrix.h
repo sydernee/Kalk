@@ -13,6 +13,7 @@ public:
     SparseMatrix(unsigned int, unsigned int);
     SparseMatrix(const SparseMatrix&);
     SparseMatrix(unsigned int, unsigned int, std::initializer_list<double>);
+    SparseMatrix(unsigned int, unsigned int, std::vector<std::initializer_list<double>>);
 
     virtual void set(unsigned int, unsigned int, double);
     void clear(); //setta a zero tutte le celle della matrice

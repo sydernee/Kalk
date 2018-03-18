@@ -16,6 +16,28 @@ Matrix::Matrix(unsigned int a, unsigned int b, std::initializer_list<double> l) 
     copy(l.begin(), std::next(l.begin(),numEle), matrix.begin());
 }
 
+//  se la lista di inizializzazione (per ogni riga) è troppo grande, i dati extra vengono ignorati
+//  se troppo piccola, i restanti dati rimangono inizializzati a 0
+Matrix::Matrix(unsigned int a, unsigned int b, std::vector<std::initializer_list<double>> l) :
+    row(a), col(b), matrix(row * col, 0) 
+{
+    auto it = l.begin();
+    for (unsigned int i = 0; i < a; i++, it++) {
+        if (it != l.end()) {
+            unsigned int j = 0;
+            for (auto innerIt = it->begin(); innerIt != it->end() || j < b; j++, innerIt++) {
+                if (innerIt != it->end()) 
+                    set(i,j,*innerIt);
+                
+                else
+                    break;
+            }
+        }
+        else 
+            break;
+    }
+}
+
 Matrix::~Matrix() {}
 
 Matrix::Matrix(const Matrix& mat) :

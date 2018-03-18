@@ -44,6 +44,7 @@ public:
     Matrix(unsigned int, unsigned int);
     Matrix(unsigned int, unsigned int, double); //costruttore che inizializza tutti i campi al valore passato come parametro
     Matrix(unsigned int, unsigned int, std::initializer_list<double>);
+    Matrix(unsigned int, unsigned int, std::vector<std::initializer_list<double>>);
 
     void fill(double, double = 0); 
 

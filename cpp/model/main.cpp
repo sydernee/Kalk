@@ -78,7 +78,12 @@ int main(){
     if (m7->isDense())
     	std::cout << "True" << std::endl;
     else 
-    	std::cout << "False" << std::endl;
+    	std::cout << "False" << std::endl << std::endl;
+    
+    //std::vector<std::initializer_list<double>>
+    Matrix* m8 = new Matrix(3, 4, {{1,3}, {1,4,2,5,6}, {3,0,-1,2}});
+    std::cout << *m8;
+
+
     return 0;
 }
-

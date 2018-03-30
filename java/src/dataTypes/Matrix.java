@@ -65,7 +65,6 @@ public class Matrix extends DataType {
 	}
 	
 	//set matrix[i,j] to value
-	
 	public void set(int rows, int cols, Double value) throws IndexOutOfBoundsException {
 		if (rows >= getRows() || cols >= getCols())
 			throw new IndexOutOfBoundsException("set(): Invalid matrix indexes.");

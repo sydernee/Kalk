@@ -3,6 +3,43 @@ package dataTypes;
 public class Main {
 	public static void main(String[] args) {
 		try {
+			System.out.println("------------------------------------");
+			System.out.println("| OPERAZIONI ELEMENTARI SU MATRICI |");
+			System.out.println("------------------------------------");
+			System.out.println();
+			
+			//Matrici e operazioni elementari
+			Matrix ma = new Matrix(2,3,3,2,1,6,-2,4);
+			Matrix mb = new Matrix(2,3,4,1,-1,1,3,7);
+			Matrix mc = new Matrix(3,2,3,2,4,5,6,1);
+			
+			System.out.println("Matrice ma: ");
+			System.out.println(ma);
+			
+			System.out.println("Matrice mb: ");
+			System.out.println(mb);
+			
+			System.out.println("Matrice mc: ");
+			System.out.println(mc);
+			
+			System.out.println("Matrice ma + mb: ");
+			System.out.println(ma.add(mb));
+			
+			System.out.println("Matrice ma - mb: ");
+			System.out.println(ma.sub(mb));
+			
+			System.out.println("Prodotto con lo scalare 3.0 con la matrice ma: ");
+			System.out.println(ma.multiply(3.0));
+			
+			System.out.println("Prodotto scalare tra ma e mc: ");
+			System.out.println(ma.multiply(mc));
+			
+			
+			
+			System.out.println("---------------------------------------");
+			System.out.println("| ALTRE OPERAZIONI E MATRICI QUADRATE |");
+			System.out.println("---------------------------------------");
+			System.out.println();
 			// 2x2
 			SquareMatrix m1 = new SquareMatrix(2,2,-3,1,3);
 			System.out.print(m1);
@@ -38,12 +75,12 @@ public class Main {
 			System.out.println("Test operazioni elementari:");
 			System.out.print("\nOriginale:\n" + m5r);
 			m5r.swapRows(0, 2);
-			System.out.print("Scambio prima e terza riga:\n" + m5r);
+			System.out.print("\nScambio prima e terza riga:\n" + m5r);
 			
 			SquareMatrix m5c = m3;
 			System.out.print("\nOriginale:\n" + m5c);
 			m5c.swapCols(0, 2);
-			System.out.print("Scambio prima e terza colonna:\n" + m5c);
+			System.out.print("\nScambio prima e terza colonna:\n" + m5c);
 			
 			SquareMatrix mswap = m3;
 			mswap.substituteRow(0, 2, 0.5);

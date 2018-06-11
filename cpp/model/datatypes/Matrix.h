@@ -80,4 +80,4 @@ Matrix operator +(const Matrix&, const Matrix&); //somma tra matrici
 Matrix operator -(const Matrix&, const Matrix&); //differenza tra matrici
 Matrix operator *(const Matrix&, const Matrix&); //prodotto scalare tra matrici
 
-#endif // MATRIX_Hs
+#endif // MATRIX_H

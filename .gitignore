@@ -37,5 +37,6 @@ Kalc.pro.*
 *.autosave
 .qmake.stash
 Kalk
+build-kalk-Desktop*
 
 Makefile

@@ -1,6 +1,7 @@
 #-------------------------------------------------
 #
 # Project created by QtCreator 2018-06-04T13:47:47
+# Improved by Timmmmmmmmmmmmmmmy
 #
 #-------------------------------------------------
 
@@ -11,6 +12,7 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 TARGET = kalk
 TEMPLATE = app
 
+# Enables C++11
 CONFIG += c++11
 
 # The following define makes your compiler emit warnings if you use
@@ -26,26 +28,29 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 
 SOURCES += \
-        main.cpp \
-        model/datatypes/Matrix.cpp \
-        model/datatypes/SparseMatrix.cpp \
-        model/DataType.cpp \
-#        model/datatypes/Number.cpp \
+    main.cpp \
+    model/datatypes/Matrix.cpp \
+    model/datatypes/SparseMatrix.cpp \
+    model/DataType.cpp \
+#   model/datatypes/Number.cpp \
     view/Widget.cpp \
     view/MatrixBuilder.cpp \
-    view/MatrixCreator.cpp
+    view/MatrixCreator.cpp \
+    view/Keypad.cpp \
+    view/KeypadInput.cpp
 
 HEADERS += \
-        model/datatypes/Matrix.h \
-        model/datatypes/Network.h \
-        model/datatypes/SparseMatrix.h \
-        model/datatypes/User.h \
-        model/DataType.h \
-#        model/datatypes/Number.h \
+    model/datatypes/Matrix.h \
+    model/datatypes/Network.h \
+    model/datatypes/SparseMatrix.h \
+    model/datatypes/User.h \
+    model/DataType.h \
+#   model/datatypes/Number.h \
     view/Widget.h \
     view/MatrixBuilder.h \
-    view/MatrixCreator.h
+    view/MatrixCreator.h \
+    view/Keypad.h \
+    view/KeypadInput.h
 
 #DISTFILES += \
 #    controller/empty_folder \
-#    view/empty_folder

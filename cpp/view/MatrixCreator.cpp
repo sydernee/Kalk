@@ -6,6 +6,7 @@
 #include <QGridLayout>
 #include <QGroupBox>
 #include <QPushButton>
+#include <cfloat>
 
 //constructor
 MatrixCreator::MatrixCreator(QWidget *parent)
@@ -85,9 +86,9 @@ void MatrixCreator::handleSelectDimensions() {
         delete matrixBuilder;
     matrixBuilder = new QGroupBox(this);
     QGridLayout* gridMatrixLayout = new QGridLayout;
-    QVector<QHBoxLayout*> cellsLayout;
+    //QVector<QHBoxLayout*> cellsLayout;
     QVector<QLineEdit*> cells;
-    QDoubleValidator* cellValidator = new QDoubleValidator(-500, 500, 3, this);
+    QDoubleValidator* cellValidator = new QDoubleValidator(DBL_MIN, DBL_MAX, 3, this);
 
     if (matrixBuilder->layout() != nullptr)
         delete matrixBuilder->layout();
@@ -103,5 +104,6 @@ void MatrixCreator::handleSelectDimensions() {
     }
     matrixBuilder->setLayout(gridMatrixLayout);
 
+    layout()->addWidget(matrixBuilder);
     //TODO add matrixBuilder to mainLayout
 }

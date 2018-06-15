@@ -15,11 +15,12 @@ class MatrixBuilder : public QWidget
 private:
     QStackedWidget* stackedWidget;
     QVector<QWidget*> pages;
-    QStringListModel* matrixListModel;
-    QComboBox* matrixSelectionBox;
-    QPushButton* matrixSelection;
+    QStringListModel* matrixListModel;  //lista per matrixSelectionBox
+    QComboBox* matrixSelectionBox;      //selezione a tendina della matrice
+    QPushButton* matrixSelection;       //pulsante di selezione
+    QPushButton* backButton;            //pulsante per tornare indietro
 
-    void buildMatrixSelectionBox();
+    void buildMatrixSelectionBox(); //costruisce il GroupBox per la selezione del tipo di matrice
 
 public:
     explicit MatrixBuilder(QWidget *parent = nullptr);
@@ -29,6 +30,7 @@ signals:
 
 private slots:
     void handleMatrixSelection();
+    void handleBackButton();
 };
 
 #endif // MATRIXBUILDER_H

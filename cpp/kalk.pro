@@ -37,7 +37,8 @@ SOURCES += \
     view/MatrixBuilder.cpp \
     view/MatrixCreator.cpp \
     view/Keypad.cpp \
-    view/KeypadInput.cpp
+    view/KeypadInput.cpp \
+    controller/MatrixController.cpp
 
 HEADERS += \
     model/datatypes/Matrix.h \
@@ -50,7 +51,8 @@ HEADERS += \
     view/MatrixBuilder.h \
     view/MatrixCreator.h \
     view/Keypad.h \
-    view/KeypadInput.h
+    view/KeypadInput.h \
+    controller/MatrixController.h
 
 #DISTFILES += \
 #    controller/empty_folder \

@@ -32,7 +32,7 @@ Keypad::Keypad(QWidget *parent)
     //connect(backspace, SIGNAL(), this, SLOT(backspaceClicked()));
 
     //keypadInput
-    keypadInput = new KeypadInput("", nullptr, this);
+    keypadInput = new KeypadInput(this);
     //keypadInput->setStyleSheet("background-color: #000; color: green;");
 
     //crea il layout
@@ -70,16 +70,25 @@ QString Keypad::getInputText() const {
 }
 
 void Keypad::setInputText(const QString& text) {
+        //regolirizeKeypadInput();
         inputText = text;
         keypadInput->setText(inputText);
 }
 
 //appende stringa text a inputText
 void Keypad::appendInputText(const QString& text) {
-    //impedisce di appendere il dot se già presente
-    if (text != "." || !inputText.contains(".")) {
+    //impedisce di appendere il dot se già presente, non inserisce la virgola
+    if (text != "," && (text != "." || !inputText.contains("."))) {
+        regolirizeKeypadInput();
         setInputText(inputText + text);
     }
+}
+
+void Keypad::regolirizeKeypadInput() {
+    if (inputText.size() < keypadInput->text().size())
+        inputText = keypadInput->text();
+    else if (inputText.size() > keypadInput->text().size())
+        keypadInput->setText(inputText);
 }
 
 //SLOTS

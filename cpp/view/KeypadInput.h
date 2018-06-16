@@ -10,7 +10,7 @@ private:
     QDoubleValidator* inputValidator;
 
 public:
-    KeypadInput(const QString& = "", QDoubleValidator* = nullptr, QWidget* parent = nullptr);
+    KeypadInput(QWidget* parent = nullptr, const QString& = "", QDoubleValidator* = nullptr);
     void keyPressEvent(QKeyEvent* event); //override per la gestione di Qt::Key_Period
 };
 

@@ -20,6 +20,7 @@ private:
     //QKeyEvent* backspace;  //cancella l'ultimo digit
 
     void createLayout(); //crea il layout del tastierino numerico
+    void regolirizeKeypadInput(); //corregge l'input tra inputText e keypadInput
 public:
     explicit Keypad(QWidget *parent = nullptr);
     void setInputText(const QString&);      //set per inputText

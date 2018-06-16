@@ -29,8 +29,6 @@ Keypad::Keypad(QWidget *parent)
 
     assignmentButton->setShortcut(tr("="));
 
-    //connect(backspace, SIGNAL(), this, SLOT(backspaceClicked()));
-
     //keypadInput
     keypadInput = new KeypadInput(this);
     //keypadInput->setStyleSheet("background-color: #000; color: green;");
@@ -70,7 +68,6 @@ QString Keypad::getInputText() const {
 }
 
 void Keypad::setInputText(const QString& text) {
-        //regolirizeKeypadInput();
         inputText = text;
         keypadInput->setText(inputText);
 }
@@ -85,10 +82,8 @@ void Keypad::appendInputText(const QString& text) {
 }
 
 void Keypad::regolirizeKeypadInput() {
-    if (inputText.size() < keypadInput->text().size())
+    if (inputText.size() != keypadInput->text().size())
         inputText = keypadInput->text();
-    else if (inputText.size() > keypadInput->text().size())
-        keypadInput->setText(inputText);
 }
 
 //SLOTS
@@ -108,13 +103,3 @@ void Keypad::dotClicked() {
 
 }
 
-void Keypad::backspaceClicked() {
-    if (!inputText.isEmpty()) {
-        if (inputText.size() == 1)
-            setInputText("");
-        else {
-            inputText.remove(inputText.size()-1, inputText.size()-1);
-            setInputText(inputText);
-        }
-    }
-}

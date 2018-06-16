@@ -17,10 +17,9 @@ private:
     QPushButton* assignmentButton; // =
     QString inputText;  //stringa di input inserita
     KeypadInput* keypadInput; //output dell'input
-    //QKeyEvent* backspace;  //cancella l'ultimo digit
 
-    void createLayout(); //crea il layout del tastierino numerico
-    void regolirizeKeypadInput(); //corregge l'input tra inputText e keypadInput
+    void createLayout();            //crea il layout del tastierino numerico
+    void regolirizeKeypadInput();   //corregge l'input tra inputText e keypadInput
 public:
     explicit Keypad(QWidget *parent = nullptr);
     void setInputText(const QString&);      //set per inputText
@@ -34,7 +33,6 @@ signals:
 private slots:
     void buttonClicked();
     void dotClicked();
-    void backspaceClicked();
 };
 
 #endif // KEYPAD_H

@@ -1,4 +1,6 @@
 #include "MatrixCreator.h"
+#include "../controller/MatrixController.h"
+
 #include <QLabel>
 #include <QLineEdit>
 #include <QSpinBox>
@@ -17,9 +19,13 @@ MatrixCreator::MatrixCreator(QWidget *parent)
       selectDimensionsLabel(nullptr),
       rowBox(nullptr),
       colBox(nullptr),
-      selectDimensions(new QPushButton("Seleziona", this))
+      selectDimensions(new QPushButton("Seleziona", this)),
+      controller(new MatrixController(this))
 {
-    setMinimumSize(200,100); //dimenisoni minime finestra
+
+    buildMatrixButton = nullptr;
+
+    setMinimumSize(200,150); //dimenisoni minime finestra
 
     //istanzia layout principale
     QVBoxLayout* mainLayout = new QVBoxLayout;
@@ -30,6 +36,10 @@ MatrixCreator::MatrixCreator(QWidget *parent)
     setLayout(mainLayout); //imposta il layout principale
 
     connect(selectDimensions, SIGNAL(released()), this, SLOT(handleSelectDimensions()));
+}
+
+MatrixCreator::~MatrixCreator() {
+    delete controller;
 }
 
 void MatrixCreator::buildDimensionsGroupBox() {
@@ -82,28 +92,43 @@ void MatrixCreator::handleSelectDimensions() {
     int rows = rowBox->value();
     int cols = colBox->value();
 
-    if (matrixBuilder != nullptr)
+    if (matrixBuilder != nullptr) {
         delete matrixBuilder;
+    }
     matrixBuilder = new QGroupBox(this);
     QGridLayout* gridMatrixLayout = new QGridLayout;
-    //QVector<QHBoxLayout*> cellsLayout;
-    QVector<QLineEdit*> cells;
     QDoubleValidator* cellValidator = new QDoubleValidator(DBL_MIN, DBL_MAX, 3, this);
 
-    if (matrixBuilder->layout() != nullptr)
-        delete matrixBuilder->layout();
+    //se non è vuoto, svuota cells
+    if (!cells.isEmpty())
+        cells.clear();
 
+    //istanzia cells
     for (int i = 0; i < rows; i++) {
-        //cellsLayout.append(new QHBoxLayout(this));
         for (int j = 0; j < cols; j++) {
-            cells.append(new QLineEdit(this));
+            cells.append(new QLineEdit(this)); //meglio KeypadInput?
             cells.last()->setValidator(cellValidator);
             gridMatrixLayout->addWidget(cells.last(),i,j);
         }
-        //gridMatrixLayout->addItem(cellsLayout[i]);
     }
+
+    //imposta il layout di matrixBuilder
     matrixBuilder->setLayout(gridMatrixLayout);
 
+    //se nullo, istanzia buildMatrixButton e lo connette
+    if (buildMatrixButton == nullptr) {
+        buildMatrixButton = new QPushButton("Crea", this);
+        connect(buildMatrixButton, SIGNAL(pressed()), this, SLOT(handleBuildMatrixButton()));
+    }
+
+    //aggiunge i QWidget al layout
     layout()->addWidget(matrixBuilder);
-    //TODO add matrixBuilder to mainLayout
+    layout()->addWidget(buildMatrixButton);
+}
+
+void MatrixCreator::handleBuildMatrixButton() {
+    controller->buildMatrix(rowBox->value(), colBox->value());
+    buildMatrixSignal(controller->getMatrix());
+
+    emit buildMatrixSignal(controller->getMatrix());
 }

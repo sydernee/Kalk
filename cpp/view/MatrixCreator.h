@@ -5,26 +5,33 @@
 #include <QBoxLayout>
 
 class Matrix;
+class QLineEdit;
 class QLabel;
 class QSpinBox;
 class QHBoxLayout;
 class QGroupBox;
 class QPushButton;
+class MatrixController; //controller
 
 class MatrixCreator : public QWidget
 {
     Q_OBJECT
 private:
-    Matrix* matrix; //matrice ottenuta dopo la costruzione
+    Matrix* matrix;                 //matrice ottenuta dopo la costruzione
     QGroupBox* dimensionsGroupBox;
     QGroupBox* matrixBuilder;
-    QLabel* selectDimensionsLabel; //label per la selezione delle dimensione
-    QSpinBox* rowBox; //box per row
-    QSpinBox* colBox; //box per col
-    QPushButton* selectDimensions; //bottone per accettare la selezione delle dimensioni
+    QLabel* selectDimensionsLabel;  //label per la selezione delle dimensione
+    QSpinBox* rowBox;               //box per row
+    QSpinBox* colBox;               //box per col
+    QPushButton* selectDimensions;  //pulsante per accettare la selezione delle dimensioni
+    QPushButton* buildMatrixButton;       //pulsante che accetta la matrice inserita
 
+
+    MatrixController* controller;
+    QVector<QLineEdit*> cells;
 public:
     explicit MatrixCreator(QWidget *parent = nullptr);
+    ~MatrixCreator();
 
     //costruisce i pulsanti per le dimensioni e restituisce il layout
     virtual void buildDimensionsGroupBox();
@@ -37,9 +44,11 @@ public:
     void setColBox();
 
 signals:
+    void buildMatrixSignal(const Matrix&);
 
 public slots:
     virtual void handleSelectDimensions(); //virtual?
+    void handleBuildMatrixButton();
 };
 
 #endif // MATRIXCREATOR_H

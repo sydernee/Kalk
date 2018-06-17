@@ -5,7 +5,7 @@
 #include <QBoxLayout>
 
 class Matrix;
-class QLineEdit;
+class KeypadInput;
 class QLabel;
 class QSpinBox;
 class QHBoxLayout;
@@ -24,11 +24,11 @@ private:
     QSpinBox* rowBox;               //box per row
     QSpinBox* colBox;               //box per col
     QPushButton* selectDimensions;  //pulsante per accettare la selezione delle dimensioni
-    QPushButton* buildMatrixButton;       //pulsante che accetta la matrice inserita
+    QPushButton* buildMatrixButton; //pulsante che accetta la matrice inserita
 
 
     MatrixController* controller;
-    QVector<QLineEdit*> cells;
+    QVector<KeypadInput*> cells;
 public:
     explicit MatrixCreator(QWidget *parent = nullptr);
     ~MatrixCreator();

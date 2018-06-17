@@ -56,3 +56,6 @@ HEADERS += \
 
 #DISTFILES += \
 #    controller/empty_folder \
+
+RESOURCES += \
+    resources.qrc

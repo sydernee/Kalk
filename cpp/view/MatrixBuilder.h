@@ -20,7 +20,7 @@ private:
     QPushButton* matrixSelection;       //pulsante di selezione
     QPushButton* backButton;            //pulsante per tornare indietro
 
-    void buildMatrixSelectionBox(); //costruisce il GroupBox per la selezione del tipo di matrice
+    void buildMatrixSelectionBox();     //costruisce il GroupBox per la selezione del tipo di matrice
 
 public:
     explicit MatrixBuilder(QWidget *parent = nullptr);

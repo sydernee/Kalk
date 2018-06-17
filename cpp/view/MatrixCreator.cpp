@@ -1,5 +1,6 @@
 #include "MatrixCreator.h"
 #include "../controller/MatrixController.h"
+#include "../view/KeypadInput.h"
 
 #include <QLabel>
 #include <QLineEdit>
@@ -97,7 +98,6 @@ void MatrixCreator::handleSelectDimensions() {
     }
     matrixBuilder = new QGroupBox(this);
     QGridLayout* gridMatrixLayout = new QGridLayout;
-    QDoubleValidator* cellValidator = new QDoubleValidator(DBL_MIN, DBL_MAX, 3, this);
 
     //se non è vuoto, svuota cells
     if (!cells.isEmpty())
@@ -106,8 +106,7 @@ void MatrixCreator::handleSelectDimensions() {
     //istanzia cells
     for (int i = 0; i < rows; i++) {
         for (int j = 0; j < cols; j++) {
-            cells.append(new QLineEdit(this)); //meglio KeypadInput?
-            cells.last()->setValidator(cellValidator);
+            cells.append(new KeypadInput(this));
             gridMatrixLayout->addWidget(cells.last(),i,j);
         }
     }
@@ -118,7 +117,7 @@ void MatrixCreator::handleSelectDimensions() {
     //se nullo, istanzia buildMatrixButton e lo connette
     if (buildMatrixButton == nullptr) {
         buildMatrixButton = new QPushButton("Crea", this);
-        connect(buildMatrixButton, SIGNAL(pressed()), this, SLOT(handleBuildMatrixButton()));
+        connect(buildMatrixButton, SIGNAL(clicked()), this, SLOT(handleBuildMatrixButton()));
     }
 
     //aggiunge i QWidget al layout

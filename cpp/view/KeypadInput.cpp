@@ -6,11 +6,10 @@ KeypadInput::KeypadInput(QWidget* parent, const QString& text, QDoubleValidator*
     : QLineEdit(text, parent),
       inputValidator(validator)
 {
-
     if (validator == nullptr)
         inputValidator = new QDoubleValidator(DBL_MIN, DBL_MAX, 50, this);
     setValidator(inputValidator);
-    setFocus();
+    //setFocus();
 }
 
 //impedisce l'inserimento di due punti di virgola

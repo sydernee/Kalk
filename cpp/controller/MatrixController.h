@@ -1,10 +1,11 @@
 #ifndef MATRIXCONTROLLER_H
 #define MATRIXCONTROLLER_H
 
-#include <initializer_list>
+#include <QVector>
 
 class Matrix;
 class MatrixCreator;
+class KeypadInput;
 
 class MatrixController
 {
@@ -15,7 +16,7 @@ public:
     MatrixController(MatrixCreator* = nullptr, Matrix* = nullptr);
     ~MatrixController();
 
-    void buildMatrix(unsigned int, unsigned int, std::initializer_list<double>);
+    void buildMatrix(QVector<KeypadInput*>, unsigned int, unsigned int);
     void buildMatrix(unsigned int, unsigned int);
     Matrix& getMatrix() const;
 

@@ -13,7 +13,8 @@ private:
     unsigned int row, col;
     std::vector<double> matrix; //1 dimensione, visto in 2 dimensioni in fase di implementazione
 
-    class Row { //classe proxy per poter utilizzare l'operatore [][]
+    //classe proxy per poter utilizzare l'operatore [][]
+    class Row {
         friend class Matrix;
 
     private:
@@ -25,7 +26,8 @@ private:
         double& operator[](unsigned int);
     };
 
-    class CRow { //versione costante di Row
+    //versione costante di Row
+    class CRow {
         friend class Matrix;
 
     private:

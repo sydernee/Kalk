@@ -9,7 +9,7 @@
 Widget::Widget(QWidget *parent)
     : QWidget(parent),
       keypad(new Keypad(this)),
-      createMatrix(new QPushButton("Crea una matrice", this))
+      createMatrix(new QPushButton("MatrixKalk", this))
 {
     setWindowTitle("Kalk"); //imposta il titolo della finestra
     setMinimumSize(150,75); //imposta le dimensioni minime della finestra
@@ -42,7 +42,7 @@ void Widget::handleAssignmentButton() {}
 
 void Widget::handleCreateMatrixButton() {
     QWidget* matrixBuilder = new MatrixBuilder;
-    matrixBuilder->setMinimumSize(100,50);
+    matrixBuilder->setMinimumSize(300,200);
     matrixBuilder->show();
     //setDisabled(true);
 }

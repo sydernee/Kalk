@@ -13,8 +13,8 @@ class MatrixBuilder : public QWidget
 {
     Q_OBJECT
 private:
-    QStackedWidget* stackedWidget;
-    QVector<QWidget*> pages;
+    QStackedWidget* stackedWidget;      //contiene uno Stack di QWidget switchabili
+    QVector<QWidget*> pages;            //QWidgets "paralleli"
     QStringListModel* matrixListModel;  //lista per matrixSelectionBox
     QComboBox* matrixSelectionBox;      //selezione a tendina della matrice
     QPushButton* matrixSelection;       //pulsante di selezione

@@ -11,8 +11,8 @@ MatrixBuilder::MatrixBuilder(QWidget *parent)
       matrixSelection(new QPushButton("Scegli", stackedWidget)),
       backButton(new QPushButton("Torna indietro", this))
 {
-    setWindowTitle("Crea una matrice"); //imposta il titolo della finestra
-    setMinimumSize(150,75);             //imposta le dimensioni minime della finestra
+    setWindowTitle("Scegli il tipo di matrice"); //imposta il titolo della finestra
+    //setMinimumSize(150,75);             //imposta le dimensioni minime della finestra
     setWindowModality(Qt::ApplicationModal); //impedisce l'input su altre finestre
 
     pages.append(new QWidget(this));        //pages[0]
@@ -43,6 +43,7 @@ MatrixBuilder::MatrixBuilder(QWidget *parent)
 
     connect(backButton, SIGNAL(released()), this, SLOT(handleBackButton()));
     connect(matrixSelection, SIGNAL(released()), this, SLOT(handleMatrixSelection()));
+
 }
 
 void MatrixBuilder::buildMatrixSelectionBox() {
@@ -63,14 +64,21 @@ MatrixBuilder::~MatrixBuilder() {}
 void MatrixBuilder::handleBackButton() {
     if (stackedWidget->currentWidget() == pages[0])
         close();
-    else //pages[1]
-        stackedWidget->setCurrentWidget(pages[0]);
+    else { //pages[1]
+        //resetta il QWidget pages[1]
+        delete pages[1];
+        pages[1] = new MatrixCreator(this);
+        stackedWidget->addWidget(pages[1]);
+        stackedWidget->setCurrentWidget(pages[0]); //imposta pages[0] come attivo
+    }
 }
 
 void MatrixBuilder::handleMatrixSelection() {
     QString choice = matrixSelectionBox->currentText();
     stackedWidget->setCurrentWidget(pages[1]);
+    setMinimumSize(500,300);
+    setWindowTitle("MatrixKalk");
     if (choice == "Matrice Quadrata") {
-        //pages[1] è SqareMatrixCreator*
+        //pages[1] è SquareMatrixCreator*
     }
 }

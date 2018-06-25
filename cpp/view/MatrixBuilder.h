@@ -20,6 +20,12 @@ private:
     QPushButton* matrixSelection;       //pulsante di selezione
     QPushButton* backButton;            //pulsante per tornare indietro
 
+    //costanti per le dimensioni della finestra
+    const int hWindowSize = 200;
+    const int wWindowSize = 300;
+    const int hCreatorWindowSize = 300;
+    const int wCreatorWindowSize = 500;
+
     void buildMatrixSelectionBox();     //costruisce il GroupBox per la selezione del tipo di matrice
 
 public:

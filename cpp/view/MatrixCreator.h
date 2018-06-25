@@ -13,6 +13,14 @@ class QGroupBox;
 class QPushButton;
 class MatrixController; //controller
 
+
+enum Operation {
+    SUM,
+    SUBTRACTION,
+    SCALAR_MULTIPLICATION,
+    NON_SCALAR_MULTIPLICATION
+};
+
 class MatrixCreator : public QWidget
 {
     Q_OBJECT
@@ -24,13 +32,16 @@ private:
     QGroupBox* operationsSet;       //QGroupBox per il set di operazioni
 
     QLabel* selectDimensionsLabel;  //label per la selezione delle dimensione
+    QLabel* selectSecondMatrixLabel;//label per l'istanziazione della seconda matrice
     QSpinBox* rowBox;               //box per row
     QSpinBox* colBox;               //box per col
     QPushButton* selectDimensions;  //pulsante per accettare la selezione delle dimensioni
-//    QPushButton* buildMatrixButton; //pulsante che accetta la matrice inserita
+    QPushButton* obtainResult;      //pulsante per =
 
-    MatrixController* controller;
-    QVector<KeypadInput*> cells;
+    MatrixController* controller;   //controller Matrix - MatrixCreator
+    QVector<KeypadInput*> cells;    //vettore che contiene le celle di matrixBuilder
+
+    Operation operationSelected;
 public:
     explicit MatrixCreator(QWidget *parent = nullptr);
     ~MatrixCreator();
@@ -41,14 +52,18 @@ public:
     //costruisce il set di pulsanti per le operazioni
     virtual void buildOperationsSet();
 
-    //set box per le dimensioni
+    //set dei QSpinBox per le dimensioni
     //0,2,3 parametri (min,max,default)
     void setRowBox(unsigned int, unsigned int, unsigned int = 2);
     void setRowBox();
     void setColBox(unsigned int, unsigned int, unsigned int = 2);
     void setColBox();
 
-    void setEditableCells(bool = true); //cells editabile?
+    void setOperationSelected(Operation);
+    Operation getOperationSelected() const;
+
+    void clearCells(); //cells[i]->setText("") per ogni i in 0..n-1
+
 
 signals:
     void buildMatrixSignal(const Matrix&);
@@ -58,6 +73,7 @@ public slots:
 
 private slots:
 //    void handleBuildMatrixButton();
+    void handleObtainResult();
 
     //operations slots
     void sumClicked();

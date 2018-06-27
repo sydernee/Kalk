@@ -33,8 +33,15 @@ public:
     static void displayMatrix(const Matrix& mat);
 
     //operations
+
     static Matrix sum(const Matrix&, const Matrix&);
     Matrix sum() const;
+
+    static Matrix subtract(const Matrix&, const Matrix&);
+    Matrix subtract() const;
+
+    //static
+    Matrix scalarMultiply() const;
 };
 
 #endif // MATRIXCONTROLLER_H

@@ -97,10 +97,24 @@ void MatrixController::displayMatrix(const Matrix& mat) {
     result->show();
 }
 
+//operations
+
 Matrix MatrixController::sum() const {
     return (*matrix1) + (*matrix2);
 }
 
 Matrix MatrixController::sum(const Matrix& m1, const Matrix& m2) {
     return m1 + m2;
+}
+
+Matrix MatrixController::subtract() const {
+    return (*matrix1) - (*matrix2);
+}
+
+Matrix MatrixController::subtract(const Matrix& m1, const Matrix& m2) {
+    return m1 - m2;
+}
+
+Matrix MatrixController::scalarMultiply() const {
+    return (*matrix1) * (*matrix2);
 }

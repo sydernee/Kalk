@@ -45,4 +45,5 @@ void Widget::handleCreateMatrixButton() {
     matrixBuilder->setMinimumSize(300,200);
     matrixBuilder->show();
     //setDisabled(true);
+    close();
 }

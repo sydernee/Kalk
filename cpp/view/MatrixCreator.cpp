@@ -25,6 +25,7 @@ MatrixCreator::MatrixCreator(QWidget *parent)
       rowBox(nullptr),
       colBox(nullptr),
       selectDimensions(nullptr),
+      selectSecondMatrixDimensions(nullptr),
       obtainResult(nullptr),
 
       controller(new MatrixController(this))
@@ -34,7 +35,7 @@ MatrixCreator::MatrixCreator(QWidget *parent)
     //istanzia layout principale
     QVBoxLayout* mainLayout = new QVBoxLayout;
 
-    setLayout(mainLayout); //imposta il layout principale
+    setLayout(mainLayout);      //imposta il layout principale
 
     buildDimensionsGroupBox();  //costruisce dimensionsGroupBox
 
@@ -52,6 +53,7 @@ MatrixCreator::~MatrixCreator() {
 void MatrixCreator::buildDimensionsGroupBox() {
     dimensionsGroupBox = new QGroupBox(this);
     selectDimensions = new QPushButton("Seleziona", dimensionsGroupBox);
+    selectSecondMatrixDimensions = new QPushButton("Seleziona", matrixBuilder);
     selectDimensionsLabel = new QLabel("Seleziona le dimensioni", dimensionsGroupBox);
     setRowBox();
     setColBox();
@@ -62,9 +64,14 @@ void MatrixCreator::buildDimensionsGroupBox() {
     layout->addWidget(rowBox);
     layout->addWidget(colBox);
     layout->addWidget(selectDimensions);
+    layout->addWidget(selectSecondMatrixDimensions);
     dimensionsGroupBox->setLayout(layout);
 
-    connect(selectDimensions, SIGNAL(released()), this, SLOT(handleSelectDimensions()));
+    //serve solo per alcune operazioni
+    selectSecondMatrixDimensions->hide();
+
+    connect(selectDimensions, SIGNAL(clicked()), this, SLOT(handleSelectDimensions()));
+    connect(selectSecondMatrixDimensions, SIGNAL(clicked()), this, SLOT(handleSelectSecondMatrixDimensions()));
 }
 
 //
@@ -73,7 +80,7 @@ void MatrixCreator::buildOperationsSet() {
         delete operationsSet;
 
     operationsSet = new QGroupBox(this); //istanziazione operationsSet
-    QVBoxLayout* vLayout = new QVBoxLayout;
+//    QVBoxLayout* vLayout = new QVBoxLayout;
     QGridLayout* gridOperationsLayout = new QGridLayout; //layout per operationsSet
 
     //istanziazione, connessioni e inserimento nel layout pulsanti per le operazioni
@@ -181,13 +188,11 @@ void MatrixCreator::resetDimensionsGroupBox() {
     colBox->setEnabled(true);
     dimensionsGroupBox->show(); //mostra dimensionsGroupBox
     selectDimensions->show();   //mostra selectDimensions
+    selectSecondMatrixDimensions->hide(); //nasconde il pulsante
     matrixBuilder->hide();      //nasconde matrixBuilder
 }
 
-//SLOTS
-
-//selectDimensions button handler
-void MatrixCreator::handleSelectDimensions() {
+void MatrixCreator::initializeMatrixBuilder() {
     if (matrixBuilder != nullptr) {
         delete matrixBuilder;
     }
@@ -213,7 +218,6 @@ void MatrixCreator::handleSelectDimensions() {
             cells.append(new KeypadInput(matrixBuilder));
 
             //text() come placeholder
-            //da verificare se viene considerato effettivamente come text() o meno
             cells.last()->setPlaceholderText("0");
 
             gridMatrixLayout->addWidget(cells.last(),i,j);
@@ -227,6 +231,13 @@ void MatrixCreator::handleSelectDimensions() {
 
     //aggiunge i QWidget al layout principale
     layout()->addWidget(matrixBuilder);
+}
+
+//SLOTS
+
+//selectDimensions button handler
+void MatrixCreator::handleSelectDimensions() {
+    initializeMatrixBuilder();
 
     //se l'operation set non è visibile, lo mostra
     //in ogni caso lo rimette in fondo nel layout
@@ -247,6 +258,19 @@ void MatrixCreator::handleSelectDimensions() {
     selectDimensions->hide();
 }
 
+void MatrixCreator::handleSelectSecondMatrixDimensions() {
+    initializeMatrixBuilder();
+    obtainResult->show();
+    layout()->removeWidget(obtainResult);
+    layout()->addWidget(obtainResult);
+
+    //disattiva i pulsanti di dimensionsGroupBox
+    selectDimensionsLabel->setText("Dimensioni");
+    rowBox->setEnabled(false);
+    colBox->setEnabled(false);
+    selectSecondMatrixDimensions->hide();
+}
+
 //obtainResult button handler
 void MatrixCreator::handleObtainResult() {
     //istanzia l'operando di destra
@@ -258,7 +282,11 @@ void MatrixCreator::handleObtainResult() {
     }
 
     else if (getOperationSelected() == SUBTRACTION) {
+        MatrixController::displayMatrix(controller->subtract());
+    }
 
+    else if (getOperationSelected() == SCALAR_MULTIPLICATION) {
+        MatrixController::displayMatrix(controller->scalarMultiply());
     }
 
     resetDimensionsGroupBox();
@@ -276,6 +304,7 @@ void MatrixCreator::sumClicked() { //n x m + n x m
     obtainResult->show();
     selectSecondMatrixLabel->show();
 
+    //riposiziona in fondo l'operando
     layout()->removeWidget(obtainResult);
     layout()->addWidget(obtainResult);
 
@@ -283,18 +312,64 @@ void MatrixCreator::sumClicked() { //n x m + n x m
 }
 
 void MatrixCreator::subtractionClicked() { //n x m + n x m
+    //Istanzia l'operando di sinistra
+    //WARN: codice ripetuto
+    controller->buildMatrix1(cells, rowBox->value(), colBox->value());
 
+    dimensionsGroupBox->hide();
+    operationsSet->hide();
+    obtainResult->show();
+    selectSecondMatrixLabel->show();
+
+    layout()->removeWidget(obtainResult);
+    layout()->addWidget(obtainResult);
+
+    setOperationSelected(SUBTRACTION);
 }
 
 void MatrixCreator::scalarMultiplicationClicked() {
 
     //possibile prodotto solo tra n x m + m x l
-//    rowBox->setValue(colBox->value());
-//    colBox->setEnabled(true); //riattiva colBox per l'input
 
+    controller->buildMatrix1(cells, rowBox->value(), colBox->value()); //costruisce l'operando di sx
+
+    operationsSet->hide();
+    obtainResult->hide();
+    rowBox->setValue(colBox->value()); //il prodotto scalare si può fare tra i x j, j x k
+    colBox->setValue(2);
+
+    resetDimensionsGroupBox(); //reset di dimensionsGroupBox
+    rowBox->setEnabled(false); //row dev'essere uguale al col della prima matrice
+    selectDimensions->hide();
+    selectSecondMatrixDimensions->show();
+
+    setOperationSelected(SCALAR_MULTIPLICATION);
 }
 
-void MatrixCreator::nonScalarMultiplicationClicked() {}
+void MatrixCreator::nonScalarMultiplicationClicked() {
+    QDialog* dialog = new QDialog;
+    dialog->setWindowTitle("Selezione scalare");
+
+    QVBoxLayout* dialogLayout = new QVBoxLayout;
+    dialogLayout->addWidget(new QLabel("Immetti il valore da moltiplicare", dialog));
+
+    QHBoxLayout* l = new QHBoxLayout;
+    l->addWidget(new KeypadInput(dialog));
+
+    QPushButton* button = new QPushButton("Ok", dialog);
+    l->addWidget(button);
+
+    dialogLayout->addLayout(l);
+    dialog->setLayout(dialogLayout);
+
+    dialog->show();
+
+    setOperationSelected(NON_SCALAR_MULTIPLICATION);
+
+//    connect(button, SIGNAL(clicked()), this, SLOT(nonScalarSelected()));
+//    connect(dialog, SIGNAL(nonScalarInputValue(int)), this, SLOT(nonScalarInputValue(int)));
+
+}
 
 void MatrixCreator::transposedClicked() {}
 
@@ -303,3 +378,4 @@ void MatrixCreator::swapRowsClicked() {}
 void MatrixCreator::swapColsClicked() {}
 
 void MatrixCreator::substituteRowClicked() {}
+

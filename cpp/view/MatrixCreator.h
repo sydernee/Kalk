@@ -36,6 +36,7 @@ private:
     QSpinBox* rowBox;               //box per row
     QSpinBox* colBox;               //box per col
     QPushButton* selectDimensions;  //pulsante per accettare la selezione delle dimensioni
+    QPushButton* selectSecondMatrixDimensions; //pulsante per la selezione della seconda matrice
     QPushButton* obtainResult;      //pulsante per =
 
     MatrixController* controller;   //controller Matrix - MatrixCreator
@@ -67,13 +68,17 @@ public:
 
     //resetta dimensionsGroupBox
     virtual void resetDimensionsGroupBox();
+
+    //resetta e inizializza matrixBuilder
+    void initializeMatrixBuilder();
+
 signals:
-    void buildMatrixSignal(const Matrix&);
+//    void buildMatrixSignal(const Matrix&);
 
 public slots:
     virtual void handleSelectDimensions(); //virtual?
+    virtual void handleSelectSecondMatrixDimensions();
 
-private slots:
 //    void handleBuildMatrixButton();
     void handleObtainResult();
 

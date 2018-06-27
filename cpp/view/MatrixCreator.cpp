@@ -34,12 +34,14 @@ MatrixCreator::MatrixCreator(QWidget *parent)
     //istanzia layout principale
     QVBoxLayout* mainLayout = new QVBoxLayout;
 
+    setLayout(mainLayout); //imposta il layout principale
+
     buildDimensionsGroupBox();  //costruisce dimensionsGroupBox
+
+    mainLayout->addWidget(dimensionsGroupBox); //aggiunge al layout dimensionsGroupBox
 
     buildOperationsSet();       //costruisce il layout per operationsSet
 
-    mainLayout->addWidget(dimensionsGroupBox); //aggiunge al layout dimensionsGroupBox
-    setLayout(mainLayout); //imposta il layout principale
 }
 
 MatrixCreator::~MatrixCreator() {
@@ -109,14 +111,17 @@ void MatrixCreator::buildOperationsSet() {
 
     //pulsante per =
     //QSpacerItem?
-    obtainResult = new QPushButton("=", operationsSet);
+    obtainResult = new QPushButton("=", this);
     connect(obtainResult, SIGNAL(clicked()), this, SLOT(handleObtainResult()));
     obtainResult->hide();
 
+    operationsSet->setLayout(gridOperationsLayout); //imposta il layout di operationsSet
+
     //impostazione del layout di operationsSet
-    vLayout->addLayout(gridOperationsLayout);
-    vLayout->addWidget(obtainResult);
-    operationsSet->setLayout(vLayout); //imposta il layout di operationsSet
+//    vLayout->addWidget(operationsSet);
+//    vLayout->addWidget(obtainResult);
+    layout()->addWidget(operationsSet);
+    layout()->addWidget(obtainResult);
     operationsSet->hide(); //nasconde operationsSet
 }
 
@@ -157,10 +162,26 @@ Operation MatrixCreator::getOperationSelected() const {
 }
 
 void MatrixCreator::clearCells() {
-    foreach (KeypadInput* input, cells) {
-        delete input;
+    foreach (KeypadInput* input, cells) {   //ogni elemento di cells
+        delete input;                       //libera la memoria allocata della cella
     }
-    cells.clear();
+    cells.clear();                          //svuota cells
+}
+
+void MatrixCreator::resetCells() {
+    foreach (KeypadInput* input, cells) {   //ogni elemento di cells
+        input->clear();                     //input->setText("")
+    }
+}
+
+void MatrixCreator::resetDimensionsGroupBox() {
+    clearCells();
+    selectDimensionsLabel->setText("Seleziona le dimensioni");
+    rowBox->setEnabled(true);   //riattiva gli QSpinBox per le dimensioni
+    colBox->setEnabled(true);
+    dimensionsGroupBox->show(); //mostra dimensionsGroupBox
+    selectDimensions->show();   //mostra selectDimensions
+    matrixBuilder->hide();      //nasconde matrixBuilder
 }
 
 //SLOTS
@@ -220,9 +241,10 @@ void MatrixCreator::handleSelectDimensions() {
     }
 
     //disattiva i pulsanti di dimensionsGroupBox
+    selectDimensionsLabel->setText("Dimensioni");
     rowBox->setEnabled(false);
     colBox->setEnabled(false);
-    selectDimensions->setEnabled(false);
+    selectDimensions->hide();
 }
 
 //obtainResult button handler
@@ -234,6 +256,14 @@ void MatrixCreator::handleObtainResult() {
     if (getOperationSelected() == SUM) {
         MatrixController::displayMatrix(controller->sum());
     }
+
+    else if (getOperationSelected() == SUBTRACTION) {
+
+    }
+
+    resetDimensionsGroupBox();
+    obtainResult->hide();
+    selectSecondMatrixLabel->hide();
 }
 
 //sum button handler
@@ -241,23 +271,20 @@ void MatrixCreator::sumClicked() { //n x m + n x m
     //Istanzia l'operando di sinistra
     controller->buildMatrix1(cells, rowBox->value(), colBox->value());
 
-    //resetta il il testo delle celle di cells
-
     dimensionsGroupBox->hide();
-
-    auto i = operationsSet->children();
-    for (auto it = i.begin(); it < i.end(); it++) {
-        if (qobject_cast<QPushButton*>(*it)){
-            static_cast<QPushButton*>(*it)->hide();
-        }
-    }
+    operationsSet->hide();
     obtainResult->show();
     selectSecondMatrixLabel->show();
+
+    layout()->removeWidget(obtainResult);
+    layout()->addWidget(obtainResult);
 
     setOperationSelected(SUM);
 }
 
-void MatrixCreator::subtractionClicked() {}
+void MatrixCreator::subtractionClicked() { //n x m + n x m
+
+}
 
 void MatrixCreator::scalarMultiplicationClicked() {
 

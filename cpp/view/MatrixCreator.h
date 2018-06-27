@@ -62,9 +62,11 @@ public:
     void setOperationSelected(Operation);
     Operation getOperationSelected() const;
 
-    void clearCells(); //cells[i]->setText("") per ogni i in 0..n-1
+    void clearCells(); //delete cells[i] per ogni i in 0..n-1 e svuota cells
+    void resetCells(); //cells[i]->setText("") per ogni i in 0..n-1
 
-
+    //resetta dimensionsGroupBox
+    virtual void resetDimensionsGroupBox();
 signals:
     void buildMatrixSignal(const Matrix&);
 

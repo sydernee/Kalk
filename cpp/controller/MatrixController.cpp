@@ -13,7 +13,8 @@ MatrixController::MatrixController(MatrixCreator* _view, Matrix* _matrix1, Matri
 {}
 
 MatrixController::~MatrixController() {
-    //delete matrix;
+    delete matrix1;
+    delete matrix2;
 }
 
 void MatrixController::buildMatrix1(QVector<KeypadInput*> cells, unsigned int rows, unsigned int cols) {
@@ -84,6 +85,7 @@ void MatrixController::displayMatrix(const Matrix& mat) {
     QGridLayout* resultLayout = new QGridLayout;
     QVector<QLabel*> matrixOutput;
     QWidget* result = new QWidget;
+    result->setMinimumSize(50,50);
 
     for (unsigned int i = 0; i < rows; i++)
         for (unsigned int j = 0; j < cols; j++) {

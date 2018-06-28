@@ -82,7 +82,7 @@ void MatrixController::displayMatrix(const Matrix& mat) {
     unsigned int rows = mat.rowCount();
     unsigned int cols = mat.colCount();
 
-    QGridLayout* resultLayout = new QGridLayout;
+    QGridLayout* resultLayout = new QGridLayout; //output su layout a griglia per la matrice
     QVector<QLabel*> matrixOutput;
     QWidget* result = new QWidget;
     result->setMinimumSize(50,50);
@@ -100,6 +100,8 @@ void MatrixController::displayMatrix(const Matrix& mat) {
 //operations
 
 Matrix MatrixController::sum() const {
+    // PRE: matrix1 e matrix2 != nullptr
+    //try
     return (*matrix1) + (*matrix2);
 }
 
@@ -108,6 +110,7 @@ Matrix MatrixController::sum(const Matrix& m1, const Matrix& m2) {
 }
 
 Matrix MatrixController::subtract() const {
+    // PRE: matrix1 e matrix2 != nullptr
     return (*matrix1) - (*matrix2);
 }
 
@@ -116,9 +119,35 @@ Matrix MatrixController::subtract(const Matrix& m1, const Matrix& m2) {
 }
 
 Matrix MatrixController::scalarMultiply() const {
+    // PRE: matrix1 e matrix2 != nullptr
     return (*matrix1) * (*matrix2);
 }
 
 Matrix MatrixController::nonScalarMultiply(double value) const {
+    // PRE: matrix1 != nullptr
     return (*matrix1) * value;
+}
+
+
+Matrix MatrixController::transposed() const {
+    // PRE: matrix1 != nullptr
+    return matrix1->transposed();
+}
+
+Matrix MatrixController::swapRows(unsigned int rowA, unsigned int rowB) {
+    // PRE: matrix1 != nullptr
+    matrix1->swapRows(rowA, rowB);
+    return *matrix1;
+}
+
+Matrix MatrixController::swapCols(unsigned int colA, unsigned int colB) {
+    // PRE: matrix1 != nullptr
+    matrix1->swapCols(colA, colB);
+    return *matrix1;
+}
+
+Matrix MatrixController::substituteRow(unsigned int destRow, unsigned int sourceRow, double factor) {
+    //PRE; matrix1 != nullptr
+    matrix1->substituteRow(destRow, sourceRow, factor);
+    return *matrix1;
 }

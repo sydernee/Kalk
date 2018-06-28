@@ -26,8 +26,12 @@ public:
         SUM,
         SUBTRACTION,
         SCALAR_MULTIPLICATION,
-        NON_SCALAR_MULTIPLICATION
+        NON_SCALAR_MULTIPLICATION,
+        SWAP_ROWS,
+        SWAP_COLS,
+        SUBSTITUTE_ROW
     };
+
 private:
 
     //set di operazioni
@@ -43,14 +47,25 @@ private:
     QPushButton* selectSecondMatrixDimensions; //pulsante per la selezione della seconda matrice
     QPushButton* obtainResult;      //pulsante per =
 
+    //nonScalarMultiplication fields
     QDialog* nonScalarMulDialog;    //QDialog per ottenere l'input per la moltiplicazione non scalare
     KeypadInput* nonScalarMulInput; //QLineEdit che contiene il double da moltiplicare alla Matrice con la moltiplicazione non scalare
 
+    //swapRows/Cols fields
+    QDialog* swapDialog;            //QDialog per l'input delle operazioni di swap
+    QSpinBox* swapFieldA;           //field A delle operazioni di swap
+    QSpinBox* swapFieldB;           //field B delle operazioni di swap
+
+    //substituteRow fields
+    QDialog* substituteRowDialog; //QDialog per substituteRow
+    QSpinBox* subRowA;
+    QSpinBox* subRowB;
+    KeypadInput* subRowDouble;
 
     MatrixController* controller;   //controller Matrix - MatrixCreator
     QVector<KeypadInput*> cells;    //vettore che contiene le celle di matrixBuilder
 
-    MatrixCreator::Operation operationSelected;
+    Operation operationSelected;
 public:
     explicit MatrixCreator(QWidget *parent = nullptr);
     ~MatrixCreator();
@@ -67,9 +82,10 @@ public:
     void setRowBox();
     void setColBox(unsigned int, unsigned int, unsigned int = 2);
     void setColBox();
+    static void setSpinBoxLimits(QSpinBox*, unsigned int, unsigned int, unsigned int = 0);
 
     void setOperationSelected(MatrixCreator::Operation);
-    MatrixCreator::Operation getOperationSelected() const;
+    Operation getOperationSelected() const;
 
     void clearCells(); //delete cells[i] per ogni i in 0..n-1 e svuota cells
     void resetCells(); //cells[i]->setText("") per ogni i in 0..n-1

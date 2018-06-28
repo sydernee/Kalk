@@ -14,6 +14,7 @@
 #include <QPushButton>
 #include <cfloat>
 
+
 //constructor
 MatrixCreator::MatrixCreator(QWidget *parent)
     : QWidget(parent),
@@ -31,6 +32,15 @@ MatrixCreator::MatrixCreator(QWidget *parent)
 
       nonScalarMulDialog(nullptr),
       nonScalarMulInput(nullptr),
+
+      swapDialog(nullptr),
+      swapFieldA(nullptr),
+      swapFieldB(nullptr),
+
+      substituteRowDialog(nullptr),
+      subRowA(nullptr),
+      subRowB(nullptr),
+      subRowDouble(nullptr),
 
       controller(new MatrixController(this))
 {
@@ -162,6 +172,14 @@ void MatrixCreator::setColBox(unsigned int min, unsigned int max, unsigned int _
 
 void MatrixCreator::setColBox() {
     setColBox(1,10);
+}
+
+//versione statica di setQSpinBox
+void MatrixCreator::setSpinBoxLimits(QSpinBox* box, unsigned int min, unsigned int max, unsigned int _default) {
+    box->setMinimum(min);       //imposta il valore minimo
+    box->setMaximum(max);       //imposta il valore massimo
+    box->setSingleStep(1);      //imposta lo step
+    box->setValue(_default);    //imposta il valore di default
 }
 
 void MatrixCreator::setOperationSelected(MatrixCreator::Operation op) {
@@ -299,6 +317,25 @@ void MatrixCreator::handleObtainResult() {
         operationsSet->hide();
     }
 
+    else if (getOperationSelected() == MatrixCreator::SWAP_ROWS) {
+        MatrixController::displayMatrix(controller->swapRows(swapFieldA->value(), swapFieldB->value()));
+        swapDialog->close();
+        operationsSet->hide();
+    }
+
+    else if (getOperationSelected() == MatrixCreator::SWAP_COLS) {
+        MatrixController::displayMatrix(controller->swapCols(swapFieldA->value(), swapFieldB->value()));
+        swapDialog->close();
+        operationsSet->hide();
+    }
+
+    else if (getOperationSelected() == MatrixCreator::SUBSTITUTE_ROW) {
+        MatrixController::displayMatrix(controller->substituteRow(subRowA->value(), subRowB->value(), subRowDouble->text().toDouble()));
+        substituteRowDialog->close();
+        operationsSet->hide();
+    }
+
+    //reset dell'interfaccia
     resetDimensionsGroupBox();
     obtainResult->hide();
     selectSecondMatrixLabel->hide();
@@ -319,7 +356,7 @@ void MatrixCreator::sumClicked() { //n x m + n x m
     layout()->removeWidget(obtainResult);
     layout()->addWidget(obtainResult);
 
-    setOperationSelected(SUM);
+    setOperationSelected(MatrixCreator::SUM);
 }
 
 void MatrixCreator::subtractionClicked() { //n x m + n x m
@@ -335,11 +372,10 @@ void MatrixCreator::subtractionClicked() { //n x m + n x m
     layout()->removeWidget(obtainResult);
     layout()->addWidget(obtainResult);
 
-    setOperationSelected(SUBTRACTION);
+    setOperationSelected(MatrixCreator::SUBTRACTION);
 }
 
 void MatrixCreator::scalarMultiplicationClicked() {
-
     //possibile prodotto solo tra n x m + m x l
 
     controller->buildMatrix1(cells, rowBox->value(), colBox->value()); //costruisce l'operando di sx
@@ -354,7 +390,7 @@ void MatrixCreator::scalarMultiplicationClicked() {
     selectDimensions->hide();
     selectSecondMatrixDimensions->show();
 
-    setOperationSelected(SCALAR_MULTIPLICATION);
+    setOperationSelected(MatrixCreator::SCALAR_MULTIPLICATION);
 }
 
 void MatrixCreator::nonScalarMultiplicationClicked() {
@@ -377,18 +413,136 @@ void MatrixCreator::nonScalarMultiplicationClicked() {
     dialogLayout->addLayout(l);
     nonScalarMulDialog->setLayout(dialogLayout);
 
-    nonScalarMulDialog->show();
+    nonScalarMulDialog->show(); //mostra nonScalarMulDialog
 
-    setOperationSelected(NON_SCALAR_MULTIPLICATION);
+    setOperationSelected(MatrixCreator::NON_SCALAR_MULTIPLICATION);
     connect(button, SIGNAL(clicked()), this, SLOT(handleObtainResult()));
-
 }
 
-void MatrixCreator::transposedClicked() {}
+void MatrixCreator::transposedClicked() {
+    controller->buildMatrix1(cells, rowBox->value(), colBox->value());  //istanzia matrix1
+    MatrixController::displayMatrix(controller->transposed());          //display di matrix1->transposed()
 
-void MatrixCreator::swapRowsClicked() {}
+    //reset dell'interfaccia
+    resetDimensionsGroupBox();
+    obtainResult->hide();
+    selectSecondMatrixLabel->hide();
+}
 
-void MatrixCreator::swapColsClicked() {}
+void MatrixCreator::swapRowsClicked() {
+    //istanzia l'operando
+    controller->buildMatrix1(cells, rowBox->value(), colBox->value());
 
-void MatrixCreator::substituteRowClicked() {}
+    swapDialog = new QDialog; //istanzia swapDialog
+    swapDialog->setWindowTitle("swapRows"); //titolo finestra
+    swapDialog->setWindowModality(Qt::ApplicationModal); //impedisce l'input su altre finestre
 
+    QVBoxLayout* dialogLayout = new QVBoxLayout;
+    dialogLayout->addWidget(new QLabel("Seleziona le righe da scambiare", swapDialog));
+
+    QHBoxLayout* l = new QHBoxLayout;
+
+    //istanzia i QSpinBox per le righe da scambiare e imposta i limiti
+    swapFieldA = new QSpinBox(swapDialog);
+    swapFieldB = new QSpinBox(swapDialog);
+    setSpinBoxLimits(swapFieldA, 0, rowBox->value()-1);
+    setSpinBoxLimits(swapFieldB, 0, rowBox->value()-1);
+
+    //aggiunge gli SpinBox al layout l
+    l->addWidget(swapFieldA);
+    l->addWidget(swapFieldB);
+
+    //istanzia e aggiunge button a l
+    QPushButton* button = new QPushButton("Ok", swapDialog);
+    l->addWidget(button);
+
+    //imposta il layout di swapDialog
+    dialogLayout->addLayout(l);
+    swapDialog->setLayout(dialogLayout);
+    swapDialog->show(); //mostra swapDialog
+
+    setOperationSelected(MatrixCreator::SWAP_ROWS);
+    connect(button, SIGNAL(clicked()), this, SLOT(handleObtainResult()));
+}
+
+void MatrixCreator::swapColsClicked() {
+    //istanzia l'operando
+    controller->buildMatrix1(cells, rowBox->value(), colBox->value());
+
+    swapDialog = new QDialog;   //istanzia swapDialog
+    swapDialog->setWindowTitle("swapCols"); //titolo finestra
+    swapDialog->setWindowModality(Qt::ApplicationModal); //impedisce l'input su altre finestre
+
+    QVBoxLayout* dialogLayout = new QVBoxLayout;
+    dialogLayout->addWidget(new QLabel("Seleziona le colonne da scambiare", swapDialog));
+
+    QHBoxLayout* l = new QHBoxLayout;
+
+    //istanzia i QSpinBox per le colonne da scambiare e imposta i limiti
+    swapFieldA = new QSpinBox(swapDialog);
+    swapFieldB = new QSpinBox(swapDialog);
+    setSpinBoxLimits(swapFieldA, 0, colBox->value()-1);
+    setSpinBoxLimits(swapFieldB, 0, colBox->value()-1);
+
+    //aggiunge gli SpinBox al layout l
+    l->addWidget(swapFieldA);
+    l->addWidget(swapFieldB);
+
+    //istanzia e aggiunge button a l
+    QPushButton* button = new QPushButton("Ok", swapDialog);
+    l->addWidget(button);
+
+    //imposta il layout di swapDialog
+    dialogLayout->addLayout(l);
+    swapDialog->setLayout(dialogLayout);
+    swapDialog->show(); //mostra swapDialog
+
+    //imposta il tipo di operazione e connette button
+    setOperationSelected(MatrixCreator::SWAP_COLS);
+    connect(button, SIGNAL(clicked()), this, SLOT(handleObtainResult()));
+}
+
+void MatrixCreator::substituteRowClicked() {
+    //istanzia l'operando
+    controller->buildMatrix1(cells, rowBox->value(), colBox->value());
+
+    substituteRowDialog = new QDialog;  //istanzia substituteRowDialog
+    substituteRowDialog->setWindowTitle("substituteRow"); //titolo finestra
+    substituteRowDialog->setWindowModality(Qt::ApplicationModal); //impedisce l'input su altre finestre
+
+    QVBoxLayout* dialogLayout = new QVBoxLayout;
+//    dialogLayout->addWidget(new QLabel("Inserisci i dati", substituteRowDialog));
+
+    QGridLayout* l = new QGridLayout;
+
+    //istanzia i field per le operazioni di input
+    subRowA = new QSpinBox(substituteRowDialog);
+    subRowB = new QSpinBox(substituteRowDialog);
+    subRowDouble = new KeypadInput(substituteRowDialog);
+
+    //imposta i limiti dei due QSpinBox
+    setSpinBoxLimits(subRowA, 0, rowBox->value()-1);
+    setSpinBoxLimits(subRowB, 0, rowBox->value()-1);
+
+    //aggiunge i campi di input con la relativa label
+    l->addWidget(new QLabel("Immetti la riga A iniziale", substituteRowDialog), 0, 0);
+    l->addWidget(subRowA, 0, 1);
+    l->addWidget(new QLabel("Immetti la riga B da sommare alla riga A", substituteRowDialog), 1, 0);
+    l->addWidget(subRowB, 1, 1);
+    l->addWidget(new QLabel("Valore da moltiplicare alla riga B", substituteRowDialog), 2, 0);
+    l->addWidget(subRowDouble, 2, 1);
+
+    dialogLayout->addLayout(l); //aggiunge l a dialogLayout
+
+    //istanzia e aggiunge button a l
+    QPushButton* button = new QPushButton("Ok", substituteRowDialog);
+    dialogLayout->addWidget(button);
+
+    //imposta il layout e mostra substituteRowDialog
+    substituteRowDialog->setLayout(dialogLayout);
+    substituteRowDialog->show();
+
+    //imposta il tipo di operazione e connette button
+    setOperationSelected(MatrixCreator::SUBSTITUTE_ROW);
+    connect(button, SIGNAL(clicked()), this, SLOT(handleObtainResult()));
+}

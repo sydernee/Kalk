@@ -34,8 +34,8 @@ public:
 
     //operations
 
-    static Matrix sum(const Matrix&, const Matrix&);
-    Matrix sum() const;
+    static Matrix sum(const Matrix&, const Matrix&);    //somma statica tra due matrici passate come parametri
+    Matrix sum() const;                                 //somma tra matrix1 e matrix2
 
     static Matrix subtract(const Matrix&, const Matrix&);
     Matrix subtract() const;
@@ -44,6 +44,11 @@ public:
     Matrix scalarMultiply() const;
 
     Matrix nonScalarMultiply(double) const;
+
+    Matrix transposed() const;
+    Matrix swapRows(unsigned int, unsigned int);
+    Matrix swapCols(unsigned int, unsigned int);
+    Matrix substituteRow(unsigned int, unsigned int, double);
 };
 
 #endif // MATRIXCONTROLLER_H

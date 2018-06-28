@@ -26,11 +26,11 @@ public:
     Matrix& getMatrix1() const;
 
     void buildMatrix2(QVector<KeypadInput*>, unsigned int, unsigned int); //costruisce matrix2
-    void buildMatrix2(unsigned int, unsigned int); //costruisce matrix2 con celle e valori di default
+    void buildMatrix2(unsigned int, unsigned int);  //costruisce matrix2 con celle e valori di default
     void setMatrix2(const Matrix&);
     Matrix& getMatrix2() const;
 
-    static void displayMatrix(const Matrix& mat);
+    static void displayMatrix(const Matrix& mat);   //genera l'output in una nuova finestra del parametro
 
     //operations
 
@@ -42,6 +42,8 @@ public:
 
     //static
     Matrix scalarMultiply() const;
+
+    Matrix nonScalarMultiply(double) const;
 };
 
 #endif // MATRIXCONTROLLER_H

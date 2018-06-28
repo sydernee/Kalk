@@ -54,8 +54,5 @@ HEADERS += \
     view/KeypadInput.h \
     controller/MatrixController.h
 
-#DISTFILES += \
-#    controller/empty_folder \
-
 RESOURCES += \
     resources.qrc

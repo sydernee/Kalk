@@ -2,15 +2,16 @@
 #include "../controller/MatrixController.h"
 #include "../view/KeypadInput.h"
 #include "../model/datatypes/Matrix.h"
+//#include "NonScalarMulDialog.h"
 
 #include <QLabel>
 #include <QLineEdit>
 #include <QSpinBox>
 #include <QHBoxLayout>
 #include <QGridLayout>
+#include <QDialog>
 #include <QGroupBox>
 #include <QPushButton>
-#include <QDialog>
 #include <cfloat>
 
 //constructor
@@ -27,6 +28,9 @@ MatrixCreator::MatrixCreator(QWidget *parent)
       selectDimensions(nullptr),
       selectSecondMatrixDimensions(nullptr),
       obtainResult(nullptr),
+
+      nonScalarMulDialog(nullptr),
+      nonScalarMulInput(nullptr),
 
       controller(new MatrixController(this))
 {
@@ -160,11 +164,11 @@ void MatrixCreator::setColBox() {
     setColBox(1,10);
 }
 
-void MatrixCreator::setOperationSelected(Operation op) {
+void MatrixCreator::setOperationSelected(MatrixCreator::Operation op) {
     operationSelected = op;
 }
 
-Operation MatrixCreator::getOperationSelected() const {
+MatrixCreator::Operation MatrixCreator::getOperationSelected() const {
     return operationSelected;
 }
 
@@ -277,22 +281,29 @@ void MatrixCreator::handleObtainResult() {
     controller->buildMatrix2(cells, rowBox->value(), colBox->value());
 
     //WARN: catena di if?
-    if (getOperationSelected() == SUM) {
+    if (getOperationSelected() == MatrixCreator::SUM) {
         MatrixController::displayMatrix(controller->sum());
     }
 
-    else if (getOperationSelected() == SUBTRACTION) {
+    else if (getOperationSelected() == MatrixCreator::SUBTRACTION) {
         MatrixController::displayMatrix(controller->subtract());
     }
 
-    else if (getOperationSelected() == SCALAR_MULTIPLICATION) {
+    else if (getOperationSelected() == MatrixCreator::SCALAR_MULTIPLICATION) {
         MatrixController::displayMatrix(controller->scalarMultiply());
+    }
+
+    else if (getOperationSelected() == MatrixCreator::NON_SCALAR_MULTIPLICATION) {
+        MatrixController::displayMatrix(controller->nonScalarMultiply(nonScalarMulInput->text().toDouble()));
+        nonScalarMulDialog->close();
+        operationsSet->hide();
     }
 
     resetDimensionsGroupBox();
     obtainResult->hide();
     selectSecondMatrixLabel->hide();
 }
+
 
 //sum button handler
 void MatrixCreator::sumClicked() { //n x m + n x m
@@ -347,27 +358,29 @@ void MatrixCreator::scalarMultiplicationClicked() {
 }
 
 void MatrixCreator::nonScalarMultiplicationClicked() {
-    QDialog* dialog = new QDialog;
-    dialog->setWindowTitle("Selezione scalare");
+    //Istanzia l'operando di sinistra
+    controller->buildMatrix1(cells, rowBox->value(), colBox->value());
 
-    QVBoxLayout* dialogLayout = new QVBoxLayout;
-    dialogLayout->addWidget(new QLabel("Immetti il valore da moltiplicare", dialog));
+    nonScalarMulDialog = new QDialog;
+    nonScalarMulDialog->setWindowTitle("Selezione scalare");    //titolo finestra
+    nonScalarMulDialog->setWindowModality(Qt::ApplicationModal);//non permette l'input su altre finestre
 
-    QHBoxLayout* l = new QHBoxLayout;
-    l->addWidget(new KeypadInput(dialog));
+    QVBoxLayout* dialogLayout = new QVBoxLayout;                //layout per nonScalarMulDialog
+    dialogLayout->addWidget(new QLabel("Immetti il valore da moltiplicare", nonScalarMulDialog));
 
-    QPushButton* button = new QPushButton("Ok", dialog);
+    QHBoxLayout* l = new QHBoxLayout;                           //layout che contiene input e pulsante
+    nonScalarMulInput = new KeypadInput(nonScalarMulDialog);
+    l->addWidget(nonScalarMulInput);
+    QPushButton* button = new QPushButton("Ok", nonScalarMulDialog);
     l->addWidget(button);
 
     dialogLayout->addLayout(l);
-    dialog->setLayout(dialogLayout);
+    nonScalarMulDialog->setLayout(dialogLayout);
 
-    dialog->show();
+    nonScalarMulDialog->show();
 
     setOperationSelected(NON_SCALAR_MULTIPLICATION);
-
-//    connect(button, SIGNAL(clicked()), this, SLOT(nonScalarSelected()));
-//    connect(dialog, SIGNAL(nonScalarInputValue(int)), this, SLOT(nonScalarInputValue(int)));
+    connect(button, SIGNAL(clicked()), this, SLOT(handleObtainResult()));
 
 }
 

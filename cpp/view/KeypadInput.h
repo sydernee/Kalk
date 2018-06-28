@@ -6,11 +6,13 @@
 
 //Ridefinizione di QLineEdit per l'input della classe Keypad
 class KeypadInput : public QLineEdit {
+    Q_OBJECT
 private:
     QDoubleValidator* inputValidator;
 
 public:
-    KeypadInput(QWidget* parent = nullptr, const QString& = "", QDoubleValidator* = nullptr);
+    explicit KeypadInput(QWidget* parent = nullptr, const QString& = "", QDoubleValidator* = nullptr);
+    ~KeypadInput();
     void keyPressEvent(QKeyEvent* event); //override per la gestione di Qt::Key_Period
 };
 

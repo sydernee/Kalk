@@ -118,3 +118,7 @@ Matrix MatrixController::subtract(const Matrix& m1, const Matrix& m2) {
 Matrix MatrixController::scalarMultiply() const {
     return (*matrix1) * (*matrix2);
 }
+
+Matrix MatrixController::nonScalarMultiply(double value) const {
+    return (*matrix1) * value;
+}

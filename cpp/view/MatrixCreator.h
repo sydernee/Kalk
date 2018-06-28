@@ -11,19 +11,23 @@ class QSpinBox;
 class QHBoxLayout;
 class QGroupBox;
 class QPushButton;
+//class NonScalarMulDialog;
+class Dialog;
 class MatrixController; //controller
 
 
-enum Operation {
-    SUM,
-    SUBTRACTION,
-    SCALAR_MULTIPLICATION,
-    NON_SCALAR_MULTIPLICATION
-};
+
 
 class MatrixCreator : public QWidget
 {
     Q_OBJECT
+public:
+    enum Operation {
+        SUM,
+        SUBTRACTION,
+        SCALAR_MULTIPLICATION,
+        NON_SCALAR_MULTIPLICATION
+    };
 private:
 
     //set di operazioni
@@ -39,10 +43,14 @@ private:
     QPushButton* selectSecondMatrixDimensions; //pulsante per la selezione della seconda matrice
     QPushButton* obtainResult;      //pulsante per =
 
+    QDialog* nonScalarMulDialog;    //QDialog per ottenere l'input per la moltiplicazione non scalare
+    KeypadInput* nonScalarMulInput; //QLineEdit che contiene il double da moltiplicare alla Matrice con la moltiplicazione non scalare
+
+
     MatrixController* controller;   //controller Matrix - MatrixCreator
     QVector<KeypadInput*> cells;    //vettore che contiene le celle di matrixBuilder
 
-    Operation operationSelected;
+    MatrixCreator::Operation operationSelected;
 public:
     explicit MatrixCreator(QWidget *parent = nullptr);
     ~MatrixCreator();
@@ -60,8 +68,8 @@ public:
     void setColBox(unsigned int, unsigned int, unsigned int = 2);
     void setColBox();
 
-    void setOperationSelected(Operation);
-    Operation getOperationSelected() const;
+    void setOperationSelected(MatrixCreator::Operation);
+    MatrixCreator::Operation getOperationSelected() const;
 
     void clearCells(); //delete cells[i] per ogni i in 0..n-1 e svuota cells
     void resetCells(); //cells[i]->setText("") per ogni i in 0..n-1
@@ -73,6 +81,7 @@ public:
     void initializeMatrixBuilder();
 
 signals:
+//    void nonScalarMulSignal(double);
 //    void buildMatrixSignal(const Matrix&);
 
 public slots:

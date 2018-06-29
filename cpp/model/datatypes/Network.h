@@ -1,24 +1,32 @@
 #ifndef NETWORK_H
 #define NETWORK_H
 
-#include <QMap>
+#include "../DataType.h"
+#include <QDebug>
+#include <QSet>
+#include <QPair>
 #include <QList>
 #include <QString>
+#include "User.h"
 
 
 class Network : public DataType {
 private:
-    QMap<User*> userlist;
+    QString name; //network name (e.g. Twitter, Instagram, LinQuedin)
+    QList<const User*> userlist;
+    QList<QPair<const User*,const User*> > following; //first follows second
 public:
-
-    void addUser(const User&);
-    void removeUser(const User&);
-    int calculateDistance(const User&, const User&, int) const;
+    Network(QString n);
+    QString getName();
+    void addUser(User*);
+    void removeUser(User*);
+    void removeUser(const QString); 
+    int calculateDistance(const User&, const User&) const;
     void addFollower(const User&,const User&);
     void removeFollower(const User&,const User&);
     bool isFollowerOf(const User&,const User&) const;
-    QList getFollower(const User&) const;
-    QList getFollowed(const User&) const;
+    QSet<const User*> getFollower(const User&) const;
+    QSet<const User*> getFollowed(const User&) const;
 };
 
 #endif // NETWORK_H

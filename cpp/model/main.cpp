@@ -2,6 +2,8 @@
 #include "datatypes/Matrix.h"
 #include "datatypes/SquareMatrix.h"
 #include "datatypes/SparseMatrix.h"
+#include "datatypes/Network.h"
+#include "datatypes/User.h"
 #include <iostream>
 
 int main(){
@@ -83,7 +85,81 @@ int main(){
     //std::vector<std::initializer_list<double>>
     Matrix* m8 = new Matrix(3, 4, {{1,3}, {1,4,2,5,6}, {3,0,-1,2}});
     std::cout << *m8;
+    
+    std::cout << std::endl;
 
 
+    //network
+    Network* facebook = new Network("facebook");
+    qDebug() << facebook->getName();
+    
+    // creo gli utenti della rete
+    User* massimo = new User("massimo");
+    User* andrea = new User("andrea");
+    User* michele = new User("michele");
+    User* nicola = new User("nicola");
+    
+    // gli aggiungo alla rete
+    facebook->addUser(massimo);
+    facebook->addUser(andrea);
+    facebook->addUser(michele);
+    facebook->addUser(nicola);
+    facebook->addUser(nicola); //tento doppia aggiunta
+    
+    //aggiungo le amicizie 
+    facebook->addFollower(*andrea,*michele); // andrea follower di michele
+    facebook->addFollower(*massimo,*michele);
+    facebook->addFollower(*michele,*nicola);
+    facebook->addFollower(*michele,*andrea);
+    
+    // stampo i follower di michele
+     QSet<const User*> fr = facebook->getFollower(*michele);
+    
+    foreach (const User* follower, fr) {
+        qDebug() << follower->getUsername();
+    }
+    
+    // stampo le persone seguite da michele
+    QSet<const User*> fd = facebook->getFollowed(*michele);
+    
+    foreach (const User* followed, fd) {
+        qDebug() << followed->getUsername();
+    } 
+     
+    // controllo se è follower
+    qDebug() << facebook->isFollowerOf(*nicola,*michele); // false
+    qDebug() << facebook->isFollowerOf(*michele,*nicola); // true
+    
+    // No duplicati, stampa 2
+    QSet<User*> si;
+    si.insert(massimo);
+    si.insert(massimo);
+    si.insert(andrea);
+    qDebug() << si.count();
+    foreach (const User* u, si) {
+        qDebug() << u->getUsername();
+    }
+    
+    // yep, non va bene modificare il QSet nel loop
+    QSet<QString> set;
+    set << "January";
+    
+    bool first = true;
+    QSet<QString>::iterator i;
+    for (i = set.begin(); i != set.end(); ++i) {
+       if (first) {
+          set << "March";
+          set << "April";
+          set << "June";
+          set << "July";
+          set << "August";
+          set << "September";
+          set << "October";
+          set << "November";//*/
+           first = false;
+       }
+      
+       qDebug() << *i;
+    }
     return 0;
 }

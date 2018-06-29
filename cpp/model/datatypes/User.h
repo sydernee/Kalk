@@ -1,21 +1,20 @@
 #ifndef USER_H
 #define USER_H
 
-#include <QMap>
+#include <QList>
 #include <QString>
 
 
-class User 
+class User {
 private:
-   QString userName;
-   QMap<QString,User*> following;
+   QString username;
 public:
    User(QString);
    
-   virtual operator==(const User&) const; //due utenti sono uguali se hanno lo stesso username
+   virtual bool operator==(const User&) const; //due utenti sono uguali se hanno lo stesso username
 
-   QString getUserName() const;
-   void changeUserName(QString); // eccezione se lo username già è presente
+   QString getUsername() const;
+   void changeUsername(QString); // eccezione se lo username già è presente
 };
 
 #endif // USER_H

@@ -29,30 +29,38 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
     main.cpp \
-    model/datatypes/Matrix.cpp \
-    model/datatypes/SparseMatrix.cpp \
     model/DataType.cpp \
+    model/datatypes/Matrix.cpp \
+    model/datatypes/SquareMatrix.cpp \
+    model/datatypes/SparseMatrix.cpp \
+    model/datatypes/User.cpp \
+    model/datatypes/Network.cpp \
 #   model/datatypes/Number.cpp \
     view/Widget.cpp \
     view/MatrixBuilder.cpp \
     view/MatrixCreator.cpp \
     view/Keypad.cpp \
     view/KeypadInput.cpp \
-    controller/MatrixController.cpp
+    controller/MatrixController.cpp \
+    view/SquareMatrixKalk.cpp \
+    controller/SquareMatrixController.cpp
 
 HEADERS += \
-    model/datatypes/Matrix.h \
-    model/datatypes/Network.h \
-    model/datatypes/SparseMatrix.h \
-    model/datatypes/User.h \
     model/DataType.h \
+    model/datatypes/Matrix.h \
+    model/datatypes/SquareMatrix.h \
+    model/datatypes/SparseMatrix.h \
+    model/datatypes/Network.h \
+    model/datatypes/User.h \
 #   model/datatypes/Number.h \
     view/Widget.h \
     view/MatrixBuilder.h \
     view/MatrixCreator.h \
     view/Keypad.h \
     view/KeypadInput.h \
-    controller/MatrixController.h
+    controller/MatrixController.h \
+    view/SquareMatrixKalk.h \
+    controller/SquareMatrixController.h
 
 RESOURCES += \
     resources.qrc

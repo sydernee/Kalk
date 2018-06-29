@@ -58,7 +58,7 @@ public:
     unsigned int colCount() const; //matrix height
 
     Matrix operator *(double) const; //prodotto per uno scalare
-    Matrix transposed() const; //trasposta della matrice di invocazione
+    Matrix* transposed() const; //trasposta della matrice di invocazione
     
     //operatori booleani
     bool operator==(const Matrix&) const;

@@ -123,11 +123,11 @@ Matrix operator *(const Matrix& mat1, const Matrix& mat2) { //THROW
 }
 
 //trasposta
-Matrix Matrix::transposed() const {
-    Matrix res(col, row);
+Matrix* Matrix::transposed() const {
+    Matrix* res = new Matrix(col, row);
     for (unsigned int i = 0; i < col; i++)
         for (unsigned int j = 0; j < row; j++)
-            res.set(i,j, get(j,i));
+            res->set(i,j, get(j,i));
     return res;
 }
 

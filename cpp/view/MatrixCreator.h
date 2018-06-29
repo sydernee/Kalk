@@ -1,22 +1,20 @@
 #ifndef MATRIXCREATOR_H
 #define MATRIXCREATOR_H
 
-#include <QWidget>
+#include "../controller/MatrixController.h"
+#include "../view/KeypadInput.h"
+#include "../model/datatypes/Matrix.h"
+
 #include <QBoxLayout>
-
-class Matrix;
-class KeypadInput;
-class QLabel;
-class QSpinBox;
-class QHBoxLayout;
-class QGroupBox;
-class QPushButton;
-//class NonScalarMulDialog;
-class Dialog;
-class MatrixController; //controller
-
-
-
+#include <QGridLayout>
+#include <QLabel>
+#include <QLineEdit>
+#include <QSpinBox>
+#include <QWidget>
+#include <QDialog>
+#include <QGroupBox>
+#include <QPushButton>
+#include <cfloat>
 
 class MatrixCreator : public QWidget
 {
@@ -29,7 +27,9 @@ public:
         NON_SCALAR_MULTIPLICATION,
         SWAP_ROWS,
         SWAP_COLS,
-        SUBSTITUTE_ROW
+        SUBSTITUTE_ROW,
+        DETERMINANT,
+        GET_MINOR
     };
 
 private:
@@ -62,30 +62,24 @@ private:
     QSpinBox* subRowB;
     KeypadInput* subRowDouble;
 
-    MatrixController* controller;   //controller Matrix - MatrixCreator
     QVector<KeypadInput*> cells;    //vettore che contiene le celle di matrixBuilder
 
     Operation operationSelected;
+
+protected:
+    MatrixController* controller;   //controller Matrix - MatrixCreator
+
 public:
-    explicit MatrixCreator(QWidget *parent = nullptr);
+    explicit MatrixCreator(MatrixController*, QWidget *parent = nullptr);
     ~MatrixCreator();
 
     //costruisce i pulsanti per le dimensioni e restituisce il layout
-    virtual void buildDimensionsGroupBox();
+    void buildDimensionsGroupBox();
 
     //costruisce il set di pulsanti per le operazioni
-    virtual void buildOperationsSet();
+    void buildOperationsSet();
 
-    //set dei QSpinBox per le dimensioni
-    //0,2,3 parametri (min,max,default)
-    void setRowBox(unsigned int, unsigned int, unsigned int = 2);
-    void setRowBox();
-    void setColBox(unsigned int, unsigned int, unsigned int = 2);
-    void setColBox();
-    static void setSpinBoxLimits(QSpinBox*, unsigned int, unsigned int, unsigned int = 0);
 
-    void setOperationSelected(MatrixCreator::Operation);
-    Operation getOperationSelected() const;
 
     void clearCells(); //delete cells[i] per ogni i in 0..n-1 e svuota cells
     void resetCells(); //cells[i]->setText("") per ogni i in 0..n-1
@@ -95,6 +89,41 @@ public:
 
     //resetta e inizializza matrixBuilder
     void initializeMatrixBuilder();
+
+    //set dei QSpinBox per le dimensioni
+    //0,2,3 parametri (min,max,default)
+    void setRowBox(unsigned int, unsigned int, unsigned int = 2);
+    void setRowBox();
+    void setColBox(unsigned int, unsigned int, unsigned int = 2);
+    void setColBox();
+    static void setSpinBoxLimits(QSpinBox*, unsigned int, unsigned int, unsigned int = 0);
+
+protected:
+    //setters
+    void setDimensionsGroupBox(QGroupBox*);
+    void setSelectDimensions(QPushButton*);
+    void setSelectSecondMatrixDimensions(QPushButton*);
+    void setSelectDimenionsLabel(QLabel*);
+    void setObtainResult(QPushButton*);
+    void setRowBox(QSpinBox*);
+    void setColBox(QSpinBox*);
+    void setMatrixBuilder(QGroupBox*);
+    void setOperationsSet(QGroupBox*);
+    void setOperationSelected(MatrixCreator::Operation);
+
+    //getters
+    QGroupBox* getDimensionsGroupBox() const;
+    QPushButton* getSelectDimensions() const;
+    QPushButton* getSelectSecondMatrixDimensions() const;
+    QLabel* getSelectDimensionsLabel() const;
+    QLabel* getSelectSecondMatrixLabel() const;
+    QPushButton* getObtainResult() const;
+    QSpinBox* getRowBox() const;
+    QSpinBox* getColBox() const;
+    QGroupBox* getMatrixBuilder() const;
+    QGroupBox* getOperationsSet() const;
+    QVector<KeypadInput*> getCells() const;
+    Operation getOperationSelected() const;
 
 signals:
 //    void nonScalarMulSignal(double);
@@ -108,14 +137,14 @@ public slots:
     void handleObtainResult();
 
     //operations slots
-    void sumClicked();
-    void subtractionClicked();
-    void scalarMultiplicationClicked();
-    void nonScalarMultiplicationClicked();
-    void transposedClicked();
-    void swapRowsClicked();
-    void swapColsClicked();
-    void substituteRowClicked();
+    virtual void sumClicked();
+    virtual void subtractionClicked();
+    virtual void scalarMultiplicationClicked();
+    virtual void nonScalarMultiplicationClicked();
+    virtual void transposedClicked();
+    virtual void swapRowsClicked();
+    virtual void swapColsClicked();
+    virtual void substituteRowClicked();
 };
 
 #endif // MATRIXCREATOR_H

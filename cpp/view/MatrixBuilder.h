@@ -6,6 +6,8 @@
 #include <QStringListModel>
 #include <QPushButton>
 #include <QStackedWidget>
+#include "MatrixCreator.h"
+#include "SquareMatrixKalk.h"
 
 
 //Classe che gestisce il widget di creazione di una matrice
@@ -19,6 +21,8 @@ private:
     QComboBox* matrixSelectionBox;      //selezione a tendina della matrice
     QPushButton* matrixSelection;       //pulsante di selezione
     QPushButton* backButton;            //pulsante per tornare indietro
+
+    MatrixController* controller;
 
     //costanti per le dimensioni della finestra
     const int hWindowSize = 200;

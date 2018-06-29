@@ -1,22 +1,10 @@
 #include "MatrixCreator.h"
-#include "../controller/MatrixController.h"
-#include "../view/KeypadInput.h"
-#include "../model/datatypes/Matrix.h"
-//#include "NonScalarMulDialog.h"
 
-#include <QLabel>
-#include <QLineEdit>
-#include <QSpinBox>
-#include <QHBoxLayout>
-#include <QGridLayout>
-#include <QDialog>
-#include <QGroupBox>
-#include <QPushButton>
-#include <cfloat>
+
 
 
 //constructor
-MatrixCreator::MatrixCreator(QWidget *parent)
+MatrixCreator::MatrixCreator(MatrixController* _controller, QWidget *parent)
     : QWidget(parent),
       dimensionsGroupBox(nullptr),
       matrixBuilder(nullptr),
@@ -42,7 +30,7 @@ MatrixCreator::MatrixCreator(QWidget *parent)
       subRowB(nullptr),
       subRowDouble(nullptr),
 
-      controller(new MatrixController(this))
+      controller(_controller)
 {
     setMinimumSize(200,150); //dimenisoni minime finestra
 
@@ -59,9 +47,7 @@ MatrixCreator::MatrixCreator(QWidget *parent)
 
 }
 
-MatrixCreator::~MatrixCreator() {
-    delete controller;
-}
+MatrixCreator::~MatrixCreator() {}
 
 //costruisce il set dei pulsanti per la selezione delle dimensioni
 void MatrixCreator::buildDimensionsGroupBox() {
@@ -96,6 +82,7 @@ void MatrixCreator::buildOperationsSet() {
     operationsSet = new QGroupBox(this); //istanziazione operationsSet
 //    QVBoxLayout* vLayout = new QVBoxLayout;
     QGridLayout* gridOperationsLayout = new QGridLayout; //layout per operationsSet
+    QVBoxLayout* operationsLayout = new QVBoxLayout;
 
     //istanziazione, connessioni e inserimento nel layout pulsanti per le operazioni
     QPushButton* sum = new QPushButton("+", operationsSet);
@@ -136,7 +123,8 @@ void MatrixCreator::buildOperationsSet() {
     connect(obtainResult, SIGNAL(clicked()), this, SLOT(handleObtainResult()));
     obtainResult->hide();
 
-    operationsSet->setLayout(gridOperationsLayout); //imposta il layout di operationsSet
+    operationsLayout->addLayout(gridOperationsLayout);
+    operationsSet->setLayout(operationsLayout); //imposta il layout di operationsSet
 
     //impostazione del layout di operationsSet
 //    vLayout->addWidget(operationsSet);
@@ -144,50 +132,6 @@ void MatrixCreator::buildOperationsSet() {
     layout()->addWidget(operationsSet);
     layout()->addWidget(obtainResult);
     operationsSet->hide(); //nasconde operationsSet
-}
-
-void MatrixCreator::setRowBox(unsigned int min, unsigned int max, unsigned int _default) {
-    if (rowBox != nullptr)
-        delete rowBox;
-    rowBox = new QSpinBox(dimensionsGroupBox);
-    rowBox->setMinimum(min);    //imposta il valore minimo
-    rowBox->setMaximum(max);    //imposta il valore massimo
-    rowBox->setSingleStep(1);   //imposta lo step
-    rowBox->setValue(_default); //imposta il valore di default
-}
-
-void MatrixCreator::setRowBox() {
-     setRowBox(1,10);
-}
-
-void MatrixCreator::setColBox(unsigned int min, unsigned int max, unsigned int _default) {
-    if (colBox != nullptr)
-        delete colBox;
-    colBox = new QSpinBox(dimensionsGroupBox);
-    colBox->setMinimum(min);    //imposta il valore minimo
-    colBox->setMaximum(max);    //imposta il valore massimo
-    colBox->setSingleStep(1);   //imposta lo step
-    colBox->setValue(_default); //imposta il valore di default
-}
-
-void MatrixCreator::setColBox() {
-    setColBox(1,10);
-}
-
-//versione statica di setQSpinBox
-void MatrixCreator::setSpinBoxLimits(QSpinBox* box, unsigned int min, unsigned int max, unsigned int _default) {
-    box->setMinimum(min);       //imposta il valore minimo
-    box->setMaximum(max);       //imposta il valore massimo
-    box->setSingleStep(1);      //imposta lo step
-    box->setValue(_default);    //imposta il valore di default
-}
-
-void MatrixCreator::setOperationSelected(MatrixCreator::Operation op) {
-    operationSelected = op;
-}
-
-MatrixCreator::Operation MatrixCreator::getOperationSelected() const {
-    return operationSelected;
 }
 
 void MatrixCreator::clearCells() {
@@ -255,6 +199,153 @@ void MatrixCreator::initializeMatrixBuilder() {
     layout()->addWidget(matrixBuilder);
 }
 
+void MatrixCreator::setRowBox(unsigned int min, unsigned int max, unsigned int _default) {
+    if (rowBox != nullptr)
+        delete rowBox;
+    rowBox = new QSpinBox(dimensionsGroupBox);
+    rowBox->setMinimum(min);    //imposta il valore minimo
+    rowBox->setMaximum(max);    //imposta il valore massimo
+    rowBox->setSingleStep(1);   //imposta lo step
+    rowBox->setValue(_default); //imposta il valore di default
+}
+
+void MatrixCreator::setRowBox() {
+     setRowBox(1,10);
+}
+
+void MatrixCreator::setColBox(unsigned int min, unsigned int max, unsigned int _default) {
+    if (colBox != nullptr)
+        delete colBox;
+    colBox = new QSpinBox(dimensionsGroupBox);
+    colBox->setMinimum(min);    //imposta il valore minimo
+    colBox->setMaximum(max);    //imposta il valore massimo
+    colBox->setSingleStep(1);   //imposta lo step
+    colBox->setValue(_default); //imposta il valore di default
+}
+
+void MatrixCreator::setColBox() {
+    setColBox(1,10);
+}
+
+//versione statica di setQSpinBox
+void MatrixCreator::setSpinBoxLimits(QSpinBox* box, unsigned int min, unsigned int max, unsigned int _default) {
+    box->setMinimum(min);       //imposta il valore minimo
+    box->setMaximum(max);       //imposta il valore massimo
+    box->setSingleStep(1);      //imposta lo step
+    box->setValue(_default);    //imposta il valore di default
+}
+
+//SETTERS
+
+void MatrixCreator::setDimensionsGroupBox(QGroupBox* groupBox) {
+    if (dimensionsGroupBox != nullptr)
+        delete dimensionsGroupBox;
+    dimensionsGroupBox = groupBox;
+}
+
+void MatrixCreator::setSelectDimensions(QPushButton* button) {
+    if (selectDimensions != nullptr)
+        delete selectDimensions;
+    selectDimensions = button;
+}
+
+void MatrixCreator::setSelectSecondMatrixDimensions(QPushButton* button) {
+    if (selectSecondMatrixDimensions != nullptr)
+        delete selectSecondMatrixDimensions;
+    selectSecondMatrixDimensions = button;
+}
+
+void MatrixCreator::setSelectDimenionsLabel(QLabel* label) {
+    if (selectDimensionsLabel != nullptr)
+        delete selectDimensionsLabel;
+    selectDimensionsLabel = label;
+}
+
+void MatrixCreator::setObtainResult(QPushButton* button) {
+    if (obtainResult != nullptr)
+        delete obtainResult;
+    obtainResult = button;
+}
+
+void MatrixCreator::setRowBox(QSpinBox* box) {
+    if (rowBox != nullptr)
+        delete rowBox;
+    rowBox = box;
+}
+
+void MatrixCreator::setColBox(QSpinBox* box) {
+    if (colBox != nullptr)
+        delete colBox;
+    colBox = box;
+}
+
+void MatrixCreator::setMatrixBuilder(QGroupBox* groupBox) {
+    if (matrixBuilder != nullptr)
+        delete matrixBuilder;
+    matrixBuilder = groupBox;
+}
+
+void MatrixCreator::setOperationsSet(QGroupBox* groupBox) {
+    if (operationsSet!= nullptr)
+        delete operationsSet;
+    operationsSet = groupBox;
+}
+
+void MatrixCreator::setOperationSelected(MatrixCreator::Operation op) {
+    operationSelected = op;
+}
+
+//GETTERS
+
+QGroupBox* MatrixCreator::getDimensionsGroupBox() const {
+    return dimensionsGroupBox;
+}
+
+
+QPushButton* MatrixCreator::getSelectDimensions() const {
+    return selectDimensions;
+}
+
+QPushButton* MatrixCreator::getSelectSecondMatrixDimensions() const {
+    return selectSecondMatrixDimensions;
+}
+
+QLabel* MatrixCreator::getSelectDimensionsLabel() const {
+    return selectDimensionsLabel;
+}
+
+QLabel *MatrixCreator::getSelectSecondMatrixLabel() const {
+    return selectSecondMatrixLabel;
+}
+
+QPushButton* MatrixCreator::getObtainResult() const {
+    return obtainResult;
+}
+
+QSpinBox* MatrixCreator::getRowBox() const {
+    return rowBox;
+}
+
+QSpinBox* MatrixCreator::getColBox() const {
+    return colBox;
+}
+
+QGroupBox* MatrixCreator::getMatrixBuilder() const {
+    return matrixBuilder;
+}
+
+QGroupBox* MatrixCreator::getOperationsSet() const {
+    return operationsSet;
+}
+
+QVector<KeypadInput *> MatrixCreator::getCells() const {
+    return cells;
+}
+
+MatrixCreator::Operation MatrixCreator::getOperationSelected() const {
+    return operationSelected;
+}
+
 //SLOTS
 
 //selectDimensions button handler
@@ -295,19 +386,23 @@ void MatrixCreator::handleSelectSecondMatrixDimensions() {
 
 //obtainResult button handler
 void MatrixCreator::handleObtainResult() {
-    //istanzia l'operando di destra
-    controller->buildMatrix2(cells, rowBox->value(), colBox->value());
 
     //WARN: catena di if?
     if (getOperationSelected() == MatrixCreator::SUM) {
+        //istanzia l'operando di destra
+        controller->buildMatrix2(cells, rowBox->value(), colBox->value());
         MatrixController::displayMatrix(controller->sum());
     }
 
     else if (getOperationSelected() == MatrixCreator::SUBTRACTION) {
+        //istanzia l'operando di destra
+        controller->buildMatrix2(cells, rowBox->value(), colBox->value());
         MatrixController::displayMatrix(controller->subtract());
     }
 
     else if (getOperationSelected() == MatrixCreator::SCALAR_MULTIPLICATION) {
+        //istanzia l'operando di destra
+        controller->buildMatrix2(cells, rowBox->value(), colBox->value());
         MatrixController::displayMatrix(controller->scalarMultiply());
     }
 
@@ -426,6 +521,7 @@ void MatrixCreator::transposedClicked() {
     //reset dell'interfaccia
     resetDimensionsGroupBox();
     obtainResult->hide();
+    operationsSet->hide();
     selectSecondMatrixLabel->hide();
 }
 
@@ -511,14 +607,13 @@ void MatrixCreator::substituteRowClicked() {
     substituteRowDialog->setWindowModality(Qt::ApplicationModal); //impedisce l'input su altre finestre
 
     QVBoxLayout* dialogLayout = new QVBoxLayout;
-//    dialogLayout->addWidget(new QLabel("Inserisci i dati", substituteRowDialog));
-
     QGridLayout* l = new QGridLayout;
 
     //istanzia i field per le operazioni di input
     subRowA = new QSpinBox(substituteRowDialog);
     subRowB = new QSpinBox(substituteRowDialog);
     subRowDouble = new KeypadInput(substituteRowDialog);
+    subRowDouble->setPlaceholderText("0");
 
     //imposta i limiti dei due QSpinBox
     setSpinBoxLimits(subRowA, 0, rowBox->value()-1);

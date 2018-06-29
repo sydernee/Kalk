@@ -8,6 +8,7 @@ public:
     SquareMatrix(unsigned int);
     SquareMatrix(unsigned int, double);
     SquareMatrix(const SquareMatrix&);
+    SquareMatrix(const Matrix&);
     SquareMatrix(unsigned int, std::initializer_list<double>);
     SquareMatrix(unsigned int, std::vector<std::initializer_list<double>>);
     SquareMatrix getMinor(unsigned int, unsigned int) const;

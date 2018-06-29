@@ -3,8 +3,12 @@
 
 #include "MatrixController.h"
 #include "../model/datatypes/Matrix.h"
+#include "../model/datatypes/SquareMatrix.h"
 #include "../view/MatrixCreator.h"
 #include "../view/KeypadInput.h"
+
+
+#include <QGridLayout>
 
 MatrixController::MatrixController(MatrixCreator* _view, Matrix* _matrix1, Matrix* _matrix2)
     : matrix1(_matrix1), //copia di puntatori
@@ -22,8 +26,11 @@ void MatrixController::buildMatrix1(QVector<KeypadInput*> cells, unsigned int ro
     if (matrix1 != nullptr) {
         delete matrix1;
     }
+    if (rows == cols)
+        matrix1 = new SquareMatrix(rows, cols); //alloca una SquareMatrix se le dimensioni sono uguali
+    else
+        matrix1 = new Matrix(rows, cols); //alloca matrix1 nello heap
 
-    matrix1 = new Matrix(rows, cols); //alloca matrix1 nello heap
     if (!cells.isEmpty()) //se cells non è vuoto, imposta il valore delle celle di matrix1
         for (unsigned int i = 0; i < rows; i++)
             for (unsigned int j = 0; j < cols; j++)
@@ -33,15 +40,23 @@ void MatrixController::buildMatrix1(QVector<KeypadInput*> cells, unsigned int ro
 void MatrixController::buildMatrix1(unsigned int rows, unsigned int cols) {
     if (matrix1 != nullptr)
         delete matrix1;
-    matrix1 = new Matrix(rows, cols);
+
+    if (rows == cols)
+        matrix1 = new SquareMatrix(rows, cols); //alloca una SquareMatrix se le dimensioni sono uguali
+    else
+        matrix1 = new Matrix(rows, cols); //alloca matrix1 nello heap
 }
 
 void MatrixController::buildMatrix2(QVector<KeypadInput*> cells, unsigned int rows, unsigned int cols) {
     //PRE: cells[n] viene visto come cells[rows][cols] e sono le corrette dimensioni della matrice che si vuole costruire
-    if (matrix2 != nullptr) {
+    if (matrix2 != nullptr)
         delete matrix2;
-    }
-    matrix2 = new Matrix(rows, cols); //alloca matrix1 nello heap
+
+    if (rows == cols)
+        matrix2 = new SquareMatrix(rows, cols); //alloca una SquareMatrix se le dimensioni sono uguali
+    else
+        matrix2 = new Matrix(rows, cols); //alloca matrix1 nello heap
+
     if (!cells.isEmpty()) //se cells non è vuoto, imposta il valore delle celle di matrix2
         for (unsigned int i = 0; i < rows; i++)
             for (unsigned int j = 0; j < cols; j++)
@@ -51,19 +66,30 @@ void MatrixController::buildMatrix2(QVector<KeypadInput*> cells, unsigned int ro
 void MatrixController::buildMatrix2(unsigned int rows, unsigned int cols) {
     if (matrix2 != nullptr)
         delete matrix2;
-    matrix2 = new Matrix(rows, cols);
+    if (rows == cols)
+        matrix2 = new SquareMatrix(rows, cols); //alloca una SquareMatrix se le dimensioni sono uguali
+    else
+        matrix2 = new Matrix(rows, cols); //alloca matrix1 nello heap;
 }
 
 //SETTERS
 
 void MatrixController::setMatrix1(const Matrix& mat) {
     delete matrix1;
-    matrix1 = new Matrix(mat);
+    const Matrix* ptr = &mat;
+    if (dynamic_cast<const SquareMatrix*>(ptr))
+        matrix1 = new SquareMatrix(static_cast<const SquareMatrix&>(mat));
+    else
+        matrix1 = new Matrix(mat);
 }
 
 void MatrixController::setMatrix2(const Matrix& mat) {
     delete matrix2;
-    matrix2 = new Matrix(mat);
+    const Matrix* ptr = &mat;
+    if (dynamic_cast<const SquareMatrix*>(ptr))
+        matrix2= new SquareMatrix(static_cast<const SquareMatrix&>(mat));
+    else
+        matrix2 = new Matrix(mat);
 }
 
 //GETTERS
@@ -131,7 +157,10 @@ Matrix MatrixController::nonScalarMultiply(double value) const {
 
 Matrix MatrixController::transposed() const {
     // PRE: matrix1 != nullptr
-    return matrix1->transposed();
+    Matrix* mat = matrix1->transposed();
+    Matrix res(*mat);
+    delete mat;
+    return res;
 }
 
 Matrix MatrixController::swapRows(unsigned int rowA, unsigned int rowB) {
@@ -150,4 +179,18 @@ Matrix MatrixController::substituteRow(unsigned int destRow, unsigned int source
     //PRE; matrix1 != nullptr
     matrix1->substituteRow(destRow, sourceRow, factor);
     return *matrix1;
+}
+
+double MatrixController::determinant() const {
+    if (!dynamic_cast<SquareMatrix*>(matrix1)) {
+        //TODO throw
+    }
+    return static_cast<SquareMatrix*>(matrix1)->determinant();
+}
+
+SquareMatrix MatrixController::getMinor(unsigned int x, unsigned int y) const {
+    if (!dynamic_cast<SquareMatrix*>(matrix1)) {
+        //TODO throw
+    }
+    return static_cast<SquareMatrix*>(matrix1)->getMinor(x, y);
 }

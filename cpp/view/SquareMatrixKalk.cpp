@@ -8,6 +8,10 @@ SquareMatrixKalk::SquareMatrixKalk(MatrixController* _controller, QWidget *paren
       getMinorX(nullptr),
       getMinorY(nullptr)
 {
+    if (!dynamic_cast<SquareMatrixController*>(controller)) {
+        //TODO throw Exception;
+    }
+
     getDimensionsGroupBox()->layout()->removeWidget(getRowBox());
     getRowBox()->hide();
 

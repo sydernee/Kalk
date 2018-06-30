@@ -55,7 +55,7 @@ void MatrixController::buildMatrix2(QVector<KeypadInput*> cells, unsigned int ro
     if (rows == cols)
         matrix2 = new SquareMatrix(rows, cols); //alloca una SquareMatrix se le dimensioni sono uguali
     else
-        matrix2 = new Matrix(rows, cols); //alloca matrix1 nello heap
+        matrix2 = new Matrix(rows, cols); //alloca matrix2 nello heap
 
     if (!cells.isEmpty()) //se cells non è vuoto, imposta il valore delle celle di matrix2
         for (unsigned int i = 0; i < rows; i++)

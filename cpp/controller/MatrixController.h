@@ -13,7 +13,7 @@ class MatrixController //: public QObject
 {
     //Q_OBJECT //worth it?
 
-private:
+protected:
     Matrix* matrix1;
     Matrix* matrix2;
     MatrixCreator* view;

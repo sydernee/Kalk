@@ -43,7 +43,9 @@ SOURCES += \
     view/KeypadInput.cpp \
     controller/MatrixController.cpp \
     view/SquareMatrixKalk.cpp \
-    controller/SquareMatrixController.cpp
+    controller/SquareMatrixController.cpp \
+    view/SparseMatrixKalk.cpp \
+    controller/SparseMatrixController.cpp
 
 HEADERS += \
     model/DataType.h \
@@ -60,7 +62,9 @@ HEADERS += \
     view/KeypadInput.h \
     controller/MatrixController.h \
     view/SquareMatrixKalk.h \
-    controller/SquareMatrixController.h
+    controller/SquareMatrixController.h \
+    view/SparseMatrixKalk.h \
+    controller/SparseMatrixController.h
 
 RESOURCES += \
     resources.qrc

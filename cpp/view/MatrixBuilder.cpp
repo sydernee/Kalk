@@ -2,6 +2,10 @@
 #include <QStringListModel>
 #include <QHBoxLayout>
 #include <QSpacerItem>
+#include "../controller/SquareMatrixController.h"
+#include "../controller/SparseMatrixController.h"
+#include "SquareMatrixKalk.h"
+#include "SparseMatrixKalk.h"
 
 MatrixBuilder::MatrixBuilder(QWidget *parent)
     : QWidget(parent),
@@ -91,12 +95,21 @@ void MatrixBuilder::handleMatrixSelection() {
         setMinimumSize(wCreatorWindowSize,hCreatorWindowSize);
     }
     else if (choice == "Matrice Quadrata") {
-        //pages[1] è SquareMatrixCreator*
+        //pages[1] sarà SquareMatrixKalk*
         if (controller != nullptr)
             delete controller;
         controller = new SquareMatrixController;
         pages[1] = new SquareMatrixKalk(controller, this);
         setMinimumSize(wCreatorWindowSize,hCreatorWindowSize+100);
+    }
+
+    else if (choice == "Matrice Sparsa") {
+        //pages[1] sarà SparseMatrixKalk*
+        if (controller != nullptr)
+            delete controller;
+        controller = new SparseMatrixController;
+        pages[1] = new SparseMatrixKalk(controller, this);
+        setMinimumSize(wCreatorWindowSize, hCreatorWindowSize+100);
     }
 
     stackedWidget->addWidget(pages[1]);

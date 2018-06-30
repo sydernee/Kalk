@@ -106,6 +106,15 @@ public class Main {
 			System.out.print(m7);
 			System.out.println("Sparsità: " + m7.getSparsity());
 			System.out.println("La matrice è densa? " + (m7.isDense() ? "True" : "False"));
+			
+			System.out.println("\nTest matrice diagonale");
+			SquareMatrix m8 = new SquareMatrix(3,
+					1, 0, 0,
+					0, 4, 0,
+					0, 0, 2);
+			System.out.print(m8);
+			if (m8.isDiagonal())
+				System.out.println("La matrice è diagonale");
 		}
 		catch(RuntimeException exc) {
 			System.err.println(exc.getClass().getName() + " -> " + exc.getMessage());

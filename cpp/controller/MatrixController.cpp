@@ -75,7 +75,8 @@ void MatrixController::buildMatrix2(unsigned int rows, unsigned int cols) {
 //SETTERS
 
 void MatrixController::setMatrix1(const Matrix& mat) {
-    delete matrix1;
+    if (matrix1 != nullptr)
+        delete matrix1;
     const Matrix* ptr = &mat;
     if (dynamic_cast<const SquareMatrix*>(ptr))
         matrix1 = new SquareMatrix(static_cast<const SquareMatrix&>(mat));
@@ -84,7 +85,8 @@ void MatrixController::setMatrix1(const Matrix& mat) {
 }
 
 void MatrixController::setMatrix2(const Matrix& mat) {
-    delete matrix2;
+    if (matrix2 != nullptr)
+        delete matrix2;
     const Matrix* ptr = &mat;
     if (dynamic_cast<const SquareMatrix*>(ptr))
         matrix2= new SquareMatrix(static_cast<const SquareMatrix&>(mat));
@@ -180,7 +182,7 @@ Matrix MatrixController::substituteRow(unsigned int destRow, unsigned int source
     matrix1->substituteRow(destRow, sourceRow, factor);
     return *matrix1;
 }
-
+/*
 double MatrixController::determinant() const {
     if (!dynamic_cast<SquareMatrix*>(matrix1)) {
         //TODO throw
@@ -194,3 +196,4 @@ SquareMatrix MatrixController::getMinor(unsigned int x, unsigned int y) const {
     }
     return static_cast<SquareMatrix*>(matrix1)->getMinor(x, y);
 }
+*/

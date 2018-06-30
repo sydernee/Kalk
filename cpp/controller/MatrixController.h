@@ -21,14 +21,14 @@ public:
     MatrixController(MatrixCreator* = nullptr, Matrix* = nullptr, Matrix* = nullptr);
     virtual ~MatrixController();
 
-    void buildMatrix1(QVector<KeypadInput*>, unsigned int, unsigned int);  //costruisce matrix1
-    void buildMatrix1(unsigned int, unsigned int); //costruisce matrix1 con celle e valori di default
-    void setMatrix1(const Matrix&);
+    virtual void buildMatrix1(QVector<KeypadInput*>, unsigned int, unsigned int);  //costruisce matrix1
+    virtual void buildMatrix1(unsigned int, unsigned int); //costruisce matrix1 con celle e valori di default
+    virtual void setMatrix1(const Matrix&);
     virtual Matrix& getMatrix1() const;
 
-    void buildMatrix2(QVector<KeypadInput*>, unsigned int, unsigned int); //costruisce matrix2
-    void buildMatrix2(unsigned int, unsigned int);  //costruisce matrix2 con celle e valori di default
-    void setMatrix2(const Matrix&);
+    virtual void buildMatrix2(QVector<KeypadInput*>, unsigned int, unsigned int); //costruisce matrix2
+    virtual void buildMatrix2(unsigned int, unsigned int);  //costruisce matrix2 con celle e valori di default
+    virtual void setMatrix2(const Matrix&);
     virtual Matrix& getMatrix2() const;
 
     static void displayMatrix(const Matrix& mat);   //genera l'output in una nuova finestra del parametro
@@ -50,9 +50,6 @@ public:
     Matrix swapRows(unsigned int, unsigned int);
     Matrix swapCols(unsigned int, unsigned int);
     Matrix substituteRow(unsigned int, unsigned int, double);
-
-    double determinant() const;
-    SquareMatrix getMinor(unsigned int, unsigned int) const;
 };
 
 #endif // MATRIXCONTROLLER_H

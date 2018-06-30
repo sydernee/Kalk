@@ -9,15 +9,25 @@ class SquareMatrix;
 class SquareMatrixController : public MatrixController {
 public:
     SquareMatrixController(SquareMatrixKalk* = nullptr, SquareMatrix* = nullptr, SquareMatrix* = nullptr);
-//    virtual ~MatrixController();
+    virtual ~SquareMatrixController();
 
-//    SquareMatrix& getMatrix1() const;
-//    SquareMatrix& getMatrix2() const;
+//    Matrix& getMatrix1() const;
+//    Matrix& getMatrix2() const;
+    void buildMatrix1(QVector<KeypadInput*>, unsigned int, unsigned int);
+    void buildMatrix1(unsigned int, unsigned int);
+    void setMatrix1(const Matrix&);
+
+    void buildMatrix2(QVector<KeypadInput*>, unsigned int, unsigned int);
+    void buildMatrix2(unsigned int, unsigned int);
+    void setMatrix2(const Matrix&);
 
     //operations
 
-    SquareMatrix determinant() const;
+    double determinant() const;
     SquareMatrix getMinor(unsigned int, unsigned int) const;
+    bool isSupTriangular() const;
+    bool isInfTriangular() const;
+    bool isDiagonal() const;
 };
 
 #endif // SQUAREMATRIXCONTROLLER_H

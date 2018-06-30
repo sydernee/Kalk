@@ -88,17 +88,18 @@ void MatrixBuilder::handleMatrixSelection() {
             delete controller;
         controller = new MatrixController;
         pages[1] = new MatrixCreator(controller, this);
+        setMinimumSize(wCreatorWindowSize,hCreatorWindowSize);
     }
     else if (choice == "Matrice Quadrata") {
         //pages[1] è SquareMatrixCreator*
         if (controller != nullptr)
             delete controller;
-        controller = new MatrixController;
+        controller = new SquareMatrixController;
         pages[1] = new SquareMatrixKalk(controller, this);
+        setMinimumSize(wCreatorWindowSize,hCreatorWindowSize+100);
     }
 
     stackedWidget->addWidget(pages[1]);
     stackedWidget->setCurrentWidget(pages[1]);
-    setMinimumSize(wCreatorWindowSize,hCreatorWindowSize);
     setWindowTitle("MatrixKalk");
 }

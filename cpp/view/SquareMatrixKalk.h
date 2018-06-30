@@ -11,19 +11,13 @@ private:
     QSpinBox* getMinorX;
     QSpinBox* getMinorY;
 
-    void insertSquareOperations();
-public:
-    enum Operation {
-        DETERMINANT
-    };
+    void insertSquareOperations(); //aggiunge le operazioni di SquareMatrix a operationsSet
 
+public:
     explicit SquareMatrixKalk(MatrixController*, QWidget *parent = nullptr);
     ~SquareMatrixKalk();
-
-//    virtual void buildDimensionsGroupBox();
-//    virtual void buildOperationsSet();
-
 //    virtual void resetDimensionsGroupBox();
+
 signals:
 
 public slots:
@@ -34,6 +28,9 @@ public slots:
     virtual void scalarMultiplicationClicked();
     virtual void handleDeterminant();
     virtual void handleGetMinor();
+    virtual void handleSupTriangular();
+    virtual void handleInfTriangular();
+    virtual void handleIsDiagonal();
     void handleSquareMatrixObtainResult();
 };
 

@@ -63,8 +63,8 @@ public class SquareMatrix extends Matrix {
 	//is matrix infTriangular?
 	public boolean infTriangular() {
 	    for (int i = 0; i < getRows(); i++)
-	        for (int j = 0; j < getCols(); j++)
-	            if ((i == j && get(i,i) == 0) || (i < j && get(i,j) != 0))
+	        for (int j = i+1; j < getCols(); j++)
+	            if (/*(i == j && get(i,i) == 0) || */(i < j && get(i,j) != 0))
 	                return false;
 	    return true;
 	}
@@ -72,8 +72,8 @@ public class SquareMatrix extends Matrix {
 	//is matrix supTriangular?
 	public boolean supTriangular() {
 	    for (int i = 0; i < getRows(); i++)
-	        for (int j = 0; j < getCols(); j++)
-	            if ((i == j && get(i,i) == 0) || (i > j && get(i,j) != 0))
+	        for (int j = 0; j < i; j++)
+	            if (/*(i == j && get(i,i) == 0) || */(i > j && get(i,j) != 0))
 	                return false;
 	    return true;
 	}

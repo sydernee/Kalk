@@ -17,7 +17,7 @@ SquareMatrix::SquareMatrix(unsigned int n, std::vector<std::initializer_list<dou
 
 bool SquareMatrix::isDiagonal() const {
     for (unsigned int i = 0; i < rowCount(); i++)
-        for (unsigned int j = 0; j < colCount(); i++)
+        for (unsigned int j = 0; j < colCount(); j++)
             if (i != j && get(i,j) != 0)
                 return false;
     return true;
@@ -74,16 +74,16 @@ double SquareMatrix::determinant() const {
 
 bool SquareMatrix::infTriangular() const {
     for (unsigned int i = 0; i < rowCount(); i++)
-        for (unsigned int j = 0; j < colCount(); j++)
-            if ((i == j && get(i,i) != 1) || (i < j && get(i,j) != 0))
+        for (unsigned int j = i+1; j < colCount(); j++)
+            if (/*(i == j && get(i,i) != 1) ||*/ (i < j && get(i,j) != 0))
                 return false;
     return true;
 }
 
 bool SquareMatrix::supTriangular() const {
     for (unsigned int i = 0; i < rowCount(); i++)
-        for (unsigned int j = 0; j < colCount(); j++)
-            if ((i == j && get(i,i) != 1) || (i > j && get(i,j) != 0))
+        for (unsigned int j = 0; j < i; j++)
+            if (/*(i == j && get(i,i) != 1) ||*/ (i > j && get(i,j) != 0))
                 return false;
     return true;
 }

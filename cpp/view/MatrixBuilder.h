@@ -8,6 +8,7 @@
 #include <QStackedWidget>
 #include "MatrixCreator.h"
 #include "SquareMatrixKalk.h"
+#include "../controller/SquareMatrixController.h"
 
 
 //Classe che gestisce il widget di creazione di una matrice

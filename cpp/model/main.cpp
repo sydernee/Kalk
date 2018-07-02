@@ -89,15 +89,17 @@ int main(){
     std::cout << std::endl;
 
 
-    //network
+    //network facebook
     Network* facebook = new Network("facebook");
     qDebug() << facebook->getName();
     
-    // creo gli utenti della rete
-    User* massimo = new User("massimo");
-    User* andrea = new User("andrea");
-    User* michele = new User("michele");
-    User* nicola = new User("nicola");
+    // creo gli utenti della rete Facebook
+    QSharedPointer<User> massimo = QSharedPointer<User>(new User("massimo"));
+    QSharedPointer<User> andrea = QSharedPointer<User>(new User("andrea"));
+    QSharedPointer<User> michele = QSharedPointer<User>(new User("michele"));
+    QSharedPointer<User> nicola = QSharedPointer<User>(new User("nicola"));
+    QSharedPointer<User> ettore = QSharedPointer<User>(new User("ettore"));
+    QSharedPointer<User> achille = QSharedPointer<User>(new User("achille"));
     
     // gli aggiungo alla rete
     facebook->addUser(massimo);
@@ -105,41 +107,104 @@ int main(){
     facebook->addUser(michele);
     facebook->addUser(nicola);
     facebook->addUser(nicola); //tento doppia aggiunta
+    facebook->addUser(ettore);
+    facebook->addUser(achille);
+	 
+    qDebug() << "Stampo il numero di utenti di facebook";
+    qDebug() << facebook->size();
     
+    // stampo tutti i nominativi della lista 
+    QSet<QSharedPointer<User>> ulist = facebook->getUsers();
+    qDebug() << "Utenti di Facebook";
+    foreach (QSharedPointer<User> usr, ulist) {
+        qDebug() << usr->getUsername();
+    }
+    qDebug() << "FINE";
+
     //aggiungo le amicizie 
-    facebook->addFollower(*andrea,*michele); // andrea follower di michele
-    facebook->addFollower(*massimo,*michele);
-    facebook->addFollower(*michele,*nicola);
-    facebook->addFollower(*michele,*andrea);
-    
+    facebook->addFollower(andrea,michele); // andrea follower di michele
+    facebook->addFollower(andrea,nicola);    
+    facebook->addFollower(massimo,michele);
+    facebook->addFollower(michele,nicola);
+    facebook->addFollower(michele,andrea);
+    facebook->addFollower(ettore,achille);
+    facebook->addFollower(andrea,ettore);
+    facebook->addFollower(ettore,michele);
+
+    //elimino Ettore e Achille dalla rete    
+    facebook->removeUser(ettore);
+    facebook->removeUser("achille");
+  
     // stampo i follower di michele
-     QSet<const User*> fr = facebook->getFollower(*michele);
-    
-    foreach (const User* follower, fr) {
+    QSet<QSharedPointer<User>> fr = facebook->getFollower(michele);
+	qDebug() << "Follower di Michele in Facebook";
+    foreach (QSharedPointer<User> follower, fr) {
         qDebug() << follower->getUsername();
     }
+	qDebug() << "FINE";
+
+    //rimuovo nicola dalle persone seguite da andrea
+    qDebug() << "rimuovo nicola dalle persone seguite da andrea";
+    facebook->removeFollower(andrea,nicola);
+ 
+    // stampo le persone seguite da andrea   
+	qDebug() << "Followed da Andrea in Facebook";
+    QSet<QSharedPointer<User>> fd = facebook->getFollowed(andrea);
     
-    // stampo le persone seguite da michele
-    QSet<const User*> fd = facebook->getFollowed(*michele);
-    
-    foreach (const User* followed, fd) {
+    foreach (QSharedPointer<User> followed, fd) {
         qDebug() << followed->getUsername();
     } 
+	qDebug() << "FINE";
      
     // controllo se è follower
-    qDebug() << facebook->isFollowerOf(*nicola,*michele); // false
-    qDebug() << facebook->isFollowerOf(*michele,*nicola); // true
+    qDebug() << facebook->isFollowerOf(nicola,michele); // false
+    qDebug() << facebook->isFollowerOf(michele,nicola); // true
     
-    // No duplicati, stampa 2
-    QSet<User*> si;
+    // No duplicati, stampa 2 (che sono massimo e andrea)
+    QSet<QSharedPointer<User>> si;
     si.insert(massimo);
     si.insert(massimo);
     si.insert(andrea);
     qDebug() << si.count();
-    foreach (const User* u, si) {
+    foreach (QSharedPointer<User> u, si) {
         qDebug() << u->getUsername();
     }
+
+    // istanzio la rete twitter
+    Network* twitter = new Network("twitter");
+    qDebug() << twitter->getName();    
+
+    // creo gli utenti della rete Twitter
+    QSharedPointer<User> orazio = QSharedPointer<User>(new User("Ser Orazio"));
+    QSharedPointer<User> pomponio = QSharedPointer<User>(new User("Re Pomponio Mela"));    
+    QSharedPointer<User> andy = andrea;
     
+    // gli aggiungo alla rete
+    twitter->addUser(orazio);
+    twitter->addUser(pomponio);
+    twitter->addUser(andy);
+    twitter->addUser(michele);    
+
+    //aggiungo le amicizie 
+    twitter->addFollower(andrea,michele); // andrea follower di michele
+    twitter->addFollower(andrea,nicola);    
+    twitter->addFollower(massimo,michele);
+
+    // stampo i follower di michele
+    QSet<QSharedPointer<User>> tmf = twitter->getFollower(michele);
+	qDebug() << "Follower di Michele in Twitter";
+    foreach (QSharedPointer<User> follower, tmf) {
+        qDebug() << follower->getUsername();
+    }
+	qDebug() << "FINE";    
+
+    //unisco facebook e twitter
+
+    //elimino le reti
+    delete facebook;
+    delete twitter;
+
+
     // yep, non va bene modificare il QSet nel loop
     QSet<QString> set;
     set << "January";

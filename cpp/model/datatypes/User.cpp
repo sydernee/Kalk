@@ -7,3 +7,5 @@ bool User::operator==(const User& other) const { return getUsername() == other.g
 QString User::getUsername() const {return username;}
 
 void User::changeUsername(QString name) { username = name; }
+
+User::~User(){ qDebug() << getUsername() << " destroyed";}

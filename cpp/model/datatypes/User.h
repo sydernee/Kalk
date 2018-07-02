@@ -3,6 +3,7 @@
 
 #include <QList>
 #include <QString>
+#include <QDebug>
 
 
 class User {
@@ -15,6 +16,7 @@ public:
 
    QString getUsername() const;
    void changeUsername(QString); // eccezione se lo username già è presente
+	virtual ~User();
 };
 
 #endif // USER_H

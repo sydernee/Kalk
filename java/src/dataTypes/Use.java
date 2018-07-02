@@ -1,6 +1,6 @@
 package dataTypes;
 
-public class Main {
+public class Use {
 	public static void main(String[] args) {
 		try {
 			System.out.println("------------------------------------");
@@ -86,6 +86,16 @@ public class Main {
 			mswap.substituteRow(0, 2, 0.5);
 			System.out.println("\nScambio prima con il doppio della terza:\n" + mswap);
 			
+			System.out.println("\nTest matrice diagonale");
+			SquareMatrix m8 = new SquareMatrix(3,
+					1, 0, 0,
+					0, 4, 0,
+					0, 0, 2);
+			System.out.print(m8);
+			
+			if (m8.isDiagonal())
+				System.out.println("La matrice è diagonale\n");
+			
 			//matrice identità
 			System.out.println("Test matrice identità:");
 			SquareMatrix m5 = SquareMatrix.identityMatrix(5);
@@ -96,6 +106,11 @@ public class Main {
 			SquareMatrix m6 = SquareMatrix.zeroMatrix(5);
 			System.out.println(m6);
 			
+			System.out.println("------------------");
+			System.out.println("| MATRICE SPARSA |");
+			System.out.println("------------------");
+			System.out.println();
+			
 			//matrice sparsa
 			System.out.println("Test matrice sparsa:");
 			SparseMatrix m7 = new SparseMatrix(4, 4,
@@ -105,16 +120,8 @@ public class Main {
 					0, 0, 0, 4);
 			System.out.print(m7);
 			System.out.println("Sparsità: " + m7.getSparsity());
-			System.out.println("La matrice è densa? " + (m7.isDense() ? "True" : "False"));
+			System.out.println("La matrice è densa? " + (m7.isDense() ? "Vero" : "Falso"));
 			
-			System.out.println("\nTest matrice diagonale");
-			SquareMatrix m8 = new SquareMatrix(3,
-					1, 0, 0,
-					0, 4, 0,
-					0, 0, 2);
-			System.out.print(m8);
-			if (m8.isDiagonal())
-				System.out.println("La matrice è diagonale");
 		}
 		catch(RuntimeException exc) {
 			System.err.println(exc.getClass().getName() + " -> " + exc.getMessage());

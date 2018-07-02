@@ -1,0 +1,29 @@
+\section{Descrizione e struttura del progetto}
+
+\subsection{Design Pattern}
+Il \emph{design pattern} scelto per lo sviluppo del progetto è il 
+\emph{model-view-controller}, \textbf{MVC}. si è cercato di aderire
+al più possibile a questo pattern architetturale.
+
+\subsection{Modello}
+Il \emph{modello} è la parte logica dell'applicativo. È stato implementato in
+modo sia totalmente indipendente dalla \emph{view}. \par
+Ogni modello di calcolo di Kalk deriva dalla classe \texttt{DataType}, una classe
+astratta che non offre alcuna vera funzionalità (poichè si propone a un livello di astrazione
+troppo alto, dato che da essa può derivare un qualunque tipo di classe. È stata usata solo per
+raggruppare in modo coerente i tipi di dato usati nella calcolatrice), oltre a un \emph{distruttore %
+virtuale puro}.
+\subsubsection{Matrix}
+Il primo tipo di calcolo è \texttt{Matrix}, una classe rappresenta le matrici matematiche.
+Le celle sono memorizzate in un \texttt{QVector<double>}; sono presenti
+i campi \texttt{row} e \texttt{col} che rappresentano le due dimensioni della matrice.
+Essi sono accessibili in lettura attraverso le funzioni \texttt{rowCount()} e 
+\texttt{colCount()}. \par
+
+È possibile accedere alle celle con la funzione \texttt{double get(i,j)}, 
+oppure attraverso l'operatore \texttt{[][]}: per implementarlo, sono presenti due classi interne
+\texttt{Row} e \texttt{CRow} che si occupano di gestire la chiamata nitidificata dell'operatore 
+\texttt{[]}. \texttt{CRow} è la versione costante di \texttt{Row}. L'operatore \texttt{[][]} comunque è meno
+efficiente di \texttt{get(i,j)}, poichè passa attraverso l'istanziazione di un oggetto \texttt{Row/CRow}.
+Allo stesso modo, è possibile accedere in scrittura alle celle con la funzione \mbox{\texttt{void set(i,j,k)}}, con 
+\texttt{k} valore di tipo \texttt{double}.

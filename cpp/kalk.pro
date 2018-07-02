@@ -45,7 +45,10 @@ SOURCES += \
     view/SquareMatrixKalk.cpp \
     controller/SquareMatrixController.cpp \
     view/SparseMatrixKalk.cpp \
-    controller/SparseMatrixController.cpp
+    controller/SparseMatrixController.cpp \
+    model/exceptions/IndexOutOfBoundsException.cpp \
+    model/exceptions/ZeroMultiplierException.cpp \
+    model/exceptions/InvalidMatrixIndexes.cpp
 
 HEADERS += \
     model/DataType.h \
@@ -64,7 +67,10 @@ HEADERS += \
     view/SquareMatrixKalk.h \
     controller/SquareMatrixController.h \
     view/SparseMatrixKalk.h \
-    controller/SparseMatrixController.h
+    controller/SparseMatrixController.h \
+    model/exceptions/IndexOutOfBoundsException.h \
+    model/exceptions/ZeroMultiplierException.h \
+    model/exceptions/InvalidMatrixIndexes.h
 
 RESOURCES += \
     resources.qrc

@@ -5,7 +5,10 @@
 #include <vector>
 #include <iostream>
 #include <initializer_list>
-//#include <iterator>
+
+#include "../exceptions/IndexOutOfBoundsException.h"
+#include "../exceptions/InvalidMatrixIndexes.h"
+#include "../exceptions/ZeroMultiplierException.h"
 
 class Matrix : public DataType {
 
@@ -50,7 +53,7 @@ public:
 
     void fill(double, double = 0); 
 
-    virtual ~Matrix();
+//    virtual ~Matrix();
     Matrix(const Matrix&); 
     Matrix& operator=(const Matrix&); 
 

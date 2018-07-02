@@ -35,7 +35,6 @@ void SparseMatrix::set(unsigned int row, unsigned int col, double value) {
     Matrix::set(row, col, value);
 }
 
-//DA CONTROLLARE j = i+1
 bool SparseMatrix::isSymmetric() const {
     if (rowCount() != colCount())
         return false;

@@ -2,7 +2,11 @@
 
 Network::Network(QString n) : name(n),userlist() {}
 
+Network::Network(QSet<QSharedPointer<User>> ul, QString n) : name(n), userlist(ul.toList()) {}
+
 QString Network::getName() {return name;}
+
+void Network::setName(QString n) { name = n; }
 
 unsigned int Network::size() const {
     return userlist.size();
@@ -68,9 +72,7 @@ void Network::removeFollower(QSharedPointer<User> follower, QSharedPointer<User>
 }
 
 bool Network::isFollowerOf(QSharedPointer<User> follower, QSharedPointer<User> followed) const {
-   QList<QPair<QSharedPointer<User>, QSharedPointer<User>>> res; //TODO
-   return res;
-   //re
+    return following.contains(qMakePair(follower,followed)); 
 }
 
 QSet<QSharedPointer<User>> Network::getFollower(QSharedPointer<User> u) const{
@@ -103,18 +105,15 @@ QSet<QSharedPointer<User>> Network::getUnion(const Network& net) const {
     return userlist.toSet() + net.userlist.toSet();
 }
 
-QSet<QSharedPointer<User>> Network::getIntersection(const Network&) const {
+QSet<QSharedPointer<User>> Network::getIntersection(const Network& net) const {
     return userlist.toSet() & net.userlist.toSet();
 }
 
-QSet<QSharedPointer<User>> Network::getRelativeComplement(const Network&) const {
+//relative complement of this userlist set in net userlist set 
+QSet<QSharedPointer<User>> Network::getRelativeComplement(const Network& net) const {
         return net.userlist.toSet() - userlist.toSet();
 }
 
-QSet<QSharedPointer<User>> Network::getSymmetricDifference(const Network&) const {
-    return userlist.toSet() - net.userlist.toSet();
+QSet<QSharedPointer<User>> Network::getSymmetricDifference(const Network& net) const {
+    return getUnion(net) - getIntersection(net); 
 }
-
-QSet<QSharedPointer<User>> Network::getCartesianProduct(const Network&) const {
-}
-

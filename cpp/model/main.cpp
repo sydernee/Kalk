@@ -113,7 +113,7 @@ int main(){
     qDebug() << "Stampo il numero di utenti di facebook";
     qDebug() << facebook->size();
     
-    // stampo tutti i nominativi della lista 
+    // stampo tutti i nominativi degli utenti di facebook 
     QSet<QSharedPointer<User>> ulist = facebook->getUsers();
     qDebug() << "Utenti di Facebook";
     foreach (QSharedPointer<User> usr, ulist) {
@@ -199,10 +199,71 @@ int main(){
 	qDebug() << "FINE";    
 
     //unisco facebook e twitter
+    QSet<QSharedPointer<User>> facetwitter = facebook->getUnion(*twitter);
+    
+    // stampo tutti i nominativi degli utenti di facebook 
+    QSet<QSharedPointer<User>> faceunionlist = facebook->getUsers();
+    qDebug() << "Utenti di Facebook";
+    foreach (QSharedPointer<User> usr, faceunionlist) {
+        qDebug() << usr->getUsername();
+    }
+    qDebug() << "FINE";
+    // stampo tutti i nominativi degli utenti di facebook 
+    QSet<QSharedPointer<User>> twitterunionlist = twitter->getUsers();
+    qDebug() << "Utenti di Twitter";
+    foreach (QSharedPointer<User> usr, twitterunionlist) {
+        qDebug() << usr->getUsername();
+    }
+    qDebug() << "FINE";
+    // stampo tutti i nominativi degli utenti di facebook 
+    qDebug() << "Utenti di Facebook uniti agli utenti di Twitter";
+    foreach (QSharedPointer<User> usr, facetwitter) {
+        qDebug() << usr->getUsername();
+    }
+    qDebug() << "FINE";
 
+    //unisco facebook e twitter
+    QSet<QSharedPointer<User>> facetwitterIntersection = facebook->getIntersection(*twitter);
+    // stampo tutti i nominativi degli utenti di facebook 
+    qDebug() << "Intersezione tra gli utenti di Facebook e gli utenti di Twitter";
+    foreach (QSharedPointer<User> usr, facetwitterIntersection) {
+        qDebug() << usr->getUsername();
+    }
+    qDebug() << "FINE";
+
+
+    //unisco facebook e twitter
+    QSet<QSharedPointer<User>> facetwitterRelativeComplement = facebook->getRelativeComplement(*twitter);
+    // stampo tutti i nominativi degli utenti di facebook 
+    qDebug() << "Complemento relativo di Facebook in Twitter";
+    foreach (QSharedPointer<User> usr, facetwitterRelativeComplement) {
+        qDebug() << usr->getUsername();
+    }
+    qDebug() << "FINE";
+
+    //unisco facebook e twitter
+    QSet<QSharedPointer<User>> facetwitterdiffsym = facebook->getSymmetricDifference(*twitter);
+    // stampo tutti i nominativi degli utenti di facebook 
+    qDebug() << "Differenza simmetrica tra gli utenti di Facebook e gli utenti di Twitter";
+    foreach (QSharedPointer<User> usr, facetwitterdiffsym) {
+        qDebug() << usr->getUsername();
+    }
+    qDebug() << "FINE";
+    
+    Network* telegram = new Network(facebook->getUnion(*twitter));
+    telegram->setName("Telegram");
+    // stampo tutti i nominativi degli utenti di facebook     
+    qDebug() << "Elenco utenti di " << telegram->getName();
+    QSet<QSharedPointer<User>> telegramusers = telegram->getUsers();
+    foreach (QSharedPointer<User> usr, telegramusers) {
+        qDebug() << usr->getUsername();
+    }
+    qDebug() << "FINE";
+    /**/
     //elimino le reti
     delete facebook;
     delete twitter;
+    delete telegram;
 
 
     // yep, non va bene modificare il QSet nel loop

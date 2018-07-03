@@ -18,7 +18,9 @@ private:
     QList<QPair<QSharedPointer<User>, QSharedPointer<User>>> following; //first follows second
 public:
     Network(QString n);
+    Network(QSet<QSharedPointer<User>>, QString="");
     QString getName();
+    void setName(QString);
     unsigned int size() const;
 
     virtual void addUser(QSharedPointer<User>);
@@ -35,9 +37,8 @@ public:
     // SET OPERATIONS
     virtual QSet<QSharedPointer<User>> getUnion(const Network&) const;
     virtual QSet<QSharedPointer<User>> getIntersection(const Network&) const;
-    virtual QSet<QSharedPointer<User>> getRelativeComplement(const Network&) const;    
+    virtual QSet<QSharedPointer<User>> getRelativeComplement(const Network&) const;  // B - A  
     virtual QSet<QSharedPointer<User>> getSymmetricDifference(const Network&) const;
-    virtual QSet<QSharedPointer<User>> getCartesianProduct(const Network&) const;
     
     virtual ~Network() = default;
 };

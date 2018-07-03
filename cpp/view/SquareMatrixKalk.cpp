@@ -3,8 +3,10 @@
 #include "../controller/SquareMatrixController.h"
 #include "../exceptions/InvalidLayoutException.h"
 
+#include <QErrorMessage>
+
 SquareMatrixKalk::SquareMatrixKalk(MatrixController* _controller, QWidget *parent)
-    : MatrixCreator(_controller, parent),
+    : MatrixKalk(_controller, parent),
       minorDialog(nullptr),
       minorX(nullptr),
       minorY(nullptr)
@@ -15,10 +17,16 @@ SquareMatrixKalk::SquareMatrixKalk(MatrixController* _controller, QWidget *paren
     getDimensionsGroupBox()->layout()->removeWidget(getRowBox());
     getRowBox()->hide();
 
-    insertSquareOperations();
+    try {
+        insertSquareOperations();
+    }
+    catch(KalkException& e) {
+        QErrorMessage* err = new QErrorMessage;
+        err->setAttribute(Qt::WA_DeleteOnClose);
+        err->showMessage(e.getMessage());
+    }
 }
 
-SquareMatrixKalk::~SquareMatrixKalk() {}
 
 void SquareMatrixKalk::insertSquareOperations() {
     QHBoxLayout* l1 = new QHBoxLayout;
@@ -59,174 +67,231 @@ void SquareMatrixKalk::insertSquareOperations() {
 //override
 void SquareMatrixKalk::handleSelectDimensions() {
     getRowBox()->setValue(getColBox()->value());    //Una matrice quadrata ha colCount == rowCount
-    MatrixCreator::handleSelectDimensions();        //si comporta come la funzione della classe base
+    MatrixKalk::handleSelectDimensions();        //si comporta come la funzione della classe base
 }
 
 void SquareMatrixKalk::handleSelectSecondMatrixDimensions() {
     getRowBox()->setValue(getColBox()->value());            //Una matrice quadrata ha colCount == rowCount
-    MatrixCreator::handleSelectSecondMatrixDimensions();    //si comporta come la funzione della classe base
+    MatrixKalk::handleSelectSecondMatrixDimensions();    //si comporta come la funzione della classe base
 }
 
 void SquareMatrixKalk::scalarMultiplicationClicked() {
     //istanzia la matrice
-    controller->buildMatrix1(getCells(), getRowBox()->value(), getColBox()->value());
+    try {
+        controller->buildMatrix1(getCells(), getRowBox()->value(), getColBox()->value());
 
-    //mostra e nasconde i QWidget
-    getDimensionsGroupBox()->hide();
-    getOperationsSet()->hide();
-    getObtainResult()->show();
-    getSelectSecondMatrixLabel()->show();
+        //mostra e nasconde i QWidget
+        getDimensionsGroupBox()->hide();
+        getOperationsSet()->hide();
+        getObtainResult()->show();
+        getSelectSecondMatrixLabel()->show();
 
-    //riposiziona il obtainResult in fondo al layout
-    layout()->removeWidget(getObtainResult());
-    layout()->addWidget(getObtainResult());
+        //riposiziona il obtainResult in fondo al layout
+        layout()->removeWidget(getObtainResult());
+        layout()->addWidget(getObtainResult());
 
-    //imposta il tipo di operazione
-    setOperationSelected(SCALAR_MULTIPLICATION);
+        //imposta il tipo di operazione
+        setOperationSelected(SCALAR_MULTIPLICATION);
+    }
+    catch(KalkException& e) {
+        QErrorMessage* err = new QErrorMessage;
+        err->setAttribute(Qt::WA_DeleteOnClose);
+        err->showMessage(e.getMessage());
+    }
 }
 
 void SquareMatrixKalk::handleDeterminant() {
-    controller->buildMatrix1(getCells(), getRowBox()->value(), getColBox()->value());
+    try {
+        controller->buildMatrix1(getCells(), getRowBox()->value(), getColBox()->value());
 
-    QDialog* dialog = new QDialog;
-    dialog->setAttribute(Qt::WA_DeleteOnClose); //delete on close
-    dialog->setMinimumSize(200,50);
-    dialog->setWindowTitle("Determinante");
-    QLabel* label = new QLabel("Determinante: " + QString::number(static_cast<SquareMatrixController*>(controller)->determinant()), dialog);
-    label->setMargin(15);
-    dialog->show();
+        QDialog* dialog = new QDialog;
+        dialog->setAttribute(Qt::WA_DeleteOnClose); //delete on close
+        dialog->setMinimumSize(200,50);
+        dialog->setWindowTitle("Determinant");
+        QLabel* label = new QLabel("Determinante: " + QString::number(static_cast<SquareMatrixController*>(controller)->determinant()), dialog);
+        label->setMargin(15);
+        dialog->show();
+    }
+    catch(KalkException& e) {
+        QErrorMessage* err = new QErrorMessage;
+        err->setAttribute(Qt::WA_DeleteOnClose);
+        err->showMessage(e.getMessage());
+    }
 }
 
 void SquareMatrixKalk::handleGetMinor() {
-    //istanzia la matrice
-    controller->buildMatrix1(getCells(), getRowBox()->value(), getColBox()->value());
 
-    minorDialog = new QDialog;   //istanzia minorDialog
-    minorDialog->setAttribute(Qt::WA_DeleteOnClose); //delete on close
-    minorDialog->setWindowTitle("getMinor"); //titolo finestra
-    minorDialog->setWindowModality(Qt::ApplicationModal); //impedisce l'interazione con altre finestre
+    try {
+        //istanzia la matrice
+        controller->buildMatrix1(getCells(), getRowBox()->value(), getColBox()->value());
 
-    minorX = new QSpinBox(minorDialog); //istanzia x
-    minorY = new QSpinBox(minorDialog); //istanzia y
+        minorDialog = new QDialog;   //istanzia minorDialog
+        minorDialog->setAttribute(Qt::WA_DeleteOnClose); //delete on close
+        minorDialog->setWindowTitle("getMinor"); //titolo finestra
+        minorDialog->setWindowModality(Qt::ApplicationModal); //impedisce l'interazione con altre finestre
 
-    //imposta i limiti dei due QSpinBox
-    setSpinBoxLimits(minorX, 0, getRowBox()->value()-1);
-    setSpinBoxLimits(minorY, 0, getColBox()->value()-1);
+        minorX = new QSpinBox(minorDialog); //istanzia x
+        minorY = new QSpinBox(minorDialog); //istanzia y
 
-    QGridLayout* l = new QGridLayout; //layout operazioni input di minorDialog
-    QVBoxLayout* dialogLayout = new QVBoxLayout; //layout di minorDialog
+        //imposta i limiti dei due QSpinBox
+        setSpinBoxLimits(minorX, 0, getRowBox()->value()-1);
+        setSpinBoxLimits(minorY, 0, getColBox()->value()-1);
 
-    //aggiunge i campi a l con la relativa label
-    l->addWidget(new QLabel("Immetti la riga da elminare", minorDialog), 0, 0);
-    l->addWidget(minorX, 0, 1);
-    l->addWidget(new QLabel("Immetti la colonna da elminare", minorDialog), 1, 0);
-    l->addWidget(minorY, 1, 1);
+        QGridLayout* l = new QGridLayout; //layout operazioni input di minorDialog
+        QVBoxLayout* dialogLayout = new QVBoxLayout; //layout di minorDialog
 
-    //pulsante per ottenere il risultato
-    QPushButton* button = new QPushButton("Ok", minorDialog);
+        //aggiunge i campi a l con la relativa label
+        l->addWidget(new QLabel("Immetti la riga da elminare", minorDialog), 0, 0);
+        l->addWidget(minorX, 0, 1);
+        l->addWidget(new QLabel("Immetti la colonna da elminare", minorDialog), 1, 0);
+        l->addWidget(minorY, 1, 1);
 
-    dialogLayout->addLayout(l);         //aggiunge l a dialogLayout
-    dialogLayout->addWidget(button);    //aggiunge button a dialogLayout
+        //pulsante per ottenere il risultato
+        QPushButton* button = new QPushButton("Ok", minorDialog);
 
-    minorDialog->setLayout(dialogLayout);    //imposta il layout di minorDialog
-    minorDialog->show();                     //mostra minorDialog
+        dialogLayout->addLayout(l);         //aggiunge l a dialogLayout
+        dialogLayout->addWidget(button);    //aggiunge button a dialogLayout
 
-    //imposta il tipo di operazione e connette button
-    setOperationSelected(GET_MINOR);
-    connect(button, SIGNAL(clicked()), this, SLOT(handleSquareMatrixObtainResult()));
+        minorDialog->setLayout(dialogLayout);    //imposta il layout di minorDialog
+        minorDialog->show();                     //mostra minorDialog
+
+        //imposta il tipo di operazione e connette button
+        setOperationSelected(GET_MINOR);
+        connect(button, SIGNAL(clicked()), this, SLOT(handleSquareMatrixObtainResult()));
+    }
+    catch(KalkException& e) {
+        QErrorMessage* err = new QErrorMessage;
+        err->setAttribute(Qt::WA_DeleteOnClose);
+        err->showMessage(e.getMessage());
+    }
 }
 
 void SquareMatrixKalk::handleIsSymmetric() {
-    controller->buildMatrix1(getCells(), getRowBox()->value(), getColBox()->value());
+    try {
+        controller->buildMatrix1(getCells(), getRowBox()->value(), getColBox()->value());
 
-    QDialog* dialog = new QDialog;
-    dialog->setAttribute(Qt::WA_DeleteOnClose); //delete on close
-    dialog->setMinimumSize(200,50);
-    dialog->setWindowTitle("Simmetria");
-    QLabel* label = new QLabel(dialog);
+        QDialog* dialog = new QDialog;
+        dialog->setAttribute(Qt::WA_DeleteOnClose); //delete on close
+        dialog->setMinimumSize(200,50);
+        dialog->setWindowTitle("Simmetria");
+        QLabel* label = new QLabel(dialog);
 
-    if (static_cast<SquareMatrixController*>(controller)->isSymmetric())
-        label->setText("La matrice è simmetrica.");
-    else
-        label->setText("La matrice non è simmetrica.");
-    label->setMargin(15);
-    dialog->show();
+        if (static_cast<SquareMatrixController*>(controller)->isSymmetric())
+            label->setText("La matrice è simmetrica.");
+        else
+            label->setText("La matrice non è simmetrica.");
+        label->setMargin(15);
+        dialog->show();
+    }
+    catch(KalkException& e) {
+        QErrorMessage* err = new QErrorMessage;
+        err->setAttribute(Qt::WA_DeleteOnClose);
+        err->showMessage(e.getMessage());
+    }
 }
 
 void SquareMatrixKalk::handleSupTriangular() {
-    //istanzia la matrice
-    controller->buildMatrix1(getCells(), getRowBox()->value(), getColBox()->value());
+    try {
+        //istanzia la matrice
+        controller->buildMatrix1(getCells(), getRowBox()->value(), getColBox()->value());
 
-    QDialog* dialog = new QDialog;
-    dialog->setAttribute(Qt::WA_DeleteOnClose); //delete on close
-    dialog->setMinimumSize(250,50);
-    dialog->setWindowTitle("supTriangular");
-    QLabel* label = new QLabel(dialog);
+        QDialog* dialog = new QDialog;
+        dialog->setAttribute(Qt::WA_DeleteOnClose); //delete on close
+        dialog->setMinimumSize(250,50);
+        dialog->setWindowTitle("supTriangular");
+        QLabel* label = new QLabel(dialog);
 
-    //se è triangolare superiore
-    if (static_cast<SquareMatrixController*>(controller)->isSupTriangular())
-        label->setText("La matrice è triangolare superiore.");
-    //altrimenti
-    else
-        label->setText("La matrice non è triangolare superiore.");
+        //se è triangolare superiore
+        if (static_cast<SquareMatrixController*>(controller)->isSupTriangular())
+            label->setText("La matrice è triangolare superiore.");
+        //altrimenti
+        else
+            label->setText("La matrice non è triangolare superiore.");
 
-    label->setMargin(15);
-    dialog->show();
+        label->setMargin(15);
+        dialog->show();
+    }
+    catch(KalkException& e) {
+        QErrorMessage* err = new QErrorMessage;
+        err->setAttribute(Qt::WA_DeleteOnClose);
+        err->showMessage(e.getMessage());
+    }
 }
 
 void SquareMatrixKalk::handleInfTriangular() {
-    //istanzia la matrice
-    controller->buildMatrix1(getCells(), getRowBox()->value(), getColBox()->value());
+    try {
+        //istanzia la matrice
+        controller->buildMatrix1(getCells(), getRowBox()->value(), getColBox()->value());
 
-    QDialog* dialog = new QDialog;
-    dialog->setAttribute(Qt::WA_DeleteOnClose); //delete on close
-    dialog->setMinimumSize(250,50);
-    dialog->setWindowTitle("infTriangular");
-    QLabel* label = new QLabel(dialog);
+        QDialog* dialog = new QDialog;
+        dialog->setAttribute(Qt::WA_DeleteOnClose); //delete on close
+        dialog->setMinimumSize(250,50);
+        dialog->setWindowTitle("infTriangular");
+        QLabel* label = new QLabel(dialog);
 
-    //se è triangolare inferiore
-    if (static_cast<SquareMatrixController*>(controller)->isInfTriangular())
-        label->setText("La matrice è triangolare inferiore.");
-    //altrimenti
-    else
-        label->setText("La matrice non è triangolare inferiore.");
+        //se è triangolare inferiore
+        if (static_cast<SquareMatrixController*>(controller)->isInfTriangular())
+            label->setText("La matrice è triangolare inferiore.");
+        //altrimenti
+        else
+            label->setText("La matrice non è triangolare inferiore.");
 
-    label->setMargin(15);
-    dialog->show();
+        label->setMargin(15);
+        dialog->show();
+    }
+    catch(KalkException& e) {
+        QErrorMessage* err = new QErrorMessage;
+        err->setAttribute(Qt::WA_DeleteOnClose);
+        err->showMessage(e.getMessage());
+    }
 }
 
 void SquareMatrixKalk::handleIsDiagonal() {
-    //istanzia la matrice
-    controller->buildMatrix1(getCells(), getRowBox()->value(), getColBox()->value());
+    try {
+        //istanzia la matrice
+        controller->buildMatrix1(getCells(), getRowBox()->value(), getColBox()->value());
 
-    QDialog* dialog = new QDialog;
-    dialog->setAttribute(Qt::WA_DeleteOnClose); //delete on close
-    dialog->setMinimumSize(250,50);
-    dialog->setWindowTitle("isDiagonal");
-    QLabel* label = new QLabel(dialog);
+        QDialog* dialog = new QDialog;
+        dialog->setAttribute(Qt::WA_DeleteOnClose); //delete on close
+        dialog->setMinimumSize(250,50);
+        dialog->setWindowTitle("isDiagonal");
+        QLabel* label = new QLabel(dialog);
 
-    //se è triangolare diagonale
-    if (static_cast<SquareMatrixController*>(controller)->isDiagonal())
-        label->setText("La matrice è diagonale.");
-    //altrimenti
-    else
-        label->setText("La matrice non è diagonale.");
+        //se è triangolare diagonale
+        if (static_cast<SquareMatrixController*>(controller)->isDiagonal())
+            label->setText("La matrice è diagonale.");
+        //altrimenti
+        else
+            label->setText("La matrice non è diagonale.");
 
-    label->setMargin(15);
-    dialog->show();
+        label->setMargin(15);
+        dialog->show();
+    }
+    catch(KalkException& e) {
+        QErrorMessage* err = new QErrorMessage;
+        err->setAttribute(Qt::WA_DeleteOnClose);
+        err->showMessage(e.getMessage());
+    }
 }
 
 void SquareMatrixKalk::handleSquareMatrixObtainResult()
 {
-    if (getOperationSelected() == GET_MINOR) {
-        MatrixController::displayMatrix(static_cast<SquareMatrixController*>(controller)->getMinor(minorX->value(), minorY->value()), "Risultato getMinor");
-        minorDialog->close();
-        getOperationsSet()->hide();
-    }
+    try {
+        if (getOperationSelected() == GET_MINOR) {
+            MatrixController::displayMatrix(static_cast<SquareMatrixController*>(controller)->getMinor(minorX->value(), minorY->value()), "Risultato getMinor");
+            minorDialog->close();
+            getOperationsSet()->hide();
+        }
 
-    //reset dell'interfaccia
-    resetDimensionsGroupBox();
-    getObtainResult()->hide();
-    getSelectSecondMatrixLabel()->hide();
+        //reset dell'interfaccia
+        resetDimensionsGroupBox();
+        getObtainResult()->hide();
+        getSelectSecondMatrixLabel()->hide();
+    }
+    catch(KalkException& e) {
+        QErrorMessage* err = new QErrorMessage;
+        err->setAttribute(Qt::WA_DeleteOnClose);
+        err->showMessage(e.getMessage());
+    }
 }
 

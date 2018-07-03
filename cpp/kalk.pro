@@ -38,7 +38,6 @@ SOURCES += \
 #   model/datatypes/Number.cpp \
     view/Widget.cpp \
     view/MatrixBuilder.cpp \
-    view/MatrixCreator.cpp \
     view/Keypad.cpp \
     view/KeypadInput.cpp \
     controller/MatrixController.cpp \
@@ -52,7 +51,8 @@ SOURCES += \
     exceptions/NullPointerException.cpp \
     exceptions/KalkException.cpp \
     exceptions/InvalidMatrixTypeException.cpp \
-    exceptions/InvalidLayoutException.cpp
+    exceptions/InvalidLayoutException.cpp \
+    view/MatrixKalk.cpp
 
 HEADERS += \
     model/DataType.h \
@@ -64,7 +64,6 @@ HEADERS += \
 #   model/datatypes/Number.h \
     view/Widget.h \
     view/MatrixBuilder.h \
-    view/MatrixCreator.h \
     view/Keypad.h \
     view/KeypadInput.h \
     controller/MatrixController.h \
@@ -78,7 +77,8 @@ HEADERS += \
     exceptions/NullPointerException.h \
     exceptions/KalkException.h \
     exceptions/InvalidMatrixTypeException.h \
-    exceptions/InvalidLayoutException.h
+    exceptions/InvalidLayoutException.h \
+    view/MatrixKalk.h
 
 RESOURCES += \
     resources.qrc

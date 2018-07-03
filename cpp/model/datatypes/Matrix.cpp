@@ -38,8 +38,6 @@ Matrix::Matrix(unsigned int a, unsigned int b, std::vector<std::initializer_list
     }
 }
 
-//Matrix::~Matrix() {}
-
 Matrix::Matrix(const Matrix& mat) :
     row(mat.rowCount()), col(mat.colCount()), matrix(mat.matrix) {}
 
@@ -72,7 +70,7 @@ unsigned int Matrix::colCount() const {
 //somma
 Matrix operator +(const Matrix& mat1, const Matrix& mat2) {
     if (mat1.rowCount() != mat2.rowCount() || mat1.colCount() != mat2.colCount())
-        throw InvalidMatrixIndexes("Somma: le matrici devono avere le stesse dimensioni.");
+        throw InvalidMatrixIndexes("Matrix::operator+(): Matrixes must have the same dimensions.");
 
     Matrix res(mat1.rowCount(), mat1.colCount());
     for (unsigned int i = 0; i < mat1.rowCount(); i++)
@@ -84,7 +82,7 @@ Matrix operator +(const Matrix& mat1, const Matrix& mat2) {
 //differenza
 Matrix operator -(const Matrix& mat1, const Matrix& mat2) {
     if (mat1.rowCount() != mat2.rowCount() || mat1.colCount() != mat2.colCount())
-        throw InvalidMatrixIndexes("Differenza: le matrici devono avere le stesse dimensioni.");
+        throw InvalidMatrixIndexes("Matrix::operator-(): Matrixes must have the same dimensions.");
 
     Matrix res(mat1.rowCount(), mat1.colCount());
     for (unsigned int i = 0; i < mat1.rowCount(); i++)
@@ -106,7 +104,7 @@ Matrix Matrix::operator *(double value) const {
 //Prodotto scalare
 Matrix operator *(const Matrix& mat1, const Matrix& mat2) {
     if (mat1.colCount() != mat2.rowCount())
-        throw InvalidMatrixIndexes("Prodotto scalare: le colonne di mat1 devono essere uguali alle righe di mat2.");
+        throw InvalidMatrixIndexes("Matrix::operator*(): mat1.colCount() is not equal to mat2.rowCount().");
 
     Matrix res(mat1.rowCount(), mat2.colCount());
     for (unsigned int i = 0; i < mat1.rowCount(); i++)
@@ -150,28 +148,28 @@ bool Matrix::operator !=(const Matrix& mat) const {
 
 double Matrix::get(unsigned int _row, unsigned int _col) const {
     if (_row >= rowCount() || _col >= colCount())
-        throw IndexOutOfBoundsException("get(): Out of bounds indexes.");
+        throw IndexOutOfBoundsException("Matrix::get(): Out of bounds indexes.");
 
     return matrix[_row * col + _col];
 }
 
 void Matrix::set(unsigned int _row, unsigned int _col, double val) {
     if (_row >= rowCount() || _col >= colCount())
-        throw IndexOutOfBoundsException("set(): Out of bounds indexes.");
+        throw IndexOutOfBoundsException("Matrix::set(): Out of bounds indexes.");
 
     matrix[_row * col + _col] = val;
 }
 
 double& Matrix::getReference(unsigned int _row, unsigned int _col) {
     if (_row >= rowCount() || _col >= colCount())
-        throw IndexOutOfBoundsException("getReference(): Out of bounds indexes.");
+        throw IndexOutOfBoundsException("Matrix::getReference(): Out of bounds indexes.");
 
     return matrix[_row * col + _col];
 }
 
 const double& Matrix::getReference(unsigned int _row, unsigned int _col) const {
     if (_row >= rowCount() || _col >= colCount())
-        throw IndexOutOfBoundsException("getReference() const: Out of bounds indexes.");
+        throw IndexOutOfBoundsException("Matrix::getReference() const: Out of bounds indexes.");
 
     return matrix[_row * col + _col];
 }
@@ -218,7 +216,7 @@ Matrix::CRow Matrix::operator [](unsigned int _row) const {
 //3 operazioni elementari
 void Matrix::swapRows(unsigned int rowA, unsigned int rowB) {
     if (rowA >= rowCount() || rowB >= rowCount())
-        throw IndexOutOfBoundsException("swapRows(): Out of bounds indexes.");
+        throw IndexOutOfBoundsException("Matrix::swapRows(): Out of bounds indexes.");
 
     if (rowA == rowB) { return; } //non ho nulla da scambiare
     for (unsigned int c = 0; c < colCount(); ++c) {
@@ -230,7 +228,7 @@ void Matrix::swapRows(unsigned int rowA, unsigned int rowB) {
 
 void Matrix::swapCols(unsigned int colA, unsigned int colB) {
     if (colA >= colCount() || colB >= colCount())
-        throw IndexOutOfBoundsException("swapCols(): Out of bounds indexes.");
+        throw IndexOutOfBoundsException("Matrix::swapCols(): Out of bounds indexes.");
 
     if (colA == colB) { return; } //non ho nulla da scambiare
     for (unsigned int r = 0; r < rowCount(); ++r) {
@@ -242,10 +240,10 @@ void Matrix::swapCols(unsigned int colA, unsigned int colB) {
 
 void Matrix::substituteRow(unsigned int destRow, unsigned int sourceRow, double factor) {
     if (sourceRow >= rowCount() || destRow >= rowCount())
-        throw IndexOutOfBoundsException("substituteRow(): Out of bounds indexes.");
+        throw IndexOutOfBoundsException("Matrix::substituteRow(): Out of bounds indexes.");
 
     if (factor == 0)
-        throw ZeroMultiplierException("substituteRow(): Cannot multiply per 0.");
+        throw ZeroMultiplierException("Matrix::substituteRow(): Cannot multiply per 0.");
 
     if (sourceRow == destRow && factor == 1) { return; } //non ho nulla da scambiare
     for (unsigned int c = 0; c < colCount(); ++c) {

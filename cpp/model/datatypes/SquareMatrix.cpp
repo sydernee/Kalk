@@ -111,3 +111,55 @@ SquareMatrix SquareMatrix::identityMatrix(unsigned int n) {
 SquareMatrix SquareMatrix::zeroMatrix(unsigned int n) {
     return SquareMatrix(n, 0);
 }
+
+//OP binarie
+
+//somma
+SquareMatrix operator +(const SquareMatrix& mat1, const SquareMatrix& mat2) {
+    if (mat1.rowCount() != mat2.rowCount() || mat1.colCount() != mat2.colCount())
+        throw InvalidMatrixIndexes("SquareMatrix::operator+(): Matrixes must have the same dimensions.");
+
+    SquareMatrix res(mat1.rowCount());
+    for (unsigned int i = 0; i < mat1.rowCount(); i++)
+        for (unsigned int j = 0; j < mat1.colCount(); j++)
+            res.set(i,j, mat1.get(i,j) + mat2.get(i,j));
+    return res;
+}
+
+//differenza
+SquareMatrix operator -(const SquareMatrix& mat1, const SquareMatrix& mat2) {
+    if (mat1.rowCount() != mat2.rowCount() || mat1.colCount() != mat2.colCount())
+        throw InvalidMatrixIndexes("SquareMatrix::operator-(): Matrixes must have the same dimensions.");
+
+    SquareMatrix res(mat1.rowCount());
+    for (unsigned int i = 0; i < mat1.rowCount(); i++)
+        for (unsigned int j = 0; j < mat1.colCount(); j++)
+            res.set(i,j, mat1.get(i,j) - mat2.get(i,j));
+    return res;
+}
+
+//Prodotto scalare
+SquareMatrix operator *(const SquareMatrix& mat1, const SquareMatrix& mat2) {
+    if (mat1.colCount() != mat2.rowCount())
+        throw InvalidMatrixIndexes("SquareMatrix::operator*(): mat1.colCount() is not equal to mat2.rowCount().");
+
+    SquareMatrix res(mat1.rowCount());
+    for (unsigned int i = 0; i < mat1.rowCount(); i++)
+        for (unsigned int j = 0; j < mat2.colCount(); j++) {
+            double sum = 0; //accumulatore
+            for (unsigned int k = 0; k < mat1.colCount(); k++)
+                sum += mat1.get(i,k) * mat2.get(k, j);
+            res.set(i,j, sum);
+    }
+    return res;
+}
+
+//prodotto per uno scalare
+SquareMatrix SquareMatrix::operator *(double value) const {
+    SquareMatrix res(rowCount());
+    for (unsigned int i = 0; i < rowCount(); i++)
+        for (unsigned int j = 0; j < colCount(); j++)
+            res.set(i,j, get(i,j) * value);
+
+    return res;
+}

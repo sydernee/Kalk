@@ -8,7 +8,7 @@ class SquareMatrix;
 
 class SquareMatrixController : public MatrixController {
 public:
-    SquareMatrixController(MatrixCreator* = nullptr, Matrix* = nullptr, Matrix* = nullptr);
+    SquareMatrixController(MatrixKalk* = nullptr, Matrix* = nullptr, Matrix* = nullptr);
 //    virtual ~SquareMatrixController();
 
     void buildMatrix1(QVector<KeypadInput*>, unsigned int, unsigned int);

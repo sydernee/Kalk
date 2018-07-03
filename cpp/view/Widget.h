@@ -10,16 +10,14 @@ class Widget : public QWidget
 {
     Q_OBJECT
 private:
-    Keypad* keypad;
-    QPushButton* createMatrix;
-
-    //void buildKeypad(); //costruisce il tastierino numerico
+//    Keypad* keypad;
+    QPushButton* createMatrixKalk;
 
 private slots:
     void handleNumButtons();
     void handleDotButton();
     void handleAssignmentButton();
-    void handleCreateMatrixButton();
+    void handleCreateMatrixKalkButton();
 
 public:
     Widget(QWidget *parent = 0);

@@ -5,7 +5,7 @@
 
 class SparseMatrixController : public MatrixController {
 public:
-    SparseMatrixController(MatrixCreator* = nullptr, Matrix* = nullptr, Matrix* = nullptr);
+    SparseMatrixController(MatrixKalk* = nullptr, Matrix* = nullptr, Matrix* = nullptr);
 
     void buildMatrix1(QVector<KeypadInput *>, unsigned int, unsigned int);
     void buildMatrix1(unsigned int, unsigned int);

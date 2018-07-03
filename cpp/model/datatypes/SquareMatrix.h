@@ -19,8 +19,14 @@ public:
     bool isDiagonal() const;
     bool isSymmetric() const;
 
+    SquareMatrix operator*(double) const;
+
     static SquareMatrix identityMatrix(unsigned int);
     static SquareMatrix zeroMatrix(unsigned int);
 };
+
+SquareMatrix operator+(const SquareMatrix&, const SquareMatrix&);
+SquareMatrix operator-(const SquareMatrix&, const SquareMatrix&);
+SquareMatrix operator*(const SquareMatrix&, const SquareMatrix&);
 
 #endif // SQUAREMATRIX_H

@@ -21,8 +21,14 @@ public:
     bool isSymmetric() const;
     bool isDense() const;
 
+    SparseMatrix operator*(double) const;
+
     QVector<double> nonZeroRow(unsigned int) const;
     QVector<double> nonZeroCol(unsigned int) const;
 };
+
+SparseMatrix operator+(const SparseMatrix&, const SparseMatrix&);
+SparseMatrix operator-(const SparseMatrix&, const SparseMatrix&);
+SparseMatrix operator*(const SparseMatrix&, const SparseMatrix&);
 
 #endif // SPARSEMATRIX_H

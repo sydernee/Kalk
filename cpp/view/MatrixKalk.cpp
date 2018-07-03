@@ -1,10 +1,8 @@
-#include "MatrixCreator.h"
-
-
-
+#include "MatrixKalk.h"
+#include <QErrorMessage>
 
 //constructor
-MatrixCreator::MatrixCreator(MatrixController* _controller, QWidget *parent)
+MatrixKalk::MatrixKalk(MatrixController* _controller, QWidget *parent)
     : QWidget(parent),
       dimensionsGroupBox(nullptr),
       matrixBuilder(nullptr),
@@ -49,10 +47,10 @@ MatrixCreator::MatrixCreator(MatrixController* _controller, QWidget *parent)
 
 }
 
-MatrixCreator::~MatrixCreator() {}
+MatrixKalk::~MatrixKalk() {}
 
 //costruisce il set dei pulsanti per la selezione delle dimensioni
-void MatrixCreator::buildDimensionsGroupBox() {
+void MatrixKalk::buildDimensionsGroupBox() {
     dimensionsGroupBox = new QGroupBox(this);
     selectDimensions = new QPushButton("Seleziona", dimensionsGroupBox);
     selectSecondMatrixDimensions = new QPushButton("Seleziona", matrixBuilder);
@@ -77,7 +75,7 @@ void MatrixCreator::buildDimensionsGroupBox() {
 }
 
 //
-void MatrixCreator::buildOperationsSet() {
+void MatrixKalk::buildOperationsSet() {
     if (operationsSet != nullptr)
         delete operationsSet;
 
@@ -95,7 +93,7 @@ void MatrixCreator::buildOperationsSet() {
     connect(subtraction, SIGNAL(clicked()), this, SLOT(subtractionClicked()));
     gridOperationsLayout->addWidget(subtraction,0,1);
 
-    QPushButton* scalarMultiplication = new QPushButton("* (scalare)", operationsSet);
+    QPushButton* scalarMultiplication = new QPushButton("scalar *", operationsSet);
     connect(scalarMultiplication, SIGNAL(clicked()), this, SLOT(scalarMultiplicationClicked()));
     gridOperationsLayout->addWidget(scalarMultiplication,0,2);
 
@@ -103,7 +101,7 @@ void MatrixCreator::buildOperationsSet() {
     connect(nonScalarMultiplication, SIGNAL(clicked()), this, SLOT(nonScalarMultiplicationClicked()));
     gridOperationsLayout->addWidget(nonScalarMultiplication,0,3);
 
-    QPushButton* transposed = new QPushButton("trasposta()", operationsSet);
+    QPushButton* transposed = new QPushButton("transposed()", operationsSet);
     connect(transposed, SIGNAL(clicked()), this, SLOT(transposedClicked()));
     gridOperationsLayout->addWidget(transposed, 1,0);
 
@@ -134,20 +132,20 @@ void MatrixCreator::buildOperationsSet() {
     operationsSet->hide(); //nasconde operationsSet
 }
 
-void MatrixCreator::clearCells() {
-    foreach (KeypadInput* input, cells) {   //ogni elemento di cells
+void MatrixKalk::clearCells() {
+    foreach (KeypadInput* input, cells) {   //per ogni elemento di cells
         delete input;                       //libera la memoria allocata della cella
     }
     cells.clear();                          //svuota cells
 }
 
-void MatrixCreator::resetCells() {
-    foreach (KeypadInput* input, cells) {   //ogni elemento di cells
+void MatrixKalk::resetCells() {
+    foreach (KeypadInput* input, cells) {   //per ogni elemento di cells
         input->clear();                     //input->setText("")
     }
 }
 
-void MatrixCreator::resetDimensionsGroupBox() {
+void MatrixKalk::resetDimensionsGroupBox() {
     clearCells();
     selectDimensionsLabel->setText("Seleziona le dimensioni");
     rowBox->setEnabled(true);   //riattiva gli QSpinBox per le dimensioni
@@ -158,10 +156,9 @@ void MatrixCreator::resetDimensionsGroupBox() {
     matrixBuilder->hide();      //nasconde matrixBuilder
 }
 
-void MatrixCreator::initializeMatrixBuilder() {
-    if (matrixBuilder != nullptr) {
+void MatrixKalk::initializeMatrixBuilder() {
+    if (matrixBuilder != nullptr)
         delete matrixBuilder;
-    }
 
     matrixBuilder = new QGroupBox(this);
     QVBoxLayout* vLayout = new QVBoxLayout;             //layout principale di matrixBuilder
@@ -199,7 +196,7 @@ void MatrixCreator::initializeMatrixBuilder() {
     layout()->addWidget(matrixBuilder);
 }
 
-void MatrixCreator::setRowBox(unsigned int min, unsigned int max, unsigned int _default) {
+void MatrixKalk::setRowBox(unsigned int min, unsigned int max, unsigned int _default) {
     if (rowBox != nullptr)
         delete rowBox;
     rowBox = new QSpinBox(dimensionsGroupBox);
@@ -209,11 +206,11 @@ void MatrixCreator::setRowBox(unsigned int min, unsigned int max, unsigned int _
     rowBox->setValue(_default); //imposta il valore di default
 }
 
-void MatrixCreator::setRowBox() {
+void MatrixKalk::setRowBox() {
      setRowBox(1,10);
 }
 
-void MatrixCreator::setColBox(unsigned int min, unsigned int max, unsigned int _default) {
+void MatrixKalk::setColBox(unsigned int min, unsigned int max, unsigned int _default) {
     if (colBox != nullptr)
         delete colBox;
     colBox = new QSpinBox(dimensionsGroupBox);
@@ -223,14 +220,14 @@ void MatrixCreator::setColBox(unsigned int min, unsigned int max, unsigned int _
     colBox->setValue(_default); //imposta il valore di default
 }
 
-void MatrixCreator::setColBox() {
+void MatrixKalk::setColBox() {
     setColBox(1,10);
 }
 
 //versione statica di setQSpinBox
-void MatrixCreator::setSpinBoxLimits(QSpinBox* box, unsigned int min, unsigned int max, unsigned int _default) {
+void MatrixKalk::setSpinBoxLimits(QSpinBox* box, unsigned int min, unsigned int max, unsigned int _default) {
     if (box == nullptr)
-        throw NullPointerException("MatrixCreator::setSpinBoxLimits(): attempted to dereference a null pointer.");
+        throw NullPointerException("MatrixKalk::setSpinBoxLimits(): attempted to dereference a null pointer.");
     box->setMinimum(min);       //imposta il valore minimo
     box->setMaximum(max);       //imposta il valore massimo
     box->setSingleStep(1);      //imposta lo step
@@ -239,119 +236,119 @@ void MatrixCreator::setSpinBoxLimits(QSpinBox* box, unsigned int min, unsigned i
 
 //SETTERS
 
-void MatrixCreator::setDimensionsGroupBox(QGroupBox* groupBox) {
+void MatrixKalk::setDimensionsGroupBox(QGroupBox* groupBox) {
     if (dimensionsGroupBox != nullptr)
         delete dimensionsGroupBox;
     dimensionsGroupBox = groupBox;
 }
 
-void MatrixCreator::setSelectDimensions(QPushButton* button) {
+void MatrixKalk::setSelectDimensions(QPushButton* button) {
     if (selectDimensions != nullptr)
         delete selectDimensions;
     selectDimensions = button;
 }
 
-void MatrixCreator::setSelectSecondMatrixDimensions(QPushButton* button) {
+void MatrixKalk::setSelectSecondMatrixDimensions(QPushButton* button) {
     if (selectSecondMatrixDimensions != nullptr)
         delete selectSecondMatrixDimensions;
     selectSecondMatrixDimensions = button;
 }
 
-void MatrixCreator::setSelectDimenionsLabel(QLabel* label) {
+void MatrixKalk::setSelectDimenionsLabel(QLabel* label) {
     if (selectDimensionsLabel != nullptr)
         delete selectDimensionsLabel;
     selectDimensionsLabel = label;
 }
 
-void MatrixCreator::setObtainResult(QPushButton* button) {
+void MatrixKalk::setObtainResult(QPushButton* button) {
     if (obtainResult != nullptr)
         delete obtainResult;
     obtainResult = button;
 }
 
-void MatrixCreator::setRowBox(QSpinBox* box) {
+void MatrixKalk::setRowBox(QSpinBox* box) {
     if (rowBox != nullptr)
         delete rowBox;
     rowBox = box;
 }
 
-void MatrixCreator::setColBox(QSpinBox* box) {
+void MatrixKalk::setColBox(QSpinBox* box) {
     if (colBox != nullptr)
         delete colBox;
     colBox = box;
 }
 
-void MatrixCreator::setMatrixBuilder(QGroupBox* groupBox) {
+void MatrixKalk::setMatrixBuilder(QGroupBox* groupBox) {
     if (matrixBuilder != nullptr)
         delete matrixBuilder;
     matrixBuilder = groupBox;
 }
 
-void MatrixCreator::setOperationsSet(QGroupBox* groupBox) {
+void MatrixKalk::setOperationsSet(QGroupBox* groupBox) {
     if (operationsSet!= nullptr)
         delete operationsSet;
     operationsSet = groupBox;
 }
 
-void MatrixCreator::setOperationSelected(Operation op) {
+void MatrixKalk::setOperationSelected(Operation op) {
     operationSelected = op;
 }
 
 //GETTERS
 
-QGroupBox* MatrixCreator::getDimensionsGroupBox() const {
+QGroupBox* MatrixKalk::getDimensionsGroupBox() const {
     return dimensionsGroupBox;
 }
 
 
-QPushButton* MatrixCreator::getSelectDimensions() const {
+QPushButton* MatrixKalk::getSelectDimensions() const {
     return selectDimensions;
 }
 
-QPushButton* MatrixCreator::getSelectSecondMatrixDimensions() const {
+QPushButton* MatrixKalk::getSelectSecondMatrixDimensions() const {
     return selectSecondMatrixDimensions;
 }
 
-QLabel* MatrixCreator::getSelectDimensionsLabel() const {
+QLabel* MatrixKalk::getSelectDimensionsLabel() const {
     return selectDimensionsLabel;
 }
 
-QLabel *MatrixCreator::getSelectSecondMatrixLabel() const {
+QLabel *MatrixKalk::getSelectSecondMatrixLabel() const {
     return selectSecondMatrixLabel;
 }
 
-QPushButton* MatrixCreator::getObtainResult() const {
+QPushButton* MatrixKalk::getObtainResult() const {
     return obtainResult;
 }
 
-QSpinBox* MatrixCreator::getRowBox() const {
+QSpinBox* MatrixKalk::getRowBox() const {
     return rowBox;
 }
 
-QSpinBox* MatrixCreator::getColBox() const {
+QSpinBox* MatrixKalk::getColBox() const {
     return colBox;
 }
 
-QGroupBox* MatrixCreator::getMatrixBuilder() const {
+QGroupBox* MatrixKalk::getMatrixBuilder() const {
     return matrixBuilder;
 }
 
-QGroupBox* MatrixCreator::getOperationsSet() const {
+QGroupBox* MatrixKalk::getOperationsSet() const {
     return operationsSet;
 }
 
-QVector<KeypadInput*> MatrixCreator::getCells() const {
+QVector<KeypadInput*> MatrixKalk::getCells() const {
     return cells;
 }
 
-Operation MatrixCreator::getOperationSelected() const {
+Operation MatrixKalk::getOperationSelected() const {
     return operationSelected;
 }
 
 //SLOTS
 
 //selectDimensions button handler
-void MatrixCreator::handleSelectDimensions() {
+void MatrixKalk::handleSelectDimensions() {
     initializeMatrixBuilder();
 
     //se l'operation set non è visibile, lo mostra
@@ -371,9 +368,10 @@ void MatrixCreator::handleSelectDimensions() {
     rowBox->setEnabled(false);
     colBox->setEnabled(false);
     selectDimensions->hide();
+    cells[0]->setFocus();   //focus sulla prima cella
 }
 
-void MatrixCreator::handleSelectSecondMatrixDimensions() {
+void MatrixKalk::handleSelectSecondMatrixDimensions() {
     initializeMatrixBuilder();
     obtainResult->show();
     layout()->removeWidget(obtainResult);
@@ -384,63 +382,70 @@ void MatrixCreator::handleSelectSecondMatrixDimensions() {
     rowBox->setEnabled(false);
     colBox->setEnabled(false);
     selectSecondMatrixDimensions->hide();
+    cells[0]->setFocus();   //focus sulla prima cella
 }
 
 //obtainResult button handler
-void MatrixCreator::handleObtainResult() {
+void MatrixKalk::handleObtainResult() {
 
-    //WARN: catena di if?
-    if (getOperationSelected() == SUM) {
-        //istanzia l'operando di destra
-        controller->buildMatrix2(cells, rowBox->value(), colBox->value());
-        MatrixController::displayMatrix(controller->sum(), "Risultato sum");
+    try {
+        if (getOperationSelected() == SUM) {
+            //istanzia l'operando di destra
+            controller->buildMatrix2(cells, rowBox->value(), colBox->value());
+            MatrixController::displayMatrix(controller->sum(), "Risultato sum");
+        }
+
+        else if (getOperationSelected() == SUBTRACTION) {
+            //istanzia l'operando di destra
+            controller->buildMatrix2(cells, rowBox->value(), colBox->value());
+            MatrixController::displayMatrix(controller->subtract(), "Risultato subtraction");
+        }
+
+        else if (getOperationSelected() == SCALAR_MULTIPLICATION) {
+            //istanzia l'operando di destra
+            controller->buildMatrix2(cells, rowBox->value(), colBox->value());
+            MatrixController::displayMatrix(controller->scalarMultiply(), "Risultato scalarMul");
+        }
+
+        else if (getOperationSelected() == NON_SCALAR_MULTIPLICATION) {
+            MatrixController::displayMatrix(controller->nonScalarMultiply(nonScalarMulInput->text().toDouble()), "Risultato nonScalarMul");
+            nonScalarMulDialog->close();
+            operationsSet->hide();
+        }
+
+        else if (getOperationSelected() == SWAP_ROWS) {
+            MatrixController::displayMatrix(controller->swapRows(swapFieldA->value(), swapFieldB->value()), "Risultato swapRows");
+            swapDialog->close();
+            operationsSet->hide();
+        }
+
+        else if (getOperationSelected() == SWAP_COLS) {
+            MatrixController::displayMatrix(controller->swapCols(swapFieldA->value(), swapFieldB->value()), "Risultato swapCols");
+            swapDialog->close();
+            operationsSet->hide();
+        }
+
+        else if (getOperationSelected() == SUBSTITUTE_ROW) {
+            MatrixController::displayMatrix(controller->substituteRow(subRowA->value(), subRowB->value(), subRowDouble->text().toDouble()), "Risultato substituteRow");
+            substituteRowDialog->close();
+            operationsSet->hide();
+        }
+
+        //reset dell'interfaccia
+        resetDimensionsGroupBox();
+        obtainResult->hide();
+        selectSecondMatrixLabel->hide();
     }
-
-    else if (getOperationSelected() == SUBTRACTION) {
-        //istanzia l'operando di destra
-        controller->buildMatrix2(cells, rowBox->value(), colBox->value());
-        MatrixController::displayMatrix(controller->subtract(), "Risultato subtraction");
+    catch (KalkException& e) {
+        QErrorMessage* err = new QErrorMessage;
+        err->setAttribute(Qt::WA_DeleteOnClose);
+        err->showMessage(e.getMessage());
     }
-
-    else if (getOperationSelected() == SCALAR_MULTIPLICATION) {
-        //istanzia l'operando di destra
-        controller->buildMatrix2(cells, rowBox->value(), colBox->value());
-        MatrixController::displayMatrix(controller->scalarMultiply(), "Risultato scalarMul");
-    }
-
-    else if (getOperationSelected() == NON_SCALAR_MULTIPLICATION) {
-        MatrixController::displayMatrix(controller->nonScalarMultiply(nonScalarMulInput->text().toDouble()), "Risultato nonScalarMul");
-        nonScalarMulDialog->close();
-        operationsSet->hide();
-    }
-
-    else if (getOperationSelected() == SWAP_ROWS) {
-        MatrixController::displayMatrix(controller->swapRows(swapFieldA->value(), swapFieldB->value()), "Risultato swapRows");
-        swapDialog->close();
-        operationsSet->hide();
-    }
-
-    else if (getOperationSelected() == SWAP_COLS) {
-        MatrixController::displayMatrix(controller->swapCols(swapFieldA->value(), swapFieldB->value()), "Risultato swapCols");
-        swapDialog->close();
-        operationsSet->hide();
-    }
-
-    else if (getOperationSelected() == SUBSTITUTE_ROW) {
-        MatrixController::displayMatrix(controller->substituteRow(subRowA->value(), subRowB->value(), subRowDouble->text().toDouble()), "Risultato substituteRow");
-        substituteRowDialog->close();
-        operationsSet->hide();
-    }
-
-    //reset dell'interfaccia
-    resetDimensionsGroupBox();
-    obtainResult->hide();
-    selectSecondMatrixLabel->hide();
 }
 
 
 //sum button handler
-void MatrixCreator::sumClicked() { //n x m + n x m
+void MatrixKalk::sumClicked() { //n x m + n x m
     //Istanzia l'operando di sinistra
     controller->buildMatrix1(cells, rowBox->value(), colBox->value());
 
@@ -454,9 +459,10 @@ void MatrixCreator::sumClicked() { //n x m + n x m
     layout()->addWidget(obtainResult);
 
     setOperationSelected(SUM);
+    resetCells();   //resetta il contenuto delle celle
 }
 
-void MatrixCreator::subtractionClicked() { //n x m + n x m
+void MatrixKalk::subtractionClicked() { //n x m + n x m
     //Istanzia l'operando di sinistra
     //WARN: codice ripetuto
     controller->buildMatrix1(cells, rowBox->value(), colBox->value());
@@ -470,9 +476,10 @@ void MatrixCreator::subtractionClicked() { //n x m + n x m
     layout()->addWidget(obtainResult);
 
     setOperationSelected(SUBTRACTION);
+    resetCells();   //resetta il contenuto delle celle
 }
 
-void MatrixCreator::scalarMultiplicationClicked() {
+void MatrixKalk::scalarMultiplicationClicked() {
     //possibile prodotto solo tra n x m + m x l
 
     controller->buildMatrix1(cells, rowBox->value(), colBox->value()); //costruisce l'operando di sx
@@ -488,9 +495,10 @@ void MatrixCreator::scalarMultiplicationClicked() {
     selectSecondMatrixDimensions->show();
 
     setOperationSelected(SCALAR_MULTIPLICATION);
+    resetCells();   //resetta il contenuto delle celle
 }
 
-void MatrixCreator::nonScalarMultiplicationClicked() {
+void MatrixKalk::nonScalarMultiplicationClicked() {
     //Istanzia l'operando di sinistra
     controller->buildMatrix1(cells, rowBox->value(), colBox->value());
 
@@ -517,12 +525,19 @@ void MatrixCreator::nonScalarMultiplicationClicked() {
     connect(button, SIGNAL(clicked()), this, SLOT(handleObtainResult()));
 }
 
-void MatrixCreator::transposedClicked() {
-    controller->buildMatrix1(cells, rowBox->value(), colBox->value());  //istanzia matrix1
-    MatrixController::displayMatrix(controller->transposed());          //display di matrix1->transposed()
+void MatrixKalk::transposedClicked() {
+    try {
+        controller->buildMatrix1(cells, rowBox->value(), colBox->value());  //istanzia matrix1
+        MatrixController::displayMatrix(controller->transposed(), "Risultato transposed()");          //display di matrix1->transposed()
+    }
+    catch(KalkException& e) {
+        QErrorMessage* err = new QErrorMessage;
+        err->setAttribute(Qt::WA_DeleteOnClose);
+        err->showMessage(e.getMessage());
+    }
 }
 
-void MatrixCreator::swapRowsClicked() {
+void MatrixKalk::swapRowsClicked() {
     //istanzia l'operando
     controller->buildMatrix1(cells, rowBox->value(), colBox->value());
 
@@ -559,7 +574,7 @@ void MatrixCreator::swapRowsClicked() {
     connect(button, SIGNAL(clicked()), this, SLOT(handleObtainResult()));
 }
 
-void MatrixCreator::swapColsClicked() {
+void MatrixKalk::swapColsClicked() {
     //istanzia l'operando
     controller->buildMatrix1(cells, rowBox->value(), colBox->value());
 
@@ -597,7 +612,7 @@ void MatrixCreator::swapColsClicked() {
     connect(button, SIGNAL(clicked()), this, SLOT(handleObtainResult()));
 }
 
-void MatrixCreator::substituteRowClicked() {
+void MatrixKalk::substituteRowClicked() {
     //istanzia l'operando
     controller->buildMatrix1(cells, rowBox->value(), colBox->value());
 

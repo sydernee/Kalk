@@ -53,9 +53,8 @@ public:
 
     void fill(double, double = 0); 
 
-//    virtual ~Matrix();
-    Matrix(const Matrix&); 
-    Matrix& operator=(const Matrix&); 
+    Matrix(const Matrix&);
+    Matrix& operator=(const Matrix&);
 
     unsigned int rowCount() const; //matrix length
     unsigned int colCount() const; //matrix height

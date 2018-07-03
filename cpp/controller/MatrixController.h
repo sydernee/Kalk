@@ -12,7 +12,7 @@
 #include "../model/datatypes/SquareMatrix.h"
 #include "../view/KeypadInput.h"
 
-class MatrixCreator;
+class MatrixKalk;
 
 class MatrixController //: public QObject
 {
@@ -21,9 +21,9 @@ class MatrixController //: public QObject
 private:
     Matrix* matrix1;
     Matrix* matrix2;
-    MatrixCreator* view;
+    MatrixKalk* view;
 public:
-    MatrixController(MatrixCreator* = nullptr, Matrix* = nullptr, Matrix* = nullptr);
+    MatrixController(MatrixKalk* = nullptr, Matrix* = nullptr, Matrix* = nullptr);
     virtual ~MatrixController();
 
     virtual void buildMatrix1(QVector<KeypadInput*>, unsigned int, unsigned int);  //costruisce matrix1

@@ -6,7 +6,7 @@
 #include <QStringListModel>
 #include <QPushButton>
 #include <QStackedWidget>
-#include "MatrixCreator.h"
+#include "MatrixKalk.h"
 
 
 //Classe che gestisce il widget di creazione di una matrice

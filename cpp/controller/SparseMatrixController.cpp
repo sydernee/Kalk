@@ -2,7 +2,7 @@
 #include "../model/datatypes/SparseMatrix.h"
 #include "../view/SparseMatrixKalk.h"
 
-SparseMatrixController::SparseMatrixController(MatrixCreator* _view, Matrix* _mat1, Matrix* _mat2)
+SparseMatrixController::SparseMatrixController(MatrixKalk* _view, Matrix* _mat1, Matrix* _mat2)
     : MatrixController(_view, _mat1, _mat2)
 {
     if ((_view != nullptr && !qobject_cast<SparseMatrixKalk*>(_view))
@@ -59,7 +59,7 @@ void SparseMatrixController::setMatrix1(const Matrix& mat) {
 
     const Matrix* ptr = &mat;
     if (!dynamic_cast<const SparseMatrix*>(ptr)) {
-        throw InvalidMatrixTypeException("SparseMatrix::setMatrix1(): parameter mat is not a SparseMatrix.");
+        throw InvalidMatrixTypeException("SparseMatrix::setMatrix1(): Parameter mat is not a SparseMatrix.");
     }
     getMatrix1() = new SparseMatrix(static_cast<const SparseMatrix&>(mat));
 }
@@ -70,24 +70,36 @@ void SparseMatrixController::setMatrix2(const Matrix& mat) {
 
     const Matrix* ptr = &mat;
     if (!dynamic_cast<const SparseMatrix*>(ptr)) {
-        throw InvalidMatrixTypeException("SparseMatrix::setMatrix2(): parameter mat is not a SparseMatrix.");
+        throw InvalidMatrixTypeException("SparseMatrix::setMatrix2(): Parameter mat is not a SparseMatrix.");
     }
     getMatrix2() = new SparseMatrix(static_cast<const SparseMatrix&>(mat));
 }
 
 double SparseMatrixController::getSparsity() const { //throws NullPointerException
+    if (getMatrix1() == nullptr)
+        throw NullPointerException("SparseMatrixController::getSparsity(): Attempted to dereference a nullpointer.");
+
     return static_cast<SparseMatrix*>(getMatrix1())->getSparsity();
 }
 
 bool SparseMatrixController::isDense() const { //throws NullPointerException
+    if (getMatrix1() == nullptr)
+        throw NullPointerException("SparseMatrixController::isDense(): Attempted to dereference a nullpointer.");
+
     return static_cast<SparseMatrix*>(getMatrix1())->isDense();
 }
 
 QVector<double> SparseMatrixController::nonZeroRow(unsigned int i) const {
+    if (getMatrix1() == nullptr)
+        throw NullPointerException("SparseMatrixController::nonZeroRow(): Attempted to dereference a nullpointer.");
+
     return static_cast<SparseMatrix*>(getMatrix1())->nonZeroRow(i);
 }
 
 
 QVector<double> SparseMatrixController::nonZeroCol(unsigned int i) const {
+    if (getMatrix1() == nullptr)
+        throw NullPointerException("SparseMatrixController::nonZeroCol(): Attempted to dereference a nullpointer.");
+
     return static_cast<SparseMatrix*>(getMatrix1())->nonZeroCol(i);
 }

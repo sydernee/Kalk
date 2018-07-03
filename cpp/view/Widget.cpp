@@ -8,28 +8,22 @@
 
 Widget::Widget(QWidget *parent)
     : QWidget(parent),
-      keypad(new Keypad(this)),
-      createMatrix(new QPushButton("MatrixKalk", this))
+//      keypad(new Keypad(this)),
+      createMatrixKalk(new QPushButton("MatrixKalk", this))
 {
     setWindowTitle("Kalk"); //imposta il titolo della finestra
     setMinimumSize(150,75); //imposta le dimensioni minime della finestra
 
-    connect(createMatrix, SIGNAL(clicked()), this, SLOT(handleCreateMatrixButton()));
+    connect(createMatrixKalk, SIGNAL(clicked()), this, SLOT(handleCreateMatrixKalkButton()));
 
     QHBoxLayout* hblayout = new QHBoxLayout;
-    hblayout->addWidget(createMatrix);
+    hblayout->addWidget(createMatrixKalk);
 
     QVBoxLayout* mainLayout = new QVBoxLayout;
     mainLayout->addLayout(hblayout);
-    mainLayout->addWidget(keypad);
+//    mainLayout->addWidget(keypad);
 
     setLayout(mainLayout);
-
-    /*
-     * TODO connettere l'istanza di Widget con un'istanza di MatrixCreator
-     * per poter ottenere in input una Matrix creata dall'istanza di MatrixCreator.
-     * Idea: nuova classe che "conosce" entrambi?
-     */
 }
 
 Widget::~Widget() {}
@@ -40,10 +34,11 @@ void Widget::handleDotButton() {}
 
 void Widget::handleAssignmentButton() {}
 
-void Widget::handleCreateMatrixButton() {
+void Widget::handleCreateMatrixKalkButton() {
     QWidget* matrixBuilder = new MatrixBuilder;
+    matrixBuilder->setAttribute(Qt::WA_DeleteOnClose); //delete on close
     matrixBuilder->setMinimumSize(300,200);
     matrixBuilder->show();
-    //setDisabled(true);
+//    setDisabled(true);
     close();
 }

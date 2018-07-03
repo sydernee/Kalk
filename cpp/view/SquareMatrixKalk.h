@@ -1,9 +1,9 @@
 #ifndef SQUAREMATRIXKALK_H
 #define SQUAREMATRIXKALK_H
 
-#include "MatrixCreator.h"
+#include "MatrixKalk.h"
 
-class SquareMatrixKalk : public MatrixCreator
+class SquareMatrixKalk : public MatrixKalk
 {
     Q_OBJECT
 private:
@@ -15,8 +15,6 @@ private:
 
 public:
     explicit SquareMatrixKalk(MatrixController*, QWidget *parent = nullptr);
-    ~SquareMatrixKalk();
-//    virtual void resetDimensionsGroupBox();
 
 signals:
 

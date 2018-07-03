@@ -2,6 +2,8 @@
 #include <QStringListModel>
 #include <QHBoxLayout>
 #include <QSpacerItem>
+#include <QDebug>
+#include <QErrorMessage>
 #include "../controller/SquareMatrixController.h"
 #include "../controller/SparseMatrixController.h"
 #include "SquareMatrixKalk.h"
@@ -16,14 +18,11 @@ MatrixBuilder::MatrixBuilder(QWidget *parent)
       controller(nullptr)
 {
     setWindowTitle("Scegli il tipo di matrice"); //imposta il titolo della finestra
-    //setMinimumSize(150,75);             //imposta le dimensioni minime della finestra
-//    setWindowModality(Qt::ApplicationModal); //impedisce l'input su altre finestre
 
     pages.append(new QWidget(this));        //pages[0]
-    pages.append(nullptr);  //pages[1], per MatrixCreator
+    pages.append(nullptr);  //pages[1], per MatrixKalk
 
     stackedWidget->addWidget(pages[0]);
-//    stackedWidget->addWidget(pages[1]);
 
     buildMatrixSelectionBox();
     stackedWidget->setCurrentWidget(pages[0]);
@@ -76,7 +75,6 @@ void MatrixBuilder::handleBackButton() {
         //resetta il QWidget pages[1]
         delete pages[1];
         pages[1] = nullptr;
-//        stackedWidget->addWidget(pages[1]);
         stackedWidget->setCurrentWidget(pages[0]); //imposta pages[0] come attivo
 
         //ridimensionamento finestra
@@ -87,32 +85,39 @@ void MatrixBuilder::handleBackButton() {
 
 void MatrixBuilder::handleMatrixSelection() {
     QString choice = matrixSelectionBox->currentText();
-    if (choice == "Matrice") {
-        if (controller != nullptr)
-            delete controller;
-        controller = new MatrixController;
-        pages[1] = new MatrixCreator(controller, this);
-        setMinimumSize(wCreatorWindowSize,hCreatorWindowSize);
+    try {
+        if (choice == "Matrice") {
+            if (controller != nullptr)
+                delete controller;
+            controller = new MatrixController;
+            pages[1] = new MatrixKalk(controller, this);
+            setMinimumSize(wCreatorWindowSize,hCreatorWindowSize);
+        }
+        else if (choice == "Matrice Quadrata") {
+            //pages[1] sarà SquareMatrixKalk*
+            if (controller != nullptr)
+                delete controller;
+            controller = new SquareMatrixController;
+            pages[1] = new SquareMatrixKalk(controller, this);
+            setMinimumSize(wCreatorWindowSize,hCreatorWindowSize+100);
+        }
+
+        else if (choice == "Matrice Sparsa") {
+            //pages[1] sarà SparseMatrixKalk*
+            if (controller != nullptr)
+                delete controller;
+            controller = new SparseMatrixController;
+            pages[1] = new SparseMatrixKalk(controller, this);
+            setMinimumSize(wCreatorWindowSize, hCreatorWindowSize+100);
+        }
+        stackedWidget->addWidget(pages[1]);
+        stackedWidget->setCurrentWidget(pages[1]);
+        setWindowTitle("MatrixKalk");
     }
-    else if (choice == "Matrice Quadrata") {
-        //pages[1] sarà SquareMatrixKalk*
-        if (controller != nullptr)
-            delete controller;
-        controller = new SquareMatrixController;
-        pages[1] = new SquareMatrixKalk(controller, this);
-        setMinimumSize(wCreatorWindowSize,hCreatorWindowSize+100);
+    catch(KalkException& e) {
+        QErrorMessage* err = new QErrorMessage;
+        err->setAttribute(Qt::WA_DeleteOnClose);
+        err->showMessage(e.getMessage());
     }
 
-    else if (choice == "Matrice Sparsa") {
-        //pages[1] sarà SparseMatrixKalk*
-        if (controller != nullptr)
-            delete controller;
-        controller = new SparseMatrixController;
-        pages[1] = new SparseMatrixKalk(controller, this);
-        setMinimumSize(wCreatorWindowSize, hCreatorWindowSize+100);
-    }
-
-    stackedWidget->addWidget(pages[1]);
-    stackedWidget->setCurrentWidget(pages[1]);
-    setWindowTitle("MatrixKalk");
 }

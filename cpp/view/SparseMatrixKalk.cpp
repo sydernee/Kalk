@@ -1,8 +1,9 @@
 #include "SparseMatrixKalk.h"
 #include "../controller/SparseMatrixController.h"
+#include <QErrorMessage>
 
 SparseMatrixKalk::SparseMatrixKalk(MatrixController* _controller, QWidget* parent)
-    : MatrixCreator(_controller, parent),
+    : MatrixKalk(_controller, parent),
       nonZeroDialog(nullptr),
       nonZeroSpinBox(nullptr)
 {
@@ -64,12 +65,21 @@ void SparseMatrixKalk::handleIsDense() {
     dialog->setWindowTitle("Densità");
     QLabel* label = new QLabel(dialog);
 
-    if (static_cast<SparseMatrixController*>(controller)->isDense())
-        label->setText("La matrice è densa.");
-    else
-        label->setText("La matrice non è densa.");
-    label->setMargin(15);
-    dialog->show();
+    try {
+        if (static_cast<SparseMatrixController*>(controller)->isDense())
+            label->setText("La matrice è densa.");
+        else
+            label->setText("La matrice non è densa.");
+        label->setMargin(15);
+        dialog->show();
+    }
+    catch(KalkException& e) {
+        QErrorMessage* err = new QErrorMessage;
+        err->setAttribute(Qt::WA_DeleteOnClose);
+        err->showMessage(e.getMessage());
+
+        dialog->close();
+    }
 }
 
 void SparseMatrixKalk::handleNonZeroRow() {
@@ -137,32 +147,40 @@ void SparseMatrixKalk::handleSparseMatrixObtainResult() {
     QWidget* result = new QWidget;
     result->setAttribute(Qt::WA_DeleteOnClose); //delete on close
 
-    if (getOperationSelected() == NON_ZERO_ROW) {
-        res = static_cast<SparseMatrixController*>(controller)->nonZeroRow(nonZeroSpinBox->value());
+    try {
+        if (getOperationSelected() == NON_ZERO_ROW) {
+            res = static_cast<SparseMatrixController*>(controller)->nonZeroRow(nonZeroSpinBox->value());
 
-        result->setWindowTitle("Risultato nonZeroRow");
+            result->setWindowTitle("Risultato nonZeroRow");
+        }
+        else if (getOperationSelected() == NON_ZERO_COL) {
+            res = static_cast<SparseMatrixController*>(controller)->nonZeroCol(nonZeroSpinBox->value());
+
+            result->setWindowTitle("Risultato nonZeroCol");
+        }
+
+        result->setMinimumSize(res.size() * 15, 50);
+        QLabel* label = new QLabel("", result);
+        label->setMargin(15);
+
+        for (auto it = res.begin(); it != res.end(); it++) {
+            label->setText(label->text() + "  " + QString::number(*it));
+        }
+
+        result->show();
+        nonZeroDialog->close();
+        getOperationsSet()->hide();
+
+
+        //reset dell'interfaccia
+        resetDimensionsGroupBox();
+        getObtainResult()->hide();
+        getSelectSecondMatrixLabel()->hide();
     }
-    else if (getOperationSelected() == NON_ZERO_COL) {
-        res = static_cast<SparseMatrixController*>(controller)->nonZeroCol(nonZeroSpinBox->value());
-
-        result->setWindowTitle("Risultato nonZeroCol");
+    catch(KalkException& e) {
+        QErrorMessage* err = new QErrorMessage;
+        err->setAttribute(Qt::WA_DeleteOnClose);
+        err->showMessage(e.getMessage());
+        result->close();
     }
-
-    result->setMinimumSize(res.size() * 15, 50);
-    QLabel* label = new QLabel("", result);
-    label->setMargin(15);
-
-    for (auto it = res.begin(); it != res.end(); it++) {
-        label->setText(label->text() + "  " + QString::number(*it));
-    }
-
-    result->show();
-    nonZeroDialog->close();
-    getOperationsSet()->hide();
-
-
-    //reset dell'interfaccia
-    resetDimensionsGroupBox();
-    getObtainResult()->hide();
-    getSelectSecondMatrixLabel()->hide();
 }

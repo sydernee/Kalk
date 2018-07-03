@@ -1,7 +1,7 @@
 #include "SquareMatrixController.h"
 #include "../view/SquareMatrixKalk.h"
 
-SquareMatrixController::SquareMatrixController(MatrixCreator* _view, Matrix* _mat1, Matrix* _mat2)
+SquareMatrixController::SquareMatrixController(MatrixKalk* _view, Matrix* _mat1, Matrix* _mat2)
     : MatrixController(_view, _mat1, _mat2)
 {
     if ((_view != nullptr && !qobject_cast<SquareMatrixKalk*>(_view))
@@ -60,26 +60,44 @@ void SquareMatrixController::setMatrix2(const Matrix& mat) {
 
 double SquareMatrixController::determinant() const {
     //matrix1 ha sicuramente TD SquareMatrix*
+    if (getMatrix1() == nullptr)
+        throw NullPointerException("SquareMatrixController::determinant(): attempted to dereference a null pointer.");
+
     return static_cast<SquareMatrix*>(getMatrix1())->determinant();
 }
 
 SquareMatrix SquareMatrixController::getMinor(unsigned int x, unsigned int y) const {
     //matrix1 ha sicuramente TD SquareMatrix*
+    if (getMatrix1() == nullptr)
+        throw NullPointerException("SquareMatrixController::determinant(): attempted to dereference a null pointer.");
+
     return static_cast<SquareMatrix*>(getMatrix1())->getMinor(x, y); //throws
 }
 
 bool SquareMatrixController::isSupTriangular() const {
+    if (getMatrix1() == nullptr)
+        throw NullPointerException("SquareMatrixController::determinant(): attempted to dereference a null pointer.");
+
     return static_cast<SquareMatrix*>(getMatrix1())->supTriangular();
 }
 
 bool SquareMatrixController::isInfTriangular() const {
+    if (getMatrix1() == nullptr)
+        throw NullPointerException("SquareMatrixController::determinant(): attempted to dereference a null pointer.");
+
     return static_cast<SquareMatrix*>(getMatrix1())->infTriangular();
 }
 
 bool SquareMatrixController::isDiagonal() const {
+    if (getMatrix1() == nullptr)
+        throw NullPointerException("SquareMatrixController::determinant(): attempted to dereference a null pointer.");
+
     return static_cast<SquareMatrix*>(getMatrix1())->isDiagonal();
 }
 
 bool SquareMatrixController::isSymmetric() const {
+    if (getMatrix1() == nullptr)
+        throw NullPointerException("SquareMatrixController::determinant(): attempted to dereference a null pointer.");
+
     return static_cast<SquareMatrix*>(getMatrix1())->isSymmetric();
 }

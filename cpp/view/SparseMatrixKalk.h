@@ -1,10 +1,10 @@
 #ifndef SPARSEMATRIXKALK_H
 #define SPARSEMATRIXKALK_H
 
-#include "MatrixCreator.h"
+#include "MatrixKalk.h"
 
 
-class SparseMatrixKalk : public MatrixCreator {
+class SparseMatrixKalk : public MatrixKalk {
     Q_OBJECT
 private:
     QDialog* nonZeroDialog;

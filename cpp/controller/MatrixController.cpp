@@ -3,7 +3,7 @@
 #include <QGridLayout>
 #include <QLabel>
 
-MatrixController::MatrixController(MatrixCreator* _view, Matrix* _matrix1, Matrix* _matrix2)
+MatrixController::MatrixController(MatrixKalk* _view, Matrix* _matrix1, Matrix* _matrix2)
     : matrix1(_matrix1), //copia di puntatori
       matrix2(_matrix2),
       view(_view)

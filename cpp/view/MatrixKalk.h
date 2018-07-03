@@ -1,5 +1,5 @@
-#ifndef MATRIXCREATOR_H
-#define MATRIXCREATOR_H
+#ifndef MATRIXKALK_H
+#define MATRIXKALK_H
 
 #include "../controller/MatrixController.h"
 #include "../view/KeypadInput.h"
@@ -36,7 +36,7 @@ enum Operation {
 };
 
 
-class MatrixCreator : public QWidget
+class MatrixKalk : public QWidget
 {
     Q_OBJECT
 private:
@@ -74,11 +74,11 @@ private:
     Operation operationSelected;
 
 protected:
-    MatrixController* controller;   //controller Matrix - MatrixCreator
+    MatrixController* controller;   //controller Matrix - MatrixKalk
 
 public:
-    explicit MatrixCreator(MatrixController*, QWidget *parent = nullptr);
-    ~MatrixCreator();
+    explicit MatrixKalk(MatrixController*, QWidget *parent = nullptr);
+    ~MatrixKalk();
 
     //costruisce i pulsanti per le dimensioni e restituisce il layout
     void buildDimensionsGroupBox();
@@ -154,4 +154,4 @@ public slots:
     virtual void substituteRowClicked();
 };
 
-#endif // MATRIXCREATOR_H
+#endif // MATRIXKALK_H

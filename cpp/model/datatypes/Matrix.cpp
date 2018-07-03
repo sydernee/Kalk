@@ -7,7 +7,7 @@ Matrix::Matrix(unsigned int a, unsigned int b, double val) :
     row(a), col(b), matrix(row * col, val) {}
 
 //  se la lista di inizializzazione è troppo grande, i dati extra vengono ignorati
-//  se troppo piccola, i restanti dati rimangono inizializzati a 0    
+//  se troppo piccola, i restanti dati rimangono inizializzati a 0
 Matrix::Matrix(unsigned int a, unsigned int b, std::initializer_list<double> l) :
     row(a), col(b), matrix(row * col, 0) {
     unsigned int tableSize = a*b;
@@ -28,7 +28,7 @@ Matrix::Matrix(unsigned int a, unsigned int b, std::vector<std::initializer_list
             for (auto innerIt = it->begin(); innerIt != it->end() || j < b; j++, innerIt++) {
                 if (innerIt != it->end()) 
                     set(i,j,*innerIt);
-                
+
                 else
                     break;
             }
@@ -38,7 +38,7 @@ Matrix::Matrix(unsigned int a, unsigned int b, std::vector<std::initializer_list
     }
 }
 
-Matrix::~Matrix() {}
+//Matrix::~Matrix() {}
 
 Matrix::Matrix(const Matrix& mat) :
     row(mat.rowCount()), col(mat.colCount()), matrix(mat.matrix) {}
@@ -52,7 +52,7 @@ Matrix& Matrix::operator =(const Matrix& mat) {
     if (this != &mat) {
         col = mat.col;
         row = mat.row;
-        matrix = mat.matrix;
+        matrix = mat.matrix; //copia tra QVector
     }
     return *this;
 }
@@ -70,10 +70,9 @@ unsigned int Matrix::colCount() const {
 //OPERATORI
 
 //somma
-Matrix operator +(const Matrix& mat1, const Matrix& mat2) { //THROW
-    if (mat1.rowCount() != mat2.rowCount() || mat1.colCount() != mat2.colCount()) {
-        //throw MatrixException();
-    }
+Matrix operator +(const Matrix& mat1, const Matrix& mat2) {
+    if (mat1.rowCount() != mat2.rowCount() || mat1.colCount() != mat2.colCount())
+        throw InvalidMatrixIndexes("Somma: le matrici devono avere le stesse dimensioni.");
 
     Matrix res(mat1.rowCount(), mat1.colCount());
     for (unsigned int i = 0; i < mat1.rowCount(); i++)
@@ -83,10 +82,9 @@ Matrix operator +(const Matrix& mat1, const Matrix& mat2) { //THROW
 }
 
 //differenza
-Matrix operator -(const Matrix& mat1, const Matrix& mat2) { //THROW
-    if (mat1.rowCount() != mat2.rowCount() || mat1.colCount() != mat2.colCount()) {
-        //throw MatrixException();
-    }
+Matrix operator -(const Matrix& mat1, const Matrix& mat2) {
+    if (mat1.rowCount() != mat2.rowCount() || mat1.colCount() != mat2.colCount())
+        throw InvalidMatrixIndexes("Differenza: le matrici devono avere le stesse dimensioni.");
 
     Matrix res(mat1.rowCount(), mat1.colCount());
     for (unsigned int i = 0; i < mat1.rowCount(); i++)
@@ -106,10 +104,9 @@ Matrix Matrix::operator *(double value) const {
 }
 
 //Prodotto scalare
-Matrix operator *(const Matrix& mat1, const Matrix& mat2) { //THROW
-    if (mat1.colCount() != mat2.rowCount()) {
-        //throw MatrixException();
-     }
+Matrix operator *(const Matrix& mat1, const Matrix& mat2) {
+    if (mat1.colCount() != mat2.rowCount())
+        throw InvalidMatrixIndexes("Prodotto scalare: le colonne di mat1 devono essere uguali alle righe di mat2.");
 
     Matrix res(mat1.rowCount(), mat2.colCount());
     for (unsigned int i = 0; i < mat1.rowCount(); i++)
@@ -152,18 +149,30 @@ bool Matrix::operator !=(const Matrix& mat) const {
 //metodi setter/getter (più efficenti di usare l'operatore di subscripting [][])
 
 double Matrix::get(unsigned int _row, unsigned int _col) const {
+    if (_row >= rowCount() || _col >= colCount())
+        throw IndexOutOfBoundsException("get(): Out of bounds indexes.");
+
     return matrix[_row * col + _col];
 }
 
 void Matrix::set(unsigned int _row, unsigned int _col, double val) {
+    if (_row >= rowCount() || _col >= colCount())
+        throw IndexOutOfBoundsException("set(): Out of bounds indexes.");
+
     matrix[_row * col + _col] = val;
 }
 
 double& Matrix::getReference(unsigned int _row, unsigned int _col) {
+    if (_row >= rowCount() || _col >= colCount())
+        throw IndexOutOfBoundsException("getReference(): Out of bounds indexes.");
+
     return matrix[_row * col + _col];
 }
 
 const double& Matrix::getReference(unsigned int _row, unsigned int _col) const {
+    if (_row >= rowCount() || _col >= colCount())
+        throw IndexOutOfBoundsException("getReference() const: Out of bounds indexes.");
+
     return matrix[_row * col + _col];
 }
 
@@ -208,6 +217,9 @@ Matrix::CRow Matrix::operator [](unsigned int _row) const {
 
 //3 operazioni elementari
 void Matrix::swapRows(unsigned int rowA, unsigned int rowB) {
+    if (rowA >= rowCount() || rowB >= rowCount())
+        throw IndexOutOfBoundsException("swapRows(): Out of bounds indexes.");
+
     if (rowA == rowB) { return; } //non ho nulla da scambiare
     for (unsigned int c = 0; c < colCount(); ++c) {
         double aux = get(rowA,c);
@@ -217,6 +229,9 @@ void Matrix::swapRows(unsigned int rowA, unsigned int rowB) {
 }
 
 void Matrix::swapCols(unsigned int colA, unsigned int colB) {
+    if (colA >= colCount() || colB >= colCount())
+        throw IndexOutOfBoundsException("swapCols(): Out of bounds indexes.");
+
     if (colA == colB) { return; } //non ho nulla da scambiare
     for (unsigned int r = 0; r < rowCount(); ++r) {
         double aux = get(r,colA);
@@ -226,8 +241,13 @@ void Matrix::swapCols(unsigned int colA, unsigned int colB) {
 }
 
 void Matrix::substituteRow(unsigned int destRow, unsigned int sourceRow, double factor) {
-    //if (factor == 0) // eccezione TODO
-    if (sourceRow == destRow && factor==1) { return; } //non ho nulla da scambiare
+    if (sourceRow >= rowCount() || destRow >= rowCount())
+        throw IndexOutOfBoundsException("substituteRow(): Out of bounds indexes.");
+
+    if (factor == 0)
+        throw ZeroMultiplierException("substituteRow(): Cannot multiply per 0.");
+
+    if (sourceRow == destRow && factor == 1) { return; } //non ho nulla da scambiare
     for (unsigned int c = 0; c < colCount(); ++c) {
         set(destRow,c, get(sourceRow,c) * factor);
     }

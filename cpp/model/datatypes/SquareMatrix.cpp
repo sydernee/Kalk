@@ -17,13 +17,25 @@ SquareMatrix::SquareMatrix(unsigned int n, std::vector<std::initializer_list<dou
 
 bool SquareMatrix::isDiagonal() const {
     for (unsigned int i = 0; i < rowCount(); i++)
-        for (unsigned int j = 0; j < colCount(); i++)
+        for (unsigned int j = 0; j < colCount(); j++)
             if (i != j && get(i,j) != 0)
                 return false;
     return true;
 }
 
+bool SquareMatrix::isSymmetric() const {
+    unsigned int n = rowCount();
+    for (unsigned int i = 0; i < n; i++)
+        for (unsigned int j = i+1; j < n; j++)
+            if (get(i,j) != get(j,i))
+                return false;
+    return true;
+}
+
 SquareMatrix SquareMatrix::getMinor(unsigned int x, unsigned int y) const {
+    if (x >= rowCount() || y >= colCount())
+        throw IndexOutOfBoundsException("getMinor(): Out of bounds indexes.");
+
     unsigned int N = colCount();
     SquareMatrix res = SquareMatrix(N-1);
     
@@ -53,7 +65,7 @@ double SquareMatrix::determinant() const {
         return get(0,0);
     if (N == 2)
         return get(0,0) * get(1,1) - get(0,1) * get(1,0);
-    if (colCount() == 3) { 
+    if (colCount() == 3) { //Sarrus rule
         return get(0,0) * get(1,1) * get(2,2) +
                 get(0,1) * get(1,2) * get(2,0) +
                 get(0,2) * get(1,0) * get(2,1) -
@@ -68,22 +80,21 @@ double SquareMatrix::determinant() const {
     		res += get(0,i) * ((i % 2 == 0) ? 1 : -1) * getMinor(0,i).determinant();
         }
     }
-	    
     return res;
 }
 
 bool SquareMatrix::infTriangular() const {
     for (unsigned int i = 0; i < rowCount(); i++)
-        for (unsigned int j = 0; j < colCount(); j++)
-            if ((i == j && get(i,i) != 1) || (i < j && get(i,j) != 0))
+        for (unsigned int j = i+1; j < colCount(); j++)
+            if (i < j && get(i,j) != 0)
                 return false;
     return true;
 }
 
 bool SquareMatrix::supTriangular() const {
     for (unsigned int i = 0; i < rowCount(); i++)
-        for (unsigned int j = 0; j < colCount(); j++)
-            if ((i == j && get(i,i) != 1) || (i > j && get(i,j) != 0))
+        for (unsigned int j = 0; j < i; j++)
+            if (i > j && get(i,j) != 0)
                 return false;
     return true;
 }

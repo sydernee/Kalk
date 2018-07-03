@@ -2,13 +2,13 @@
 #define SPARSEMATRIX_H
 
 #include "Matrix.h"
+#include <QVector>
 
 class SparseMatrix : public Matrix {
 private:
-    mutable bool dirtyBit;
-    mutable double sparsity; //-1 in fase di costruzione per migliorare l'efficienza,
-                     // assegnato solo in caso venga richiesto
- 
+    mutable bool dirtyBit;      //usato per ricordare se è necessario modificare sparsity
+    mutable double sparsity;    //-1 in fase di costruzione per migliorare l'efficienza,
+                                // assegnato solo in caso venga richiesto
 public:
     SparseMatrix(unsigned int, unsigned int);
     SparseMatrix(const SparseMatrix&);
@@ -20,6 +20,9 @@ public:
     double getSparsity() const; //restituisce la sparsità della matrice
     bool isSymmetric() const;
     bool isDense() const;
+
+    QVector<double> nonZeroRow(unsigned int) const;
+    QVector<double> nonZeroCol(unsigned int) const;
 };
 
 #endif // SPARSEMATRIX_H

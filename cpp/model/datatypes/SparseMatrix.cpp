@@ -35,7 +35,6 @@ void SparseMatrix::set(unsigned int row, unsigned int col, double value) {
     Matrix::set(row, col, value);
 }
 
-//DA CONTROLLARE j = i+1
 bool SparseMatrix::isSymmetric() const {
     if (rowCount() != colCount())
         return false;
@@ -53,9 +52,26 @@ bool SparseMatrix::isDense() const {
     return false;
 }
 
-/*
-00 01 02 03
-10 11 12 13
-20 21 22 23
-30 31 32 33
-*/
+QVector<double> SparseMatrix::nonZeroRow(unsigned int i) const {
+    if (i >= rowCount())
+        throw IndexOutOfBoundsException("nonZeroRow(): Out of bounds parameter index.");
+
+    QVector<double> res;
+    for (unsigned int j = 0; j < colCount(); j++) {
+        if (get(i,j) != 0)
+            res.append(get(i,j));
+    }
+    return res;
+}
+
+QVector<double> SparseMatrix::nonZeroCol(unsigned int j) const {
+    if (j >= colCount())
+        throw IndexOutOfBoundsException("nonZeroCol(): Out of bounds parameter index.");
+
+    QVector<double> res;
+    for (unsigned int i = 0; i < rowCount(); i++) {
+        if (get(i,j) != 0)
+            res.append(get(i,j));
+    }
+    return res;
+}

@@ -5,7 +5,10 @@
 #include <vector>
 #include <iostream>
 #include <initializer_list>
-//#include <iterator>
+
+#include "../../exceptions/IndexOutOfBoundsException.h"
+#include "../../exceptions/InvalidMatrixIndexes.h"
+#include "../../exceptions/ZeroMultiplierException.h"
 
 class Matrix : public DataType {
 
@@ -13,7 +16,8 @@ private:
     unsigned int row, col;
     std::vector<double> matrix; //1 dimensione, visto in 2 dimensioni in fase di implementazione
 
-    class Row { //classe proxy per poter utilizzare l'operatore [][]
+    //classe proxy per poter utilizzare l'operatore [][]
+    class Row {
         friend class Matrix;
 
     private:
@@ -25,7 +29,8 @@ private:
         double& operator[](unsigned int);
     };
 
-    class CRow { //versione costante di Row
+    //versione costante di Row
+    class CRow {
         friend class Matrix;
 
     private:
@@ -48,7 +53,7 @@ public:
 
     void fill(double, double = 0); 
 
-    virtual ~Matrix();
+//    virtual ~Matrix();
     Matrix(const Matrix&); 
     Matrix& operator=(const Matrix&); 
 
@@ -80,4 +85,4 @@ Matrix operator +(const Matrix&, const Matrix&); //somma tra matrici
 Matrix operator -(const Matrix&, const Matrix&); //differenza tra matrici
 Matrix operator *(const Matrix&, const Matrix&); //prodotto scalare tra matrici
 
-#endif // MATRIX_Hs
+#endif // MATRIX_H

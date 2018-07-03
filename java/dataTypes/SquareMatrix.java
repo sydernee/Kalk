@@ -48,11 +48,6 @@ public class SquareMatrix extends Matrix {
 	    
 	    Double cumulator = 0.0;
 	    for (int i = 0; i < getRows(); i++) {
-	    	//a00 * c00 * getMinor(0,0).determinant() +
-	    	//a01 * c01 * getMinor(0,1).determinant() +
-	    	//a02 * c02 * getMinor(0,2).determinant() +
-	    	//a03 * c03 * getMinor(0,3).determinant() +
-	    	//a04 * c04 * getMinor(0,4).determinant()
 	    	if (get(0,i) != 0.0)
 	    		cumulator += get(0,i) * ((i % 2 == 0) ? 1 : -1) * getMinor(0,i).determinant();
 	    }
@@ -63,8 +58,8 @@ public class SquareMatrix extends Matrix {
 	//is matrix infTriangular?
 	public boolean infTriangular() {
 	    for (int i = 0; i < getRows(); i++)
-	        for (int j = 0; j < getCols(); j++)
-	            if ((i == j && get(i,i) == 0) || (i < j && get(i,j) != 0))
+	        for (int j = i+1; j < getCols(); j++)
+	            if ((i < j && get(i,j) != 0))
 	                return false;
 	    return true;
 	}
@@ -72,8 +67,8 @@ public class SquareMatrix extends Matrix {
 	//is matrix supTriangular?
 	public boolean supTriangular() {
 	    for (int i = 0; i < getRows(); i++)
-	        for (int j = 0; j < getCols(); j++)
-	            if ((i == j && get(i,i) == 0) || (i > j && get(i,j) != 0))
+	        for (int j = 0; j < i; j++)
+	            if (/*(i == j && get(i,i) == 0) || */(i > j && get(i,j) != 0))
 	                return false;
 	    return true;
 	}

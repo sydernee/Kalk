@@ -5,7 +5,7 @@
 
 class DataType {
 public:
-    virtual ~DataType() = 0;
+    virtual ~DataType() = default;
     // virtual QString toString() const = 0;
 };
 

@@ -1,16 +1,14 @@
 #ifndef ZEROMULTIPLIEREXCEPTION_H
 #define ZEROMULTIPLIEREXCEPTION_H
 
-#include<QException>
+#include "KalkException.h"
 
-class ZeroMultiplierException : public QException {
-private:
-    QString message;
+class ZeroMultiplierException : public KalkException {
+
 public:
     ZeroMultiplierException(const QString& what = "");
     void raise() const;
     ZeroMultiplierException* clone() const;
-    QString getMessage() const;
 };
 
 #endif // ZEROMULTIPLIEREXCEPTION_H

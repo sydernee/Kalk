@@ -6,9 +6,9 @@
 #include <iostream>
 #include <initializer_list>
 
-#include "../exceptions/IndexOutOfBoundsException.h"
-#include "../exceptions/InvalidMatrixIndexes.h"
-#include "../exceptions/ZeroMultiplierException.h"
+#include "../../exceptions/IndexOutOfBoundsException.h"
+#include "../../exceptions/InvalidMatrixIndexes.h"
+#include "../../exceptions/ZeroMultiplierException.h"
 
 class Matrix : public DataType {
 

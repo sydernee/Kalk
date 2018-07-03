@@ -7,9 +7,9 @@ class SquareMatrixKalk : public MatrixCreator
 {
     Q_OBJECT
 private:
-    QDialog* getMinorDialog;
-    QSpinBox* getMinorX;
-    QSpinBox* getMinorY;
+    QDialog* minorDialog;
+    QSpinBox* minorX;
+    QSpinBox* minorY;
 
     void insertSquareOperations(); //aggiunge le operazioni di SquareMatrix a operationsSet
 
@@ -28,6 +28,7 @@ public slots:
     virtual void scalarMultiplicationClicked();
     virtual void handleDeterminant();
     virtual void handleGetMinor();
+    virtual void handleIsSymmetric();
     virtual void handleSupTriangular();
     virtual void handleInfTriangular();
     virtual void handleIsDiagonal();

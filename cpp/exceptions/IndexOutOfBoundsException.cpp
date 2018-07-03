@@ -1,11 +1,7 @@
 #include "IndexOutOfBoundsException.h"
 
 IndexOutOfBoundsException::IndexOutOfBoundsException(const QString& what)
-    : message(what) {}
-
-QString IndexOutOfBoundsException::getMessage() const {
-    return message;
-}
+    : KalkException(what) {}
 
 void IndexOutOfBoundsException::raise() const {
     throw *this;

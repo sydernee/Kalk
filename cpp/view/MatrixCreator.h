@@ -16,22 +16,29 @@
 #include <QPushButton>
 #include <cfloat>
 
+enum Operation {
+    //Matrix
+    SUM,
+    SUBTRACTION,
+    SCALAR_MULTIPLICATION,
+    NON_SCALAR_MULTIPLICATION,
+    SWAP_ROWS,
+    SWAP_COLS,
+    SUBSTITUTE_ROW,
+
+    //SquareMatrix
+    DETERMINANT,
+    GET_MINOR,
+
+    //SparseMatrix
+    NON_ZERO_ROW,
+    NON_ZERO_COL
+};
+
+
 class MatrixCreator : public QWidget
 {
     Q_OBJECT
-public:
-    enum Operation {
-        SUM,
-        SUBTRACTION,
-        SCALAR_MULTIPLICATION,
-        NON_SCALAR_MULTIPLICATION,
-        SWAP_ROWS,
-        SWAP_COLS,
-        SUBSTITUTE_ROW,
-        DETERMINANT,
-        GET_MINOR
-    };
-
 private:
 
     //set di operazioni
@@ -109,7 +116,7 @@ protected:
     void setColBox(QSpinBox*);
     void setMatrixBuilder(QGroupBox*);
     void setOperationsSet(QGroupBox*);
-    void setOperationSelected(MatrixCreator::Operation);
+    void setOperationSelected(Operation);
 
     //getters
     QGroupBox* getDimensionsGroupBox() const;

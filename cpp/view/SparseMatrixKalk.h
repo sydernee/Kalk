@@ -7,6 +7,9 @@
 class SparseMatrixKalk : public MatrixCreator {
     Q_OBJECT
 private:
+    QDialog* nonZeroDialog;
+    QSpinBox* nonZeroSpinBox;
+
     void insertSparseOperations();
 public:
     explicit SparseMatrixKalk(MatrixController*, QWidget* parent = nullptr);
@@ -15,7 +18,9 @@ public:
 public slots:
     virtual void handleGetSparsity();
     virtual void handleIsDense();
-    virtual void handleIsSymmetric();
+    virtual void handleNonZeroRow();
+    virtual void handleNonZeroCol();
+    void handleSparseMatrixObtainResult();
 };
 
 #endif // SPARSEMATRIXKALK_H

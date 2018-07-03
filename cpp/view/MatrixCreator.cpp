@@ -45,6 +45,8 @@ MatrixCreator::MatrixCreator(MatrixController* _controller, QWidget *parent)
 
     buildOperationsSet();       //costruisce il layout per operationsSet
 
+    setAttribute(Qt::WA_DeleteOnClose); //delete on close
+
 }
 
 MatrixCreator::~MatrixCreator() {}
@@ -127,8 +129,6 @@ void MatrixCreator::buildOperationsSet() {
     operationsSet->setLayout(operationsLayout); //imposta il layout di operationsSet
 
     //impostazione del layout di operationsSet
-//    vLayout->addWidget(operationsSet);
-//    vLayout->addWidget(obtainResult);
     layout()->addWidget(operationsSet);
     layout()->addWidget(obtainResult);
     operationsSet->hide(); //nasconde operationsSet
@@ -229,6 +229,8 @@ void MatrixCreator::setColBox() {
 
 //versione statica di setQSpinBox
 void MatrixCreator::setSpinBoxLimits(QSpinBox* box, unsigned int min, unsigned int max, unsigned int _default) {
+    if (box == nullptr)
+        throw NullPointerException("MatrixCreator::setSpinBoxLimits(): attempted to dereference a null pointer.");
     box->setMinimum(min);       //imposta il valore minimo
     box->setMaximum(max);       //imposta il valore massimo
     box->setSingleStep(1);      //imposta lo step
@@ -291,7 +293,7 @@ void MatrixCreator::setOperationsSet(QGroupBox* groupBox) {
     operationsSet = groupBox;
 }
 
-void MatrixCreator::setOperationSelected(MatrixCreator::Operation op) {
+void MatrixCreator::setOperationSelected(Operation op) {
     operationSelected = op;
 }
 
@@ -338,11 +340,11 @@ QGroupBox* MatrixCreator::getOperationsSet() const {
     return operationsSet;
 }
 
-QVector<KeypadInput *> MatrixCreator::getCells() const {
+QVector<KeypadInput*> MatrixCreator::getCells() const {
     return cells;
 }
 
-MatrixCreator::Operation MatrixCreator::getOperationSelected() const {
+Operation MatrixCreator::getOperationSelected() const {
     return operationSelected;
 }
 
@@ -388,44 +390,44 @@ void MatrixCreator::handleSelectSecondMatrixDimensions() {
 void MatrixCreator::handleObtainResult() {
 
     //WARN: catena di if?
-    if (getOperationSelected() == MatrixCreator::SUM) {
+    if (getOperationSelected() == SUM) {
         //istanzia l'operando di destra
         controller->buildMatrix2(cells, rowBox->value(), colBox->value());
-        MatrixController::displayMatrix(controller->sum());
+        MatrixController::displayMatrix(controller->sum(), "Risultato sum");
     }
 
-    else if (getOperationSelected() == MatrixCreator::SUBTRACTION) {
+    else if (getOperationSelected() == SUBTRACTION) {
         //istanzia l'operando di destra
         controller->buildMatrix2(cells, rowBox->value(), colBox->value());
-        MatrixController::displayMatrix(controller->subtract());
+        MatrixController::displayMatrix(controller->subtract(), "Risultato subtraction");
     }
 
-    else if (getOperationSelected() == MatrixCreator::SCALAR_MULTIPLICATION) {
+    else if (getOperationSelected() == SCALAR_MULTIPLICATION) {
         //istanzia l'operando di destra
         controller->buildMatrix2(cells, rowBox->value(), colBox->value());
-        MatrixController::displayMatrix(controller->scalarMultiply());
+        MatrixController::displayMatrix(controller->scalarMultiply(), "Risultato scalarMul");
     }
 
-    else if (getOperationSelected() == MatrixCreator::NON_SCALAR_MULTIPLICATION) {
-        MatrixController::displayMatrix(controller->nonScalarMultiply(nonScalarMulInput->text().toDouble()));
+    else if (getOperationSelected() == NON_SCALAR_MULTIPLICATION) {
+        MatrixController::displayMatrix(controller->nonScalarMultiply(nonScalarMulInput->text().toDouble()), "Risultato nonScalarMul");
         nonScalarMulDialog->close();
         operationsSet->hide();
     }
 
-    else if (getOperationSelected() == MatrixCreator::SWAP_ROWS) {
-        MatrixController::displayMatrix(controller->swapRows(swapFieldA->value(), swapFieldB->value()));
+    else if (getOperationSelected() == SWAP_ROWS) {
+        MatrixController::displayMatrix(controller->swapRows(swapFieldA->value(), swapFieldB->value()), "Risultato swapRows");
         swapDialog->close();
         operationsSet->hide();
     }
 
-    else if (getOperationSelected() == MatrixCreator::SWAP_COLS) {
-        MatrixController::displayMatrix(controller->swapCols(swapFieldA->value(), swapFieldB->value()));
+    else if (getOperationSelected() == SWAP_COLS) {
+        MatrixController::displayMatrix(controller->swapCols(swapFieldA->value(), swapFieldB->value()), "Risultato swapCols");
         swapDialog->close();
         operationsSet->hide();
     }
 
-    else if (getOperationSelected() == MatrixCreator::SUBSTITUTE_ROW) {
-        MatrixController::displayMatrix(controller->substituteRow(subRowA->value(), subRowB->value(), subRowDouble->text().toDouble()));
+    else if (getOperationSelected() == SUBSTITUTE_ROW) {
+        MatrixController::displayMatrix(controller->substituteRow(subRowA->value(), subRowB->value(), subRowDouble->text().toDouble()), "Risultato substituteRow");
         substituteRowDialog->close();
         operationsSet->hide();
     }
@@ -451,7 +453,7 @@ void MatrixCreator::sumClicked() { //n x m + n x m
     layout()->removeWidget(obtainResult);
     layout()->addWidget(obtainResult);
 
-    setOperationSelected(MatrixCreator::SUM);
+    setOperationSelected(SUM);
 }
 
 void MatrixCreator::subtractionClicked() { //n x m + n x m
@@ -467,7 +469,7 @@ void MatrixCreator::subtractionClicked() { //n x m + n x m
     layout()->removeWidget(obtainResult);
     layout()->addWidget(obtainResult);
 
-    setOperationSelected(MatrixCreator::SUBTRACTION);
+    setOperationSelected(SUBTRACTION);
 }
 
 void MatrixCreator::scalarMultiplicationClicked() {
@@ -485,7 +487,7 @@ void MatrixCreator::scalarMultiplicationClicked() {
     selectDimensions->hide();
     selectSecondMatrixDimensions->show();
 
-    setOperationSelected(MatrixCreator::SCALAR_MULTIPLICATION);
+    setOperationSelected(SCALAR_MULTIPLICATION);
 }
 
 void MatrixCreator::nonScalarMultiplicationClicked() {
@@ -493,6 +495,7 @@ void MatrixCreator::nonScalarMultiplicationClicked() {
     controller->buildMatrix1(cells, rowBox->value(), colBox->value());
 
     nonScalarMulDialog = new QDialog;
+    nonScalarMulDialog->setAttribute(Qt::WA_DeleteOnClose);     //delete on close
     nonScalarMulDialog->setWindowTitle("Selezione scalare");    //titolo finestra
     nonScalarMulDialog->setWindowModality(Qt::ApplicationModal);//non permette l'input su altre finestre
 
@@ -510,19 +513,13 @@ void MatrixCreator::nonScalarMultiplicationClicked() {
 
     nonScalarMulDialog->show(); //mostra nonScalarMulDialog
 
-    setOperationSelected(MatrixCreator::NON_SCALAR_MULTIPLICATION);
+    setOperationSelected(NON_SCALAR_MULTIPLICATION);
     connect(button, SIGNAL(clicked()), this, SLOT(handleObtainResult()));
 }
 
 void MatrixCreator::transposedClicked() {
     controller->buildMatrix1(cells, rowBox->value(), colBox->value());  //istanzia matrix1
     MatrixController::displayMatrix(controller->transposed());          //display di matrix1->transposed()
-
-    //reset dell'interfaccia
-    resetDimensionsGroupBox();
-    obtainResult->hide();
-    operationsSet->hide();
-    selectSecondMatrixLabel->hide();
 }
 
 void MatrixCreator::swapRowsClicked() {
@@ -530,6 +527,7 @@ void MatrixCreator::swapRowsClicked() {
     controller->buildMatrix1(cells, rowBox->value(), colBox->value());
 
     swapDialog = new QDialog; //istanzia swapDialog
+    swapDialog->setAttribute(Qt::WA_DeleteOnClose); //delete on close
     swapDialog->setWindowTitle("swapRows"); //titolo finestra
     swapDialog->setWindowModality(Qt::ApplicationModal); //impedisce l'input su altre finestre
 
@@ -557,7 +555,7 @@ void MatrixCreator::swapRowsClicked() {
     swapDialog->setLayout(dialogLayout);
     swapDialog->show(); //mostra swapDialog
 
-    setOperationSelected(MatrixCreator::SWAP_ROWS);
+    setOperationSelected(SWAP_ROWS);
     connect(button, SIGNAL(clicked()), this, SLOT(handleObtainResult()));
 }
 
@@ -566,6 +564,7 @@ void MatrixCreator::swapColsClicked() {
     controller->buildMatrix1(cells, rowBox->value(), colBox->value());
 
     swapDialog = new QDialog;   //istanzia swapDialog
+    swapDialog->setAttribute(Qt::WA_DeleteOnClose);  //delete on close
     swapDialog->setWindowTitle("swapCols"); //titolo finestra
     swapDialog->setWindowModality(Qt::ApplicationModal); //impedisce l'input su altre finestre
 
@@ -594,7 +593,7 @@ void MatrixCreator::swapColsClicked() {
     swapDialog->show(); //mostra swapDialog
 
     //imposta il tipo di operazione e connette button
-    setOperationSelected(MatrixCreator::SWAP_COLS);
+    setOperationSelected(SWAP_COLS);
     connect(button, SIGNAL(clicked()), this, SLOT(handleObtainResult()));
 }
 
@@ -603,8 +602,9 @@ void MatrixCreator::substituteRowClicked() {
     controller->buildMatrix1(cells, rowBox->value(), colBox->value());
 
     substituteRowDialog = new QDialog;  //istanzia substituteRowDialog
-    substituteRowDialog->setWindowTitle("substituteRow"); //titolo finestra
-    substituteRowDialog->setWindowModality(Qt::ApplicationModal); //impedisce l'input su altre finestre
+    substituteRowDialog->setAttribute(Qt::WA_DeleteOnClose);        //delete on close
+    substituteRowDialog->setWindowTitle("substituteRow");           //titolo finestra
+    substituteRowDialog->setWindowModality(Qt::ApplicationModal);   //impedisce l'input su altre finestre
 
     QVBoxLayout* dialogLayout = new QVBoxLayout;
     QGridLayout* l = new QGridLayout;
@@ -638,6 +638,6 @@ void MatrixCreator::substituteRowClicked() {
     substituteRowDialog->show();
 
     //imposta il tipo di operazione e connette button
-    setOperationSelected(MatrixCreator::SUBSTITUTE_ROW);
+    setOperationSelected(SUBSTITUTE_ROW);
     connect(button, SIGNAL(clicked()), this, SLOT(handleObtainResult()));
 }

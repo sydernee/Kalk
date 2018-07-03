@@ -8,11 +8,9 @@ class SquareMatrix;
 
 class SquareMatrixController : public MatrixController {
 public:
-    SquareMatrixController(SquareMatrixKalk* = nullptr, SquareMatrix* = nullptr, SquareMatrix* = nullptr);
-    virtual ~SquareMatrixController();
+    SquareMatrixController(MatrixCreator* = nullptr, Matrix* = nullptr, Matrix* = nullptr);
+//    virtual ~SquareMatrixController();
 
-//    Matrix& getMatrix1() const;
-//    Matrix& getMatrix2() const;
     void buildMatrix1(QVector<KeypadInput*>, unsigned int, unsigned int);
     void buildMatrix1(unsigned int, unsigned int);
     void setMatrix1(const Matrix&);
@@ -28,6 +26,7 @@ public:
     bool isSupTriangular() const;
     bool isInfTriangular() const;
     bool isDiagonal() const;
+    bool isSymmetric() const;
 };
 
 #endif // SQUAREMATRIXCONTROLLER_H

@@ -1,11 +1,7 @@
 #include "InvalidMatrixIndexes.h"
 
 InvalidMatrixIndexes::InvalidMatrixIndexes(const QString& what)
-    : message(what) {}
-
-QString InvalidMatrixIndexes::getMessage() const {
-    return message;
-}
+    : KalkException(what) {}
 
 InvalidMatrixIndexes* InvalidMatrixIndexes::clone() const {
     return new InvalidMatrixIndexes(*this);

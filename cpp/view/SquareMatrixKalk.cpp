@@ -1,16 +1,16 @@
 #include "SquareMatrixKalk.h"
 #include "../model/datatypes/SquareMatrix.h"
 #include "../controller/SquareMatrixController.h"
+#include "../exceptions/InvalidLayoutException.h"
 
 SquareMatrixKalk::SquareMatrixKalk(MatrixController* _controller, QWidget *parent)
     : MatrixCreator(_controller, parent),
-      getMinorDialog(nullptr),
-      getMinorX(nullptr),
-      getMinorY(nullptr)
+      minorDialog(nullptr),
+      minorX(nullptr),
+      minorY(nullptr)
 {
-    if (!dynamic_cast<SquareMatrixController*>(controller)) {
-        //TODO throw Exception;
-    }
+    if (!dynamic_cast<SquareMatrixController*>(controller))
+        throw InvalidMatrixTypeException("SquareMatrixKalk::SquareMatrixKalk(): invalid controller dynamic type.");
 
     getDimensionsGroupBox()->layout()->removeWidget(getRowBox());
     getRowBox()->hide();
@@ -33,6 +33,10 @@ void SquareMatrixKalk::insertSquareOperations() {
     connect(minor, SIGNAL(clicked()), this, SLOT(handleGetMinor()));
     l1->addWidget(minor);
 
+    QPushButton* symmetric = new QPushButton("isSymmetric()", getOperationsSet());
+    connect(symmetric, SIGNAL(clicked()), this, SLOT(handleIsSymmetric()));
+    l1->addWidget(symmetric);
+
     QPushButton* supTriangular = new QPushButton("supTriangular()", getOperationsSet());
     connect(supTriangular, SIGNAL(clicked()), this, SLOT(handleSupTriangular()));
     l2->addWidget(supTriangular);
@@ -46,8 +50,8 @@ void SquareMatrixKalk::insertSquareOperations() {
     l2->addWidget(isDiagonal);
 
     QVBoxLayout* ptr = qobject_cast<QVBoxLayout*>(getOperationsSet()->layout());
-    if (!ptr)
-        {}//TODO throw
+    if (!ptr)    
+        throw InvalidLayoutException("SquareMatrixKalk::insertSquareOperations(): invalid layout.");
     ptr->addLayout(l1);
     ptr->addLayout(l2);
 }
@@ -78,13 +82,14 @@ void SquareMatrixKalk::scalarMultiplicationClicked() {
     layout()->addWidget(getObtainResult());
 
     //imposta il tipo di operazione
-    setOperationSelected(MatrixCreator::SCALAR_MULTIPLICATION);
+    setOperationSelected(SCALAR_MULTIPLICATION);
 }
 
 void SquareMatrixKalk::handleDeterminant() {
     controller->buildMatrix1(getCells(), getRowBox()->value(), getColBox()->value());
 
     QDialog* dialog = new QDialog;
+    dialog->setAttribute(Qt::WA_DeleteOnClose); //delete on close
     dialog->setMinimumSize(200,50);
     dialog->setWindowTitle("Determinante");
     QLabel* label = new QLabel("Determinante: " + QString::number(static_cast<SquareMatrixController*>(controller)->determinant()), dialog);
@@ -96,39 +101,56 @@ void SquareMatrixKalk::handleGetMinor() {
     //istanzia la matrice
     controller->buildMatrix1(getCells(), getRowBox()->value(), getColBox()->value());
 
-    getMinorDialog = new QDialog;   //istanzia getMinorDialog
-    getMinorDialog->setWindowTitle("getMinor"); //titolo finestra
-    getMinorDialog->setWindowModality(Qt::ApplicationModal); //impedisce l'interazione con altre finestre
+    minorDialog = new QDialog;   //istanzia minorDialog
+    minorDialog->setAttribute(Qt::WA_DeleteOnClose); //delete on close
+    minorDialog->setWindowTitle("getMinor"); //titolo finestra
+    minorDialog->setWindowModality(Qt::ApplicationModal); //impedisce l'interazione con altre finestre
 
-    getMinorX = new QSpinBox(getMinorDialog); //istanzia x
-    getMinorY = new QSpinBox(getMinorDialog); //istanzia y
+    minorX = new QSpinBox(minorDialog); //istanzia x
+    minorY = new QSpinBox(minorDialog); //istanzia y
 
     //imposta i limiti dei due QSpinBox
-    setSpinBoxLimits(getMinorX, 0, getRowBox()->value()-1);
-    setSpinBoxLimits(getMinorY, 0, getColBox()->value()-1);
+    setSpinBoxLimits(minorX, 0, getRowBox()->value()-1);
+    setSpinBoxLimits(minorY, 0, getColBox()->value()-1);
 
-    QGridLayout* l = new QGridLayout; //layout operazioni input di getMinorDialog
-    QVBoxLayout* dialogLayout = new QVBoxLayout; //layout di getMinorDialog
+    QGridLayout* l = new QGridLayout; //layout operazioni input di minorDialog
+    QVBoxLayout* dialogLayout = new QVBoxLayout; //layout di minorDialog
 
     //aggiunge i campi a l con la relativa label
-    l->addWidget(new QLabel("Immetti la riga da elminare", getMinorDialog), 0, 0);
-    l->addWidget(getMinorX, 0, 1);
-    l->addWidget(new QLabel("Immetti la colonna da elminare", getMinorDialog), 1, 0);
-    l->addWidget(getMinorY, 1, 1);
+    l->addWidget(new QLabel("Immetti la riga da elminare", minorDialog), 0, 0);
+    l->addWidget(minorX, 0, 1);
+    l->addWidget(new QLabel("Immetti la colonna da elminare", minorDialog), 1, 0);
+    l->addWidget(minorY, 1, 1);
 
     //pulsante per ottenere il risultato
-    QPushButton* button = new QPushButton("Ok", getMinorDialog);
-
+    QPushButton* button = new QPushButton("Ok", minorDialog);
 
     dialogLayout->addLayout(l);         //aggiunge l a dialogLayout
     dialogLayout->addWidget(button);    //aggiunge button a dialogLayout
 
-    getMinorDialog->setLayout(dialogLayout);    //imposta il layout di getMinorDialog
-    getMinorDialog->show();                     //mostra getMinorDialog
+    minorDialog->setLayout(dialogLayout);    //imposta il layout di minorDialog
+    minorDialog->show();                     //mostra minorDialog
 
     //imposta il tipo di operazione e connette button
-    setOperationSelected(MatrixCreator::GET_MINOR);
+    setOperationSelected(GET_MINOR);
     connect(button, SIGNAL(clicked()), this, SLOT(handleSquareMatrixObtainResult()));
+}
+
+void SquareMatrixKalk::handleIsSymmetric() {
+    controller->buildMatrix1(getCells(), getRowBox()->value(), getColBox()->value());
+
+    QDialog* dialog = new QDialog;
+    dialog->setAttribute(Qt::WA_DeleteOnClose); //delete on close
+    dialog->setMinimumSize(200,50);
+    dialog->setWindowTitle("Simmetria");
+    QLabel* label = new QLabel(dialog);
+
+    if (static_cast<SquareMatrixController*>(controller)->isSymmetric())
+        label->setText("La matrice è simmetrica.");
+    else
+        label->setText("La matrice non è simmetrica.");
+    label->setMargin(15);
+    dialog->show();
 }
 
 void SquareMatrixKalk::handleSupTriangular() {
@@ -136,6 +158,7 @@ void SquareMatrixKalk::handleSupTriangular() {
     controller->buildMatrix1(getCells(), getRowBox()->value(), getColBox()->value());
 
     QDialog* dialog = new QDialog;
+    dialog->setAttribute(Qt::WA_DeleteOnClose); //delete on close
     dialog->setMinimumSize(250,50);
     dialog->setWindowTitle("supTriangular");
     QLabel* label = new QLabel(dialog);
@@ -156,6 +179,7 @@ void SquareMatrixKalk::handleInfTriangular() {
     controller->buildMatrix1(getCells(), getRowBox()->value(), getColBox()->value());
 
     QDialog* dialog = new QDialog;
+    dialog->setAttribute(Qt::WA_DeleteOnClose); //delete on close
     dialog->setMinimumSize(250,50);
     dialog->setWindowTitle("infTriangular");
     QLabel* label = new QLabel(dialog);
@@ -176,6 +200,7 @@ void SquareMatrixKalk::handleIsDiagonal() {
     controller->buildMatrix1(getCells(), getRowBox()->value(), getColBox()->value());
 
     QDialog* dialog = new QDialog;
+    dialog->setAttribute(Qt::WA_DeleteOnClose); //delete on close
     dialog->setMinimumSize(250,50);
     dialog->setWindowTitle("isDiagonal");
     QLabel* label = new QLabel(dialog);
@@ -193,10 +218,10 @@ void SquareMatrixKalk::handleIsDiagonal() {
 
 void SquareMatrixKalk::handleSquareMatrixObtainResult()
 {
-    if (getOperationSelected() == MatrixCreator::GET_MINOR) {
-        MatrixController::displayMatrix(static_cast<SquareMatrixController*>(controller)->getMinor(getMinorX->value(), getMinorY->value()));
-        getMinorDialog->close();
-        getOperationsSet()->close();
+    if (getOperationSelected() == GET_MINOR) {
+        MatrixController::displayMatrix(static_cast<SquareMatrixController*>(controller)->getMinor(minorX->value(), minorY->value()), "Risultato getMinor");
+        minorDialog->close();
+        getOperationsSet()->hide();
     }
 
     //reset dell'interfaccia

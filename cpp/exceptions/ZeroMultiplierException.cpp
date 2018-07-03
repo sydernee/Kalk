@@ -1,11 +1,7 @@
 #include "ZeroMultiplierException.h"
 
 ZeroMultiplierException::ZeroMultiplierException(const QString& what)
-    : message(what) {}
-
-QString ZeroMultiplierException::getMessage() const {
-    return message;
-}
+    : KalkException(what) {}
 
 ZeroMultiplierException* ZeroMultiplierException::clone() const {
     return new ZeroMultiplierException(*this);
@@ -14,4 +10,3 @@ ZeroMultiplierException* ZeroMultiplierException::clone() const {
 void ZeroMultiplierException::raise() const {
     throw *this;
 }
-

@@ -2,6 +2,7 @@
 #define SPARSEMATRIX_H
 
 #include "Matrix.h"
+#include <QVector>
 
 class SparseMatrix : public Matrix {
 private:
@@ -19,6 +20,9 @@ public:
     double getSparsity() const; //restituisce la sparsità della matrice
     bool isSymmetric() const;
     bool isDense() const;
+
+    QVector<double> nonZeroRow(unsigned int) const;
+    QVector<double> nonZeroCol(unsigned int) const;
 };
 
 #endif // SPARSEMATRIX_H

@@ -51,3 +51,27 @@ bool SparseMatrix::isDense() const {
         return true;
     return false;
 }
+
+QVector<double> SparseMatrix::nonZeroRow(unsigned int i) const {
+    if (i >= rowCount())
+        throw IndexOutOfBoundsException("nonZeroRow(): Out of bounds parameter index.");
+
+    QVector<double> res;
+    for (unsigned int j = 0; j < colCount(); j++) {
+        if (get(i,j) != 0)
+            res.append(get(i,j));
+    }
+    return res;
+}
+
+QVector<double> SparseMatrix::nonZeroCol(unsigned int j) const {
+    if (j >= colCount())
+        throw IndexOutOfBoundsException("nonZeroCol(): Out of bounds parameter index.");
+
+    QVector<double> res;
+    for (unsigned int i = 0; i < rowCount(); i++) {
+        if (get(i,j) != 0)
+            res.append(get(i,j));
+    }
+    return res;
+}

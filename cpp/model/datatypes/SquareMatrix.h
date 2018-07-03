@@ -17,6 +17,7 @@ public:
     bool supTriangular() const;
     bool infTriangular() const;
     bool isDiagonal() const;
+    bool isSymmetric() const;
 
     static SquareMatrix identityMatrix(unsigned int);
     static SquareMatrix zeroMatrix(unsigned int);

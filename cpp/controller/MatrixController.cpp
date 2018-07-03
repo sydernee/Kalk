@@ -1,14 +1,7 @@
-#include <QWidget>
-#include <QLabel>
-
 #include "MatrixController.h"
-#include "../model/datatypes/Matrix.h"
-#include "../model/datatypes/SquareMatrix.h"
-#include "../view/MatrixCreator.h"
-#include "../view/KeypadInput.h"
-
 
 #include <QGridLayout>
+#include <QLabel>
 
 MatrixController::MatrixController(MatrixCreator* _view, Matrix* _matrix1, Matrix* _matrix2)
     : matrix1(_matrix1), //copia di puntatori
@@ -77,6 +70,7 @@ void MatrixController::buildMatrix2(unsigned int rows, unsigned int cols) {
 void MatrixController::setMatrix1(const Matrix& mat) {
     if (matrix1 != nullptr)
         delete matrix1;
+
     const Matrix* ptr = &mat;
     if (dynamic_cast<const SquareMatrix*>(ptr))
         matrix1 = new SquareMatrix(static_cast<const SquareMatrix&>(mat));
@@ -87,6 +81,7 @@ void MatrixController::setMatrix1(const Matrix& mat) {
 void MatrixController::setMatrix2(const Matrix& mat) {
     if (matrix2 != nullptr)
         delete matrix2;
+
     const Matrix* ptr = &mat;
     if (dynamic_cast<const SquareMatrix*>(ptr))
         matrix2= new SquareMatrix(static_cast<const SquareMatrix&>(mat));
@@ -96,23 +91,34 @@ void MatrixController::setMatrix2(const Matrix& mat) {
 
 //GETTERS
 
-Matrix& MatrixController::getMatrix1() const {
-    return *matrix1;
+Matrix*& MatrixController::getMatrix1() {
+    return matrix1;
 }
 
-Matrix& MatrixController::getMatrix2() const {
-    return *matrix2;
+Matrix* MatrixController::getMatrix1() const {
+    return matrix1;
+}
+
+Matrix*& MatrixController::getMatrix2() {
+    return matrix2;
+}
+
+Matrix* MatrixController::getMatrix2() const {
+    return matrix2;
 }
 
 //output
 
-void MatrixController::displayMatrix(const Matrix& mat) {
+void MatrixController::displayMatrix(const Matrix& mat, const QString& title) {
     unsigned int rows = mat.rowCount();
     unsigned int cols = mat.colCount();
 
     QGridLayout* resultLayout = new QGridLayout; //output su layout a griglia per la matrice
     QVector<QLabel*> matrixOutput;
     QWidget* result = new QWidget;
+    result->setAttribute(Qt::WA_DeleteOnClose); //delete on close
+    if (title != "")
+        result->setWindowTitle(title);
     result->setMinimumSize(50,50);
 
     for (unsigned int i = 0; i < rows; i++)
@@ -128,8 +134,9 @@ void MatrixController::displayMatrix(const Matrix& mat) {
 //operations
 
 Matrix MatrixController::sum() const {
-    // PRE: matrix1 e matrix2 != nullptr
-    //try
+    if (matrix1 == nullptr || matrix2 == nullptr)
+        throw NullPointerException("MatrixController::sum(): Attempted to dereference a null pointer.");
+
     return (*matrix1) + (*matrix2);
 }
 
@@ -138,7 +145,9 @@ Matrix MatrixController::sum(const Matrix& m1, const Matrix& m2) {
 }
 
 Matrix MatrixController::subtract() const {
-    // PRE: matrix1 e matrix2 != nullptr
+    if (matrix1 == nullptr || matrix2 == nullptr)
+        throw NullPointerException("MatrixController::subtract(): Attempted to dereference a null pointer.");
+
     return (*matrix1) - (*matrix2);
 }
 
@@ -147,18 +156,23 @@ Matrix MatrixController::subtract(const Matrix& m1, const Matrix& m2) {
 }
 
 Matrix MatrixController::scalarMultiply() const {
-    // PRE: matrix1 e matrix2 != nullptr
+    if (matrix1 == nullptr || matrix2 == nullptr)
+        throw NullPointerException("MatrixController::scalarMultiply(): Attempted to dereference a null pointer.");
     return (*matrix1) * (*matrix2);
 }
 
 Matrix MatrixController::nonScalarMultiply(double value) const {
-    // PRE: matrix1 != nullptr
+    if (matrix1 == nullptr)
+        throw NullPointerException("MatrixController::nonScalarMultiply(): Attempted to dereference a null pointer.");
+
     return (*matrix1) * value;
 }
 
 
 Matrix MatrixController::transposed() const {
-    // PRE: matrix1 != nullptr
+    if (matrix1 == nullptr)
+        throw NullPointerException("MatrixController::transposed(): Attempted to dereference a null pointer.");
+
     Matrix* mat = matrix1->transposed();
     Matrix res(*mat);
     delete mat;
@@ -166,34 +180,31 @@ Matrix MatrixController::transposed() const {
 }
 
 Matrix MatrixController::swapRows(unsigned int rowA, unsigned int rowB) {
-    // PRE: matrix1 != nullptr
+    if (matrix1 == nullptr)
+        throw NullPointerException("MatrixController::swapRows(): Attempted to dereference a null pointer.");
+    if (rowA >= matrix1->rowCount() || rowB >= matrix1->rowCount())
+        throw IndexOutOfBoundsException("MatrixController::swapRows(): Out of bounds indexes.");
+
     matrix1->swapRows(rowA, rowB);
     return *matrix1;
 }
 
 Matrix MatrixController::swapCols(unsigned int colA, unsigned int colB) {
-    // PRE: matrix1 != nullptr
+    if (matrix1 == nullptr)
+        throw NullPointerException("MatrixController::swapCols(): Attempted to dereference a null pointer.");
+    if (colA >= matrix1->colCount() || colB >= matrix1->colCount())
+        throw IndexOutOfBoundsException("MatrixController::swapCols(): Out of bounds indexes.");
+
     matrix1->swapCols(colA, colB);
     return *matrix1;
 }
 
 Matrix MatrixController::substituteRow(unsigned int destRow, unsigned int sourceRow, double factor) {
-    //PRE; matrix1 != nullptr
+    if (matrix1 == nullptr)
+        throw NullPointerException("MatrixController::substituteRow(): Attempted to dereference a null pointer.");
+    if (destRow >= matrix1->rowCount() || sourceRow >= matrix1->rowCount())
+        throw IndexOutOfBoundsException("MatrixController::substituteRow(): Out of bounds indexes.");
+
     matrix1->substituteRow(destRow, sourceRow, factor);
     return *matrix1;
 }
-/*
-double MatrixController::determinant() const {
-    if (!dynamic_cast<SquareMatrix*>(matrix1)) {
-        //TODO throw
-    }
-    return static_cast<SquareMatrix*>(matrix1)->determinant();
-}
-
-SquareMatrix MatrixController::getMinor(unsigned int x, unsigned int y) const {
-    if (!dynamic_cast<SquareMatrix*>(matrix1)) {
-        //TODO throw
-    }
-    return static_cast<SquareMatrix*>(matrix1)->getMinor(x, y);
-}
-*/

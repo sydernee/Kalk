@@ -23,6 +23,15 @@ bool SquareMatrix::isDiagonal() const {
     return true;
 }
 
+bool SquareMatrix::isSymmetric() const {
+    unsigned int n = rowCount();
+    for (unsigned int i = 0; i < n; i++)
+        for (unsigned int j = i+1; j < n; j++)
+            if (get(i,j) != get(j,i))
+                return false;
+    return true;
+}
+
 SquareMatrix SquareMatrix::getMinor(unsigned int x, unsigned int y) const {
     if (x >= rowCount() || y >= colCount())
         throw IndexOutOfBoundsException("getMinor(): Out of bounds indexes.");

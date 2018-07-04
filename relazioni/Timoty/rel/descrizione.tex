@@ -2,8 +2,10 @@
 
 \subsection{Design Pattern}
 Il \emph{design pattern} scelto per lo sviluppo del progetto è il 
-\emph{model-view-controller}, \textbf{MVC}. si è cercato di aderire
-al più possibile a questo pattern architetturale.
+\emph{model-view-controller}, \textbf{MVC}. Si è cercato di aderire
+il più possibile a questo pattern architetturale. \par
+Il progetto è stato sviluppato seguendo l'ideologia dell'\emph{Open World Assumption}.
+Per questa ragione, gran parte dei metodi sono dichiarati come \texttt{virtual}.
 
 \subsection{Modello}
 Il \emph{modello} è la parte logica dell'applicativo. È stato implementato in
@@ -27,3 +29,19 @@ oppure attraverso l'operatore \texttt{[][]}: per implementarlo, sono presenti du
 efficiente di \texttt{get(i,j)}, poichè passa attraverso l'istanziazione di un oggetto \texttt{Row/CRow}.
 Allo stesso modo, è possibile accedere in scrittura alle celle con la funzione \mbox{\texttt{void set(i,j,k)}}, con 
 \texttt{k} valore di tipo \texttt{double}.
+
+\paragraph{Operazioni di Kalk} Le operazioni che offre \texttt{Matrix} sono
+la somma (\texttt{operator+}), la differenza (\texttt{operator-}), il prodotto scalare (\texttt{operator*})
+definite come funzioni esterne; il prodotto non scalare (overload dell'\texttt{operator*}), \texttt{swapRows} 
+(scambia due righe passate come parametro, facendo \emph{side-effect}), \texttt{swapCols} (come la precedente 
+ma sulle colonne) e \texttt{substituteRow} (somma la riga \emph{b} alla riga \emph{a} dopo aver moltiplicato 
+\emph{b} per un \emph{double v}, facendo \emph{side-effect}) come funzioni interne;
+
+\paragraph*{Polimorfismo} 
+\begin{itemize}
+    \item \texttt{void Matrix::set()}: \texttt{set} viene 
+    \emph{overridata} in \texttt{SparseMatrix}. Questo perchè, nel caso in cui 
+    venga chiamata in un oggetto che ha tipo dinamico \texttt{SparseMatrix},
+    bisogna tenere traccia nel \texttt{dirtyBit} che è stata effettuata una modifica alla matrice, in modo
+    da restituire un valore di \emph{sparsità} corretto in caso venga richiesto.
+\end{itemize}

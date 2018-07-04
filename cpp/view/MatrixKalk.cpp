@@ -227,7 +227,7 @@ void MatrixKalk::setColBox() {
 //versione statica di setQSpinBox
 void MatrixKalk::setSpinBoxLimits(QSpinBox* box, unsigned int min, unsigned int max, unsigned int _default) {
     if (box == nullptr)
-        throw NullPointerException("MatrixKalk::setSpinBoxLimits(): attempted to dereference a null pointer.");
+        throw NullPointerException("MatrixKalk::setSpinBoxLimits(): Attempted to dereference a null pointer.");
     box->setMinimum(min);       //imposta il valore minimo
     box->setMaximum(max);       //imposta il valore massimo
     box->setSingleStep(1);      //imposta lo step
@@ -349,6 +349,9 @@ Operation MatrixKalk::getOperationSelected() const {
 
 //selectDimensions button handler
 void MatrixKalk::handleSelectDimensions() {
+    if (rowBox->value() == colBox->value())
+        emit squareMatrixSignal();
+
     initializeMatrixBuilder();
 
     //se l'operation set non è visibile, lo mostra
@@ -437,9 +440,7 @@ void MatrixKalk::handleObtainResult() {
         selectSecondMatrixLabel->hide();
     }
     catch (KalkException& e) {
-        QErrorMessage* err = new QErrorMessage;
-        err->setAttribute(Qt::WA_DeleteOnClose);
-        err->showMessage(e.getMessage());
+        exceptionHandling(e);
     }
 }
 
@@ -531,9 +532,7 @@ void MatrixKalk::transposedClicked() {
         MatrixController::displayMatrix(controller->transposed(), "Risultato transposed()");          //display di matrix1->transposed()
     }
     catch(KalkException& e) {
-        QErrorMessage* err = new QErrorMessage;
-        err->setAttribute(Qt::WA_DeleteOnClose);
-        err->showMessage(e.getMessage());
+        exceptionHandling(e);
     }
 }
 
@@ -655,4 +654,12 @@ void MatrixKalk::substituteRowClicked() {
     //imposta il tipo di operazione e connette button
     setOperationSelected(SUBSTITUTE_ROW);
     connect(button, SIGNAL(clicked()), this, SLOT(handleObtainResult()));
+}
+
+//funzioni esterne
+
+void exceptionHandling(KalkException& e) {
+    QErrorMessage* err = new QErrorMessage;
+    err->setAttribute(Qt::WA_DeleteOnClose);
+    err->showMessage(e.getMessage());
 }

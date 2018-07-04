@@ -13,7 +13,6 @@ private:
     void insertSparseOperations();
 public:
     explicit SparseMatrixKalk(MatrixController*, QWidget* parent = nullptr);
-    ~SparseMatrixKalk();
 
 public slots:
     virtual void handleGetSparsity();

@@ -7,11 +7,12 @@ class SquareMatrixKalk : public MatrixKalk
 {
     Q_OBJECT
 private:
-    QDialog* minorDialog;
-    QSpinBox* minorX;
-    QSpinBox* minorY;
+    QDialog* minorDialog;       //QDialog per getMinor()
+    QSpinBox* minorX;           //campo row di getMinor()
+    QSpinBox* minorY;           //campo col di getMinor()
 
-    void insertSquareOperations(); //aggiunge le operazioni di SquareMatrix a operationsSet
+    void insertSquareOperations();          //aggiunge le operazioni di SquareMatrix a operationsSet
+    void buildZeroIdentityMatrixButtons();  //costruisce i pulsanti per Zero e identity matrix
 
 public:
     explicit SquareMatrixKalk(MatrixController*, QWidget *parent = nullptr);
@@ -19,11 +20,11 @@ public:
 signals:
 
 public slots:
-    virtual void handleSelectDimensions();
-    virtual void handleSelectSecondMatrixDimensions();
+    void handleSelectDimensions() override;
+    void handleSelectSecondMatrixDimensions() override;
 
     //operations slots
-    virtual void scalarMultiplicationClicked();
+    void scalarMultiplicationClicked() override;
     virtual void handleDeterminant();
     virtual void handleGetMinor();
     virtual void handleIsSymmetric();

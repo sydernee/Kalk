@@ -36,10 +36,12 @@ public:
     ~MatrixBuilder();
 
 signals:
+    void matrixBuilderCloseSignal();
 
 private slots:
     void handleMatrixSelection();
     void handleBackButton();
+    void connectMatrixKalk();
 };
 
 #endif // MATRIXBUILDER_H

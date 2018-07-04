@@ -75,14 +75,14 @@ void SparseMatrixController::setMatrix2(const Matrix& mat) {
     getMatrix2() = new SparseMatrix(static_cast<const SparseMatrix&>(mat));
 }
 
-double SparseMatrixController::getSparsity() const { //throws NullPointerException
+double SparseMatrixController::getSparsity() const {
     if (getMatrix1() == nullptr)
         throw NullPointerException("SparseMatrixController::getSparsity(): Attempted to dereference a nullpointer.");
 
     return static_cast<SparseMatrix*>(getMatrix1())->getSparsity();
 }
 
-bool SparseMatrixController::isDense() const { //throws NullPointerException
+bool SparseMatrixController::isDense() const {
     if (getMatrix1() == nullptr)
         throw NullPointerException("SparseMatrixController::isDense(): Attempted to dereference a nullpointer.");
 

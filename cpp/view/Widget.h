@@ -18,6 +18,7 @@ private slots:
     void handleDotButton();
     void handleAssignmentButton();
     void handleCreateMatrixKalkButton();
+    void showWidget();
 
 public:
     Widget(QWidget *parent = 0);

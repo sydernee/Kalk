@@ -4,13 +4,21 @@ SparseMatrix::SparseMatrix(unsigned int a, unsigned int b) :
     Matrix(a, b, 0), dirtyBit(false), sparsity(-1) {}
     
 SparseMatrix::SparseMatrix(const SparseMatrix& mat) :
-	Matrix(mat), dirtyBit(-1), sparsity(-1) {}
+    Matrix(mat), dirtyBit(-1), sparsity(-1) {}
 
 SparseMatrix::SparseMatrix(unsigned int a, unsigned int b, std::initializer_list<double> l) :
 	Matrix(a, b, l), dirtyBit(false), sparsity(-1) {}
 
 SparseMatrix::SparseMatrix(unsigned int a, unsigned int b, std::vector<std::initializer_list<double>> l) :
     Matrix(a, b, l), dirtyBit(false), sparsity(-1) {}
+
+SparseMatrix& SparseMatrix::operator=(const SparseMatrix& mat) {
+    if (this != &mat) {
+        sparsity = mat.getSparsity();
+        Matrix::operator=(mat);
+    }
+    return *this;
+}
 
 void SparseMatrix::clear() {
     fill(0);
@@ -30,20 +38,15 @@ double SparseMatrix::getSparsity() const {
     return sparsity;
 }
 
-void SparseMatrix::set(unsigned int row, unsigned int col, double value) {
-    dirtyBit = true;
-    Matrix::set(row, col, value);
+void SparseMatrix::set(unsigned int _row, unsigned int _col, double value) {
+    if (get(_row, _col) != value)
+        dirtyBit = true;
+    Matrix::set(_row, _col, value);
 }
 
-bool SparseMatrix::isSymmetric() const {
-    if (rowCount() != colCount())
-        return false;
-    unsigned int n = rowCount();
-    for (unsigned int i = 0; i < n; i++)
-        for (unsigned int j = i+1; j < n; j++)
-            if (get(i,j) != get(j,i))
-                return false;
-    return true;
+double& SparseMatrix::getReference(unsigned int _row, unsigned int _col) {
+    dirtyBit = true;
+    return Matrix::getReference(_row, _col);
 }
 
 bool SparseMatrix::isDense() const {
@@ -74,6 +77,23 @@ QVector<double> SparseMatrix::nonZeroCol(unsigned int j) const {
             res.append(get(i,j));
     }
     return res;
+}
+
+//operations overriding
+
+void SparseMatrix::swapRows(unsigned int row, unsigned int col) {
+    dirtyBit = true;
+    Matrix::swapRows(row, col);
+}
+
+void SparseMatrix::swapCols(unsigned int row, unsigned int col) {
+    dirtyBit = true;
+    Matrix::swapCols(row, col);
+}
+
+void SparseMatrix::substituteRow(unsigned int row, unsigned int col, double value) {
+    dirtyBit = true;
+    Matrix::substituteRow(row, col, value);
 }
 
 //somma

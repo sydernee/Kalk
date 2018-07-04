@@ -21,12 +21,10 @@ SquareMatrixKalk::SquareMatrixKalk(MatrixController* _controller, QWidget *paren
         insertSquareOperations();
     }
     catch(KalkException& e) {
-        QErrorMessage* err = new QErrorMessage;
-        err->setAttribute(Qt::WA_DeleteOnClose);
-        err->showMessage(e.getMessage());
+        exceptionHandling(e);
     }
-}
 
+}
 
 void SquareMatrixKalk::insertSquareOperations() {
     QHBoxLayout* l1 = new QHBoxLayout;
@@ -64,6 +62,7 @@ void SquareMatrixKalk::insertSquareOperations() {
     ptr->addLayout(l2);
 }
 
+
 //override
 void SquareMatrixKalk::handleSelectDimensions() {
     getRowBox()->setValue(getColBox()->value());    //Una matrice quadrata ha colCount == rowCount
@@ -89,14 +88,13 @@ void SquareMatrixKalk::scalarMultiplicationClicked() {
         //riposiziona il obtainResult in fondo al layout
         layout()->removeWidget(getObtainResult());
         layout()->addWidget(getObtainResult());
+        resetCells();   //azzera il contenuto delle celle
 
         //imposta il tipo di operazione
         setOperationSelected(SCALAR_MULTIPLICATION);
     }
     catch(KalkException& e) {
-        QErrorMessage* err = new QErrorMessage;
-        err->setAttribute(Qt::WA_DeleteOnClose);
-        err->showMessage(e.getMessage());
+        exceptionHandling(e);
     }
 }
 
@@ -113,9 +111,7 @@ void SquareMatrixKalk::handleDeterminant() {
         dialog->show();
     }
     catch(KalkException& e) {
-        QErrorMessage* err = new QErrorMessage;
-        err->setAttribute(Qt::WA_DeleteOnClose);
-        err->showMessage(e.getMessage());
+        exceptionHandling(e);
     }
 }
 
@@ -160,9 +156,7 @@ void SquareMatrixKalk::handleGetMinor() {
         connect(button, SIGNAL(clicked()), this, SLOT(handleSquareMatrixObtainResult()));
     }
     catch(KalkException& e) {
-        QErrorMessage* err = new QErrorMessage;
-        err->setAttribute(Qt::WA_DeleteOnClose);
-        err->showMessage(e.getMessage());
+        exceptionHandling(e);
     }
 }
 
@@ -184,9 +178,7 @@ void SquareMatrixKalk::handleIsSymmetric() {
         dialog->show();
     }
     catch(KalkException& e) {
-        QErrorMessage* err = new QErrorMessage;
-        err->setAttribute(Qt::WA_DeleteOnClose);
-        err->showMessage(e.getMessage());
+        exceptionHandling(e);
     }
 }
 
@@ -212,9 +204,7 @@ void SquareMatrixKalk::handleSupTriangular() {
         dialog->show();
     }
     catch(KalkException& e) {
-        QErrorMessage* err = new QErrorMessage;
-        err->setAttribute(Qt::WA_DeleteOnClose);
-        err->showMessage(e.getMessage());
+        exceptionHandling(e);
     }
 }
 
@@ -240,9 +230,7 @@ void SquareMatrixKalk::handleInfTriangular() {
         dialog->show();
     }
     catch(KalkException& e) {
-        QErrorMessage* err = new QErrorMessage;
-        err->setAttribute(Qt::WA_DeleteOnClose);
-        err->showMessage(e.getMessage());
+        exceptionHandling(e);
     }
 }
 
@@ -268,9 +256,7 @@ void SquareMatrixKalk::handleIsDiagonal() {
         dialog->show();
     }
     catch(KalkException& e) {
-        QErrorMessage* err = new QErrorMessage;
-        err->setAttribute(Qt::WA_DeleteOnClose);
-        err->showMessage(e.getMessage());
+        exceptionHandling(e);
     }
 }
 
@@ -289,9 +275,7 @@ void SquareMatrixKalk::handleSquareMatrixObtainResult()
         getSelectSecondMatrixLabel()->hide();
     }
     catch(KalkException& e) {
-        QErrorMessage* err = new QErrorMessage;
-        err->setAttribute(Qt::WA_DeleteOnClose);
-        err->showMessage(e.getMessage());
+        exceptionHandling(e);
     }
 }
 

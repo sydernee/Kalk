@@ -42,46 +42,50 @@ private:
         const double& operator[](unsigned int) const;
     };
     
-    double& getReference(unsigned int, unsigned int); //per SparseMatrix
-    const double& getReference(unsigned int _row, unsigned int _col) const;
-    
+    const double& getReference(unsigned int _row, unsigned int _col) const; //restituisce un riferimento costante alla cella [_row][_col]
+
+protected:
+    virtual double& getReference(unsigned int _row, unsigned int _col); //restituisce un riferimento alla cella [_row][_col]
+
 public:
-    Matrix(unsigned int, unsigned int);
-    Matrix(unsigned int, unsigned int, double); //costruttore che inizializza tutti i campi al valore passato come parametro
-    Matrix(unsigned int, unsigned int, std::initializer_list<double>);
-    Matrix(unsigned int, unsigned int, std::vector<std::initializer_list<double>>);
+    Matrix(unsigned int numRows, unsigned int numCols);
+    Matrix(unsigned int numRows, unsigned int numCols, double value); //costruttore che inizializza tutti i campi al valore passato come parametro
+    Matrix(unsigned int numRows, unsigned int numCols, std::initializer_list<double> list); //permette una costruzione e.g. Matrix(2,3, {1,2,1,...,2})
+    Matrix(unsigned int numRows, unsigned int numCols, std::vector<std::initializer_list<double>> list); //permette una costruzione e.g. Matrix(2,3, {1,2,1}, {2,2,3}})
 
-    void fill(double, double = 0); 
+    virtual void fill(double value, double range = 0); //assegna ad ogni cella value+i*range, i in [0,n[
 
-    Matrix(const Matrix&);
-    Matrix& operator=(const Matrix&);
+    Matrix(const Matrix& mat);            //costruttore di copia
+    Matrix& operator=(const Matrix& mat); //assegnazione profonda
 
-    unsigned int rowCount() const; //matrix length
-    unsigned int colCount() const; //matrix height
+    virtual unsigned int rowCount() const; //matrix length
+    virtual unsigned int colCount() const; //matrix height
 
     Matrix operator *(double) const; //prodotto per uno scalare
-    Matrix* transposed() const; //trasposta della matrice di invocazione
+    virtual Matrix* transposed() const; //trasposta della matrice di invocazione
     
     //operatori booleani
-    bool operator==(const Matrix&) const;
-    bool operator!=(const Matrix&) const;
+    virtual bool operator==(const Matrix& mat) const; //uguaglianza tra due matrici
+    virtual bool operator!=(const Matrix& mat) const; //disuguaglianza tra due matrici
 
-    virtual double get(unsigned int, unsigned int) const;
-    virtual void set(unsigned int, unsigned int, double);
+    virtual double get(unsigned int _row, unsigned int _col) const; //restituisce il valore della cella [_row][_col]
+    virtual void set(unsigned int _row, unsigned int _col, double value); //imposta la cella [_row][_col] a value
 
     Row operator[](unsigned int);
    CRow operator[](unsigned int) const;
    
    //3 operazioni elementari
-   void swapRows(unsigned int,unsigned int);
-   void swapCols(unsigned int,unsigned int);
-   void substituteRow(unsigned int, unsigned int, double);
+   virtual void swapRows(unsigned int rowA, unsigned int rowB); //scambia le righe rowA e rowB
+   virtual void swapCols(unsigned int colA, unsigned int colB); //scambia le colonne colA e colB
+
+   //somma alla riga destRow la riga sourceRow moltiplicata per value (!= 0)
+   virtual void substituteRow(unsigned int destRow, unsigned int sourceRow, double value);
 };
 
-std::ostream& operator<<(std::ostream&, const Matrix&); //output operator overload
+std::ostream& operator<<(std::ostream& out, const Matrix& mat); //output operator overload
 
-Matrix operator +(const Matrix&, const Matrix&); //somma tra matrici
-Matrix operator -(const Matrix&, const Matrix&); //differenza tra matrici
-Matrix operator *(const Matrix&, const Matrix&); //prodotto scalare tra matrici
+Matrix operator +(const Matrix& mat1, const Matrix& mat2); //somma tra matrici
+Matrix operator -(const Matrix& mat1, const Matrix& mat2); //differenza tra matrici
+Matrix operator *(const Matrix& mat1, const Matrix& mat2); //prodotto scalare tra matrici
 
 #endif // MATRIX_H

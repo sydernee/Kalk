@@ -247,6 +247,6 @@ void Matrix::substituteRow(unsigned int destRow, unsigned int sourceRow, double 
 
     if (sourceRow == destRow && factor == 1) { return; } //non ho nulla da scambiare
     for (unsigned int c = 0; c < colCount(); ++c) {
-        set(destRow,c, get(sourceRow,c) * factor);
+        set(destRow, c, get(sourceRow,c) * factor);
     }
 }

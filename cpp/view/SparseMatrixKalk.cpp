@@ -8,13 +8,16 @@ SparseMatrixKalk::SparseMatrixKalk(MatrixController* _controller, QWidget* paren
       nonZeroSpinBox(nullptr)
 {
     if (!dynamic_cast<SparseMatrixController*>(controller)) {
-        throw InvalidMatrixTypeException("SparseMatrixKalk::SparseMatrixKalk(): invalid controller dynamic type.");
+        throw InvalidMatrixTypeException("SparseMatrixKalk::SparseMatrixKalk(): Invalid controller dynamic type.");
     }
-
-    insertSparseOperations();
+    try {
+        insertSparseOperations();
+    }
+    catch(KalkException& e) {
+        exceptionHandling(e);
+        close();
+    }
 }
-
-SparseMatrixKalk::~SparseMatrixKalk() {}
 
 void SparseMatrixKalk::insertSparseOperations() {
     QHBoxLayout* l = new QHBoxLayout;
@@ -37,8 +40,10 @@ void SparseMatrixKalk::insertSparseOperations() {
     l->addWidget(nonZeroCol);
 
     QVBoxLayout* ptr = qobject_cast<QVBoxLayout*>(getOperationsSet()->layout());
+
     if (!ptr)
-        {}//TODO throw
+        throw NullPointerException("SparseMatrix::insertSparseOperations(): InvalidLayout.");
+
     ptr->addLayout(l);
 }
 
@@ -74,10 +79,7 @@ void SparseMatrixKalk::handleIsDense() {
         dialog->show();
     }
     catch(KalkException& e) {
-        QErrorMessage* err = new QErrorMessage;
-        err->setAttribute(Qt::WA_DeleteOnClose);
-        err->showMessage(e.getMessage());
-
+        exceptionHandling(e);
         dialog->close();
     }
 }
@@ -85,9 +87,9 @@ void SparseMatrixKalk::handleIsDense() {
 void SparseMatrixKalk::handleNonZeroRow() {
     controller->buildMatrix1(getCells(), getRowBox()->value(), getColBox()->value());
 
-    nonZeroDialog = new QDialog; //istanzia nonZeroDialog
-    nonZeroDialog->setAttribute(Qt::WA_DeleteOnClose); //delete on close
-    nonZeroDialog->setWindowTitle("nonZeroRow"); //titolo finestra
+    nonZeroDialog = new QDialog;                        //istanzia nonZeroDialog
+    nonZeroDialog->setAttribute(Qt::WA_DeleteOnClose);  //delete on close
+    nonZeroDialog->setWindowTitle("nonZeroRow");        //titolo finestra
     nonZeroDialog->setWindowModality(Qt::ApplicationModal); //impedisce l'interazione con altre finestre
     nonZeroDialog->setMinimumSize(150,100);
 
@@ -115,9 +117,9 @@ void SparseMatrixKalk::handleNonZeroRow() {
 void SparseMatrixKalk::handleNonZeroCol() {
     controller->buildMatrix1(getCells(), getRowBox()->value(), getColBox()->value());
 
-    nonZeroDialog = new QDialog; //istanzia nonZeroDialog
-    nonZeroDialog->setAttribute(Qt::WA_DeleteOnClose); //delete on close
-    nonZeroDialog->setWindowTitle("nonZeroCol"); //titolo finestra
+    nonZeroDialog = new QDialog;                        //istanzia nonZeroDialog
+    nonZeroDialog->setAttribute(Qt::WA_DeleteOnClose);  //delete on close
+    nonZeroDialog->setWindowTitle("nonZeroCol");        //titolo finestra
     nonZeroDialog->setWindowModality(Qt::ApplicationModal); //impedisce l'interazione con altre finestre
     nonZeroDialog->setMinimumSize(150,100);
 
@@ -171,16 +173,13 @@ void SparseMatrixKalk::handleSparseMatrixObtainResult() {
         nonZeroDialog->close();
         getOperationsSet()->hide();
 
-
         //reset dell'interfaccia
         resetDimensionsGroupBox();
         getObtainResult()->hide();
         getSelectSecondMatrixLabel()->hide();
     }
     catch(KalkException& e) {
-        QErrorMessage* err = new QErrorMessage;
-        err->setAttribute(Qt::WA_DeleteOnClose);
-        err->showMessage(e.getMessage());
+        exceptionHandling(e);
         result->close();
     }
 }

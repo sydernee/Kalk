@@ -2,7 +2,6 @@
 #include <QStringListModel>
 #include <QHBoxLayout>
 #include <QSpacerItem>
-#include <QDebug>
 #include <QErrorMessage>
 #include "../controller/SquareMatrixController.h"
 #include "../controller/SparseMatrixController.h"
@@ -21,6 +20,7 @@ MatrixBuilder::MatrixBuilder(QWidget *parent)
 
     pages.append(new QWidget(this));        //pages[0]
     pages.append(nullptr);  //pages[1], per MatrixKalk
+    pages.append(nullptr);  //pages[2], per switchare tra MatrixKalk e SquareMatrixKalk
 
     stackedWidget->addWidget(pages[0]);
 
@@ -69,13 +69,25 @@ MatrixBuilder::~MatrixBuilder() {
 
 void MatrixBuilder::handleBackButton() {
     if (stackedWidget->currentWidget() == pages[0]) {
+        emit matrixBuilderCloseSignal();
         close();
     }
-    else { //pages[1]
+    else if (stackedWidget->currentWidget() == pages[1]) { //pages[1]
         //resetta il QWidget pages[1]
         delete pages[1];
         pages[1] = nullptr;
         stackedWidget->setCurrentWidget(pages[0]); //imposta pages[0] come attivo
+
+        //ridimensionamento finestra
+        setMinimumSize(wWindowSize,hWindowSize);
+        resize(wWindowSize,hWindowSize);
+    }
+    else { //pages[2]
+        delete pages[1];
+        delete pages[2];
+        pages[1] = nullptr;
+        pages[2] = nullptr;
+        stackedWidget->setCurrentWidget(pages[0]);
 
         //ridimensionamento finestra
         setMinimumSize(wWindowSize,hWindowSize);
@@ -92,6 +104,7 @@ void MatrixBuilder::handleMatrixSelection() {
             controller = new MatrixController;
             pages[1] = new MatrixKalk(controller, this);
             setMinimumSize(wCreatorWindowSize,hCreatorWindowSize);
+            QObject::connect(pages[1], SIGNAL(squareMatrixSignal()), this, SLOT(connectMatrixKalk()));
         }
         else if (choice == "Matrice Quadrata") {
             //pages[1] sarà SquareMatrixKalk*
@@ -110,14 +123,37 @@ void MatrixBuilder::handleMatrixSelection() {
             pages[1] = new SparseMatrixKalk(controller, this);
             setMinimumSize(wCreatorWindowSize, hCreatorWindowSize+100);
         }
+
+        //sezione pages[2]
+        if (pages[2] == nullptr) {
+            controller = new SquareMatrixController;
+            pages[2] = new SquareMatrixKalk(controller, this);
+            setMinimumSize(wCreatorWindowSize, hCreatorWindowSize+100);
+            stackedWidget->addWidget(pages[2]);
+        }
+
+        stackedWidget->removeWidget(pages[2]);
         stackedWidget->addWidget(pages[1]);
+        stackedWidget->addWidget(pages[2]);
         stackedWidget->setCurrentWidget(pages[1]);
         setWindowTitle("MatrixKalk");
     }
     catch(KalkException& e) {
-        QErrorMessage* err = new QErrorMessage;
-        err->setAttribute(Qt::WA_DeleteOnClose);
-        err->showMessage(e.getMessage());
+        exceptionHandling(e);
     }
 
+}
+
+void MatrixBuilder::connectMatrixKalk()
+{
+    QObject::disconnect(pages[1], SIGNAL(squareMatrixSignal()), this, SLOT(connectMatrixKalk())); //sconnette pages[1] al segnale
+
+    unsigned int dim = qobject_cast<MatrixKalk*>(pages[1])->getColBox()->value(); //ricorda la dimensione scelta
+
+    SquareMatrixKalk* ptr = qobject_cast<SquareMatrixKalk*>(pages[2]);  //pages[2]
+    ptr->getColBox()->setValue(dim); //imposta il valore scelto
+    setMinimumSize(wCreatorWindowSize, hCreatorWindowSize+100);
+
+    stackedWidget->setCurrentWidget(pages[2]);  //imposta come attivo pages[2]
+    ptr->handleSelectDimensions();
 }

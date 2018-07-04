@@ -8,7 +8,7 @@ SquareMatrixController::SquareMatrixController(MatrixKalk* _view, Matrix* _mat1,
             || (_mat1 != nullptr && !dynamic_cast<SquareMatrix*>(_mat1))
             || (_mat2 != nullptr && !dynamic_cast<SquareMatrix*>(_mat2)))
     {
-        throw InvalidMatrixTypeException("SquareMatrixController::SquareMatrixController(): invalid Matrix type");
+        throw InvalidMatrixTypeException("SquareMatrixController::SquareMatrixController(): Invalid Matrix type");
     }
 }
 
@@ -44,14 +44,14 @@ void SquareMatrixController::buildMatrix2(unsigned int rows, unsigned int cols) 
 
 void SquareMatrixController::setMatrix1(const Matrix& mat) {
     if (mat.rowCount() != mat.colCount())
-        throw InvalidMatrixTypeException("SquareMatrixController::setMatrix1(): parameter mat is not a SquareMatrix.");
+        throw InvalidMatrixTypeException("SquareMatrixController::setMatrix1(): Parameter mat is not a SquareMatrix.");
 
     MatrixController::setMatrix1(mat);
 }
 
 void SquareMatrixController::setMatrix2(const Matrix& mat) {
     if (mat.rowCount() != mat.colCount())
-        throw InvalidMatrixTypeException("SquareMatrixController::setMatrix2(): parameter mat is not a SquareMatrix.");
+        throw InvalidMatrixTypeException("SquareMatrixController::setMatrix2(): Parameter mat is not a SquareMatrix.");
 
     MatrixController::setMatrix2(mat);
 }
@@ -61,7 +61,7 @@ void SquareMatrixController::setMatrix2(const Matrix& mat) {
 double SquareMatrixController::determinant() const {
     //matrix1 ha sicuramente TD SquareMatrix*
     if (getMatrix1() == nullptr)
-        throw NullPointerException("SquareMatrixController::determinant(): attempted to dereference a null pointer.");
+        throw NullPointerException("SquareMatrixController::determinant(): Attempted to dereference a null pointer.");
 
     return static_cast<SquareMatrix*>(getMatrix1())->determinant();
 }
@@ -69,35 +69,35 @@ double SquareMatrixController::determinant() const {
 SquareMatrix SquareMatrixController::getMinor(unsigned int x, unsigned int y) const {
     //matrix1 ha sicuramente TD SquareMatrix*
     if (getMatrix1() == nullptr)
-        throw NullPointerException("SquareMatrixController::determinant(): attempted to dereference a null pointer.");
+        throw NullPointerException("SquareMatrixController::determinant(): Attempted to dereference a null pointer.");
 
     return static_cast<SquareMatrix*>(getMatrix1())->getMinor(x, y); //throws
 }
 
 bool SquareMatrixController::isSupTriangular() const {
     if (getMatrix1() == nullptr)
-        throw NullPointerException("SquareMatrixController::determinant(): attempted to dereference a null pointer.");
+        throw NullPointerException("SquareMatrixController::determinant(): Attempted to dereference a null pointer.");
 
     return static_cast<SquareMatrix*>(getMatrix1())->supTriangular();
 }
 
 bool SquareMatrixController::isInfTriangular() const {
     if (getMatrix1() == nullptr)
-        throw NullPointerException("SquareMatrixController::determinant(): attempted to dereference a null pointer.");
+        throw NullPointerException("SquareMatrixController::determinant(): Attempted to dereference a null pointer.");
 
     return static_cast<SquareMatrix*>(getMatrix1())->infTriangular();
 }
 
 bool SquareMatrixController::isDiagonal() const {
     if (getMatrix1() == nullptr)
-        throw NullPointerException("SquareMatrixController::determinant(): attempted to dereference a null pointer.");
+        throw NullPointerException("SquareMatrixController::determinant(): Attempted to dereference a null pointer.");
 
     return static_cast<SquareMatrix*>(getMatrix1())->isDiagonal();
 }
 
 bool SquareMatrixController::isSymmetric() const {
     if (getMatrix1() == nullptr)
-        throw NullPointerException("SquareMatrixController::determinant(): attempted to dereference a null pointer.");
+        throw NullPointerException("SquareMatrixController::determinant(): Attempted to dereference a null pointer.");
 
     return static_cast<SquareMatrix*>(getMatrix1())->isSymmetric();
 }

@@ -39,6 +39,11 @@ void Widget::handleCreateMatrixKalkButton() {
     matrixBuilder->setAttribute(Qt::WA_DeleteOnClose); //delete on close
     matrixBuilder->setMinimumSize(300,200);
     matrixBuilder->show();
-//    setDisabled(true);
-    close();
+
+    QObject::connect(matrixBuilder, SIGNAL(matrixBuilderCloseSignal()), this, SLOT(showWidget()));
+    hide();
+}
+
+void Widget::showWidget() {
+    show();
 }

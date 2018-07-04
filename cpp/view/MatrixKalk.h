@@ -35,9 +35,12 @@ enum Operation {
     NON_ZERO_COL
 };
 
+class MatrixBuilder;
+
 
 class MatrixKalk : public QWidget
 {
+    friend class MatrixBuilder;
     Q_OBJECT
 private:
 
@@ -133,15 +136,13 @@ protected:
     Operation getOperationSelected() const;
 
 signals:
-//    void nonScalarMulSignal(double);
-//    void buildMatrixSignal(const Matrix&);
+    void squareMatrixSignal(); //Segnale nel caso le dimensioni siano uguali per switchare a SquareMatrix
 
 public slots:
-    virtual void handleSelectDimensions(); //virtual?
+    virtual void handleSelectDimensions();
     virtual void handleSelectSecondMatrixDimensions();
 
-//    void handleBuildMatrixButton();
-    void handleObtainResult();
+    virtual void handleObtainResult();
 
     //operations slots
     virtual void sumClicked();
@@ -153,5 +154,7 @@ public slots:
     virtual void swapColsClicked();
     virtual void substituteRowClicked();
 };
+
+void exceptionHandling(KalkException&);
 
 #endif // MATRIXKALK_H

@@ -6,14 +6,20 @@ SquareMatrix::SquareMatrix(unsigned int n) :
 SquareMatrix::SquareMatrix(unsigned int n, double val) :
     Matrix(n, n, val) {}
 
-SquareMatrix::SquareMatrix(const SquareMatrix& mat) :
-    Matrix(mat) {}
-
 SquareMatrix::SquareMatrix(unsigned int n, std::initializer_list<double> l) :
     Matrix(n, n, l) {}
 
 SquareMatrix::SquareMatrix(unsigned int n, std::vector<std::initializer_list<double>> l) :
     Matrix(n, n, l) {}
+
+SquareMatrix::SquareMatrix(const SquareMatrix& mat) :
+    Matrix(mat) {}
+
+SquareMatrix& SquareMatrix::operator=(const SquareMatrix& mat) {
+    if (this != &mat)
+        Matrix::operator =(mat);
+    return *this;
+}
 
 bool SquareMatrix::isDiagonal() const {
     for (unsigned int i = 0; i < rowCount(); i++)
@@ -56,7 +62,6 @@ SquareMatrix SquareMatrix::getMinor(unsigned int x, unsigned int y) const {
 SquareMatrix* SquareMatrix::transposed() const {
     return static_cast<SquareMatrix*>(Matrix::transposed());
 }
-
 
 double SquareMatrix::determinant() const {  
     unsigned int N = colCount();

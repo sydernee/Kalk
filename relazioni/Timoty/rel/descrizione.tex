@@ -5,7 +5,16 @@ Il \emph{design pattern} scelto per lo sviluppo del progetto è il
 \emph{model-view-controller}, \textbf{MVC}. Si è cercato di aderire
 il più possibile a questo pattern architetturale. \par
 Il progetto è stato sviluppato seguendo l'ideologia dell'\emph{Open World Assumption}.
-Per questa ragione, gran parte dei metodi sono dichiarati come \texttt{virtual}.
+Per questa ragione, gran parte dei metodi sono dichiarati come \texttt{virtual}.\par
+I file sono organizzati principalmente in 4 cartelle:
+\begin{itemize}
+    \item \textbf{model}\verb|/| contiene i file per il modello;
+    \item \textbf{view}\verb|/| contiene i file relativi alla GUI implementata utilizzando 
+    la libreria \texttt{Qt};
+    \item \textbf{controller}\verb|/| contiene i file relativi ai controller;
+    \item \textbf{exceptions}\verb|/| contiene i file relativi alla gerarchia delle eccezioni.
+\end{itemize}
+
 
 \subsection{Modello}
 Il \emph{modello} è la parte logica dell'applicativo. È stato implementato in
@@ -13,7 +22,7 @@ modo sia totalmente indipendente dalla \emph{view}. \par
 Ogni modello di calcolo di Kalk deriva dalla classe \texttt{DataType}, una classe
 astratta che non offre alcuna vera funzionalità (poichè si propone a un livello di astrazione
 troppo alto, dato che da essa può derivare un qualunque tipo di classe. È stata usata solo per
-raggruppare in modo coerente i tipi di dato usati nella calcolatrice), oltre a un \emph{distruttore %
+raggruppare in modo coerente i tipi di dato usati nella calcolatrice), oltre a offrire un \emph{distruttore %
 virtuale puro}.
 \subsubsection{Matrix}
 Il primo tipo di calcolo è \texttt{Matrix}, una classe rappresenta le matrici matematiche.
@@ -23,25 +32,144 @@ Essi sono accessibili in lettura attraverso le funzioni \texttt{rowCount()} e
 \texttt{colCount()}. \par
 
 È possibile accedere alle celle con la funzione \texttt{double get(i,j)}, 
-oppure attraverso l'operatore \texttt{[][]}: per implementarlo, sono presenti due classi interne
+oppure attraverso l'operatore di subscripting \texttt{[][]}: per implementarlo, sono presenti due classi interne
 \texttt{Row} e \texttt{CRow} che si occupano di gestire la chiamata nitidificata dell'operatore 
 \texttt{[]}. \texttt{CRow} è la versione costante di \texttt{Row}. L'operatore \texttt{[][]} comunque è meno
 efficiente di \texttt{get(i,j)}, poichè passa attraverso l'istanziazione di un oggetto \texttt{Row/CRow}.
 Allo stesso modo, è possibile accedere in scrittura alle celle con la funzione \mbox{\texttt{void set(i,j,k)}}, con 
 \texttt{k} valore di tipo \texttt{double}.
 
-\paragraph{Operazioni di Kalk} Le operazioni che offre \texttt{Matrix} sono
+%\paragraph{Operazioni di Kalk} 
+Le operazioni che offre \texttt{Matrix} sono
 la somma (\texttt{operator+}), la differenza (\texttt{operator-}), il prodotto scalare (\texttt{operator*})
-definite come funzioni esterne; il prodotto non scalare (overload dell'\texttt{operator*}), \texttt{swapRows} 
+definite come funzioni esterne; il prodotto non scalare (overload dell'\texttt{operator*}), la trasposta (\texttt{transposed()}), \texttt{swapRows} 
 (scambia due righe passate come parametro, facendo \emph{side-effect}), \texttt{swapCols} (come la precedente 
 ma sulle colonne) e \texttt{substituteRow} (somma la riga \emph{b} alla riga \emph{a} dopo aver moltiplicato 
 \emph{b} per un \emph{double v}, facendo \emph{side-effect}) come funzioni interne;
 
-\paragraph*{Polimorfismo} 
+\subsubsection{SquareMatrix} 
+\texttt{SquareMatrix} è una classe derivata di \texttt{Matrix}. Non aggiunge nuovi \emph{field} all'oggetto,
+è semplicemente un sottoinsieme delle matrici: matrici con le due dimensioni uguali.\par
+Questo tipo di proprietà permette di aggiungere nuovi tipi di operazioni, che non sono possibili su una
+normale matrice, ossia: il calcolo del determinante (\texttt{determinant()}); funzioni che restituiscono un 
+booleano per determinare se la matrice è: triangolare superiore (\texttt{supTriangular()}), triangolare 
+inferiore (\texttt{infTriangular()}), diagonale (\texttt{isDiagonal()}) e simmetrica (\texttt{isSymmetric()});
+la funzione \texttt{getMinor()}, che restituisce una matrice con dimensione ridotta di uno rispetto alla 
+\texttt{SquareMatrix} d'invocazione, in cui sono state rimosse la riga e la colonna passate come parametro.
+
+\subsubsection{SparseMatrix}
+\texttt{SparseMatrix} è un'altra classe derivata da \texttt{Matrix}. Una matrice sparsa è una normale matrice
+che tendenzialmente ha molte celle con valore nullo (0). Aggiunge i campi \texttt{sparsity} e 
+\texttt{dirtyBit}. Il primo viene inizialmente posto a $-1$, poichè il calcolo della sparsità avrebbe costo $O(n)$,
+e per scelta progettuale questo calcolo viene rimandato a quando la sparsità viene esplicitamente richiesta. 
+In caso la matrice venga modificata, il \texttt{dirtyBit} viene posto a \texttt{true} in modo da ricordare che
+la sparsità va ricalcolata.\par
+Le operazioni che offre sono: \texttt{getSparsity()} per ottenere il valore della sparsità; \texttt{isDense()}
+per sapere se la matrice è \emph{densa} (ossia sparsità $\leq 0.5$); \texttt{nonZeroRow()} restituisce i valori
+(in un \texttt{QVector<double>}) $\neq 0$ nella riga passata come parametro, e l'analoga \texttt{nonZeroCol()},
+che fa lo stesso ma con la colonna passata come parametro.
+
+\paragraph*{Polimorfismo nella gerarchia Matrix}
+
 \begin{itemize}
-    \item \texttt{void Matrix::set()}: \texttt{set} viene 
-    \emph{overridata} in \texttt{SparseMatrix}. Questo perchè, nel caso in cui 
-    venga chiamata in un oggetto che ha tipo dinamico \texttt{SparseMatrix},
-    bisogna tenere traccia nel \texttt{dirtyBit} che è stata effettuata una modifica alla matrice, in modo
+    \item Per la redifinizione degli operatori binari (somma, differenza, prodotto scalare) è stato scelto di seguire la 
+    pratica comune del \texttt{C++}, senza utilizzare codice polimorfo, bensì dichiarando le funzioni esterne alla 
+    classe, poichè in caso di polimorfismo si perderebbe la commutatività dell'operatore e bisognerebbe passare 
+    attraverso puntatori e memoria allocata nello \emph{heap}, cosa che rischia di creare garbage.\par 
+    Ad esempio (prendendo le versioni di \texttt{Matrix} e \texttt{SquareMatrix}), abbiamo, per \texttt{operator+}:
+    \begin{center}
+        \texttt{Matrix operator +(const Matrix}\verb|&|\texttt{, const Matrix}\verb|&|\texttt{)} \\
+        \texttt{SquareMatrix operator +(const SquareMatrix}\verb|&|\texttt{, const SquareMatrix}\verb|&|\texttt{)}
+    \end{center}
+    A run-time verrà scelta la funzione che con i parametri con il corretto tipo dinamico.
+    
+    \item Anche per l'operatore di assegnazione \texttt{operator=}, è stato scelto di non usare funzioni virtuali:
+    questo perchè nel linguaggio non è necessario dichiarare virtuale tale operatore.
+
+    \item \texttt{void Matrix::set()}, \texttt{double}\verb|&| \texttt{Matrix::getReference()} e altre funzioni che fanno \emph{side-effect}
+    sulle celle della matrice: vengono \emph{overridate} in \texttt{SparseMatrix} perchè, nel caso in cui 
+    venga modificato un oggetto che ha tipo dinamico \texttt{SparseMatrix},
+    va tenuta traccia tramite il \texttt{dirtyBit} che è stata effettuata una modifica alla matrice, in modo
     da restituire un valore di \emph{sparsità} corretto in caso venga richiesto.
+
+    \item \texttt{Matrix* Matrix::transposed()}: overridata in \texttt{SquareMatrix} e \texttt{SparseMatrix} 
+    per restituire un puntatore con il tipo dinamico corretto. 
 \end{itemize}
+Per il resto, gran parte delle funzioni sono dichiarate come \texttt{virtual}, anche se non vengono esplicitamente overridate.
+
+\subsubsection{Network}
+\texttt{Network} è una classe che ha lo scopo di simulare una rete di \emph{utenti} interconnessi, in modo simile
+a un \emph{social network} (ovviamente in forma molto semplificata).
+L'utente è rappresentato tramite la classe \texttt{User}, composta da \texttt{username}, che deve essere
+univoco all'interno di una stessa rete, \texttt{name} e \texttt{surname}. \par
+Ogni rete è rappresentata da un oggetto \texttt{Network}. Per i puntatori usati in questa classe si è scelto
+di usare gli smart pointer offerti da \texttt{Qt} con la classe \texttt{QSharedPointer}, per non aver problemi di gestione
+di memoria. Una rete ha:
+\begin{itemize}
+    \item \texttt{QString name}: rappresenta il nome della rete;
+    \item \texttt{QList<QSharedPointer<User>> userlist}: lista di utenti iscritti alla rete;
+    \item \texttt{QList<QPair<QSharedPointer<User>, QSharedPointer<User>>> following}: lista di coppie
+    \texttt{User*} - \texttt{User*}, in cui il primo utente ``segue'' il secondo.
+\end{itemize}
+
+Le funzioni di utilità che offre la classe sono:
+\begin{itemize}[noitemsep]
+    \item \texttt{size()} restituisce il numero di utenti nella rete;
+    \item \texttt{addUser()} aggiunge un utente alla rete (se non già presente, altrimenti lancia un'eccezione);
+    \item \texttt{isUserOfTheNetwork()} restituisce un booleano che è \texttt{true} se e solo se l'utente è presente
+    nella rete;
+    \item \texttt{removeUser()} rimuove un utente con un determinato \texttt{username};
+    \item \texttt{addFollower()} aggiunge una coppia (\texttt{QPair}) di puntatori a utenti a \texttt{followed} (il primo segue
+    il secondo);
+    \item \texttt{removeFollower()} rimuove una coppia da \texttt{following};
+    \item \texttt{isFollowerOf()} verifica se il primo \texttt{User} segue il secondo;
+    \item \texttt{getFollower()} restituisce un contenitore (\texttt{QSet}) con i puntatori a utenti seguiti da un certo \texttt{User};
+    \item \texttt{getFollowed()} restituisce un contenitore (\texttt{QSet}) con i puntatori a utenti che seguono un certo \texttt{User}.
+\end{itemize}
+
+Infine la classe offre una serie di operazioni insiemistiche tra due \texttt{Network}: 
+\begin{itemize}[noitemsep]
+    \item \texttt{getUnion()} restituisce un \texttt{QSet} in cui sono presenti i puntatori a tutti gli utenti
+    in comune e non tra le due reti;
+    \item \texttt{getIntersection()} restituisce un \texttt{QSet} in cui sono presenti i puntatori a tutti gli 
+    utenti in comune tra le due reti;
+    \item \texttt{getRelativeComplement()} restituisce un \texttt{QSet} che è il complemento relativo tra gli utenti 
+    delle due reti;
+    \item \texttt{getSymmetricDifference()} restituisce un \texttt{QSet} che è la differenza simmetrica tra gli utenti
+    delle due reti.
+\end{itemize}
+
+Tutti i metodi sono virtuali, ad eccezione di \texttt{size()}, poichè il numero di utenti sarà sempre quello di 
+\texttt{userlist}, \texttt{getName()} e \texttt{setName()}, poichè il nome della rete resterà sempre la variabile
+\texttt{name} nelle classi derivate.
+ 
+\subsection{View}
+
+Per implementare la GUI è stata utilizzata la libreria \texttt{Qt}. Non è stato utilizzato il tool \mbox{\emph{Qt Designer}} e il codice per la GUI è stato scritto
+interamente a mano, poichè, data la scarsa complessità della GUI, sarebbe stato uno spreco di tempo dover andare a ritoccare a mano
+il codice scritto in automatico dall'IDE.\par
+Il widget iniziale è dato dalla classe 
+\texttt{Widget} che deriva da \texttt{QWidget}. Da esso è possibile selezionare se usare \texttt{MatrixKalk} 
+o \texttt{NetworkKalk}
+
+\subsubsection{Gerarchia MatrixKalk}
+La prima classe con cui l'utente si trova ad interagire e \texttt{MatrixBuilder}, che deriva da \texttt{QWidget}.
+Questo widget sarà l'istanza principale per \texttt{MatrixKalk}. Inizialmente permette di selezionare con quali 
+matrici si vogliono effettuare operazioni di calcolo: ``Matrice'', ``Matrice Quadrata'' o ``Matrice Sparsa''.
+In base a cosa l'utente sceglierà, verrà creata un'istanza della classe \texttt{MatrixKalk} per le matrici, 
+\texttt{SquareMatrixKalk} (che deriva da \texttt{MatrixKalk}) per le matrici quadrate e \texttt{SparseMatrixKalk} 
+(anch'essa deriva da \texttt{MatrixKalk}) per le matrici sparse, con relativi controller.\par
+Per i campi di input numerici è stata implementata \texttt{KeypadInput}, derivata da \texttt{QLineEdit}, per poter controllare che non vengano inseriti
+input non validi.
+% È presente nella classe un campo \texttt{stackedWidget} di tipo \texttt{QStackedWidget*},
+% che si occuperà di tenere in memoria più widget contemporaneamente ma di tenerne attivo solamente uno.
+% Il primo (\texttt{pages[0]}) è per la selezione delle matrici, mentre il secondo (\texttt{pages[1]}) è quello in cui c'è il calcolo effettivo delle matrici.
+
+\paragraph{Polimorfismo in MatrixKalk} I metodi utilizzati per la costruzione (come ad esempio \texttt{buildDimensionsGroupBox()}) sono 
+stati dichiarati non virtuali. Questo
+perchè il linguaggio non permette di invocare in un costruttore un metodo virtuale (si otterrebbe un comportamento \emph{non} virtuale). \par
+Metodi \emph{overridati} si hanno in \texttt{SquareMatrixKalk} (le funzioni, \emph{slot}, per la gestione della selezione delle dimensioni
+e della moltiplicazione scalare, per gestire correttamente l'assenza del pulsante con la seconda dimensione). La totalità dei 
+metodi per il calcolo delle operazioni (i relativi slot) sono definiti come \texttt{virtual}.
+
+\subsubsection{NetworkKalk}

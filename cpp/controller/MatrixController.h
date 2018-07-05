@@ -21,22 +21,17 @@ class MatrixController //: public QObject
 private:
     Matrix* matrix1;
     Matrix* matrix2;
-//    MatrixKalk* view;
+
 public:
-    MatrixController(/*MatrixKalk* = nullptr, */Matrix* = nullptr, Matrix* = nullptr);
+    MatrixController(Matrix* = nullptr, Matrix* = nullptr);
     virtual ~MatrixController();
 
+    //matrix2 if whichMatrix=2, matrix2 else
     virtual void buildMatrix(const QVector<KeypadInput*>&, unsigned int, unsigned int, int whichMatrix = 1);  //costruisce matrix1
     virtual void buildMatrix(unsigned int, unsigned int, int whichMatrix = 1); //costruisce matrix1 con celle e valori di default
     virtual void setMatrix(const Matrix&, int whichMatrix = 1);
     virtual Matrix*& getMatrix(int whichMatrix = 1);
     virtual Matrix* getMatrix(int whichMatrix = 1) const;
-
-//    virtual void buildMatrix2(QVector<KeypadInput*>, unsigned int, unsigned int); //costruisce matrix2
-//    virtual void buildMatrix2(unsigned int, unsigned int);  //costruisce matrix2 con celle e valori di default
-//    virtual void setMatrix2(const Matrix&);
-//    virtual Matrix*& getMatrix2();
-//    virtual Matrix* getMatrix2() const;
 
     static void displayMatrix(const Matrix& mat, const QString& = "");   //genera l'output in una nuova finestra del parametro
 

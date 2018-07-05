@@ -4,6 +4,7 @@
 #include "../exceptions/InvalidLayoutException.h"
 
 #include <QErrorMessage>
+#include <QDebug>
 
 SquareMatrixKalk::SquareMatrixKalk(MatrixController* _controller, QWidget *parent)
     : MatrixKalk(_controller, parent),
@@ -32,28 +33,36 @@ void SquareMatrixKalk::insertSquareOperations() {
 
     //istanziazione, connessioni e inserimento nel layout pulsanti per le nuove operazioni
     QPushButton* determinant = new QPushButton("determinant()", getOperationsSet());
-    connect(determinant, SIGNAL(clicked()), this, SLOT(handleDeterminant()));
+    QObject::connect(determinant, SIGNAL(clicked()), this, SLOT(handleDeterminant()));
     l1->addWidget(determinant);
 
-    QPushButton* minor = new QPushButton("getMinor()", getOperationsSet());
-    connect(minor, SIGNAL(clicked()), this, SLOT(handleGetMinor()));
-    l1->addWidget(minor);
-
     QPushButton* symmetric = new QPushButton("isSymmetric()", getOperationsSet());
-    connect(symmetric, SIGNAL(clicked()), this, SLOT(handleIsSymmetric()));
+    QObject::connect(symmetric, SIGNAL(clicked()), this, SLOT(handleIsSymmetric()));
     l1->addWidget(symmetric);
 
     QPushButton* supTriangular = new QPushButton("supTriangular()", getOperationsSet());
-    connect(supTriangular, SIGNAL(clicked()), this, SLOT(handleSupTriangular()));
-    l2->addWidget(supTriangular);
+    QObject::connect(supTriangular, SIGNAL(clicked()), this, SLOT(handleSupTriangular()));
+    l1->addWidget(supTriangular);
 
     QPushButton* infTriangular = new QPushButton("infTriangular()", getOperationsSet());
-    connect(infTriangular, SIGNAL(clicked()), this, SLOT(handleInfTriangular()));
-    l2->addWidget(infTriangular);
+    QObject::connect(infTriangular, SIGNAL(clicked()), this, SLOT(handleInfTriangular()));
+    l1->addWidget(infTriangular);
+
+    QPushButton* minor = new QPushButton("getMinor()", getOperationsSet());
+    QObject::connect(minor, SIGNAL(clicked()), this, SLOT(handleGetMinor()));
+    l2->addWidget(minor);
 
     QPushButton* isDiagonal = new QPushButton("isDiagonal()", getOperationsSet());
-    connect(isDiagonal, SIGNAL(clicked()), this, SLOT(handleIsDiagonal()));
+    QObject::connect(isDiagonal, SIGNAL(clicked()), this, SLOT(handleIsDiagonal()));
     l2->addWidget(isDiagonal);
+
+    QPushButton* identityButton = new QPushButton("identityMatrix()", getOperationsSet());
+    QObject::connect(identityButton, SIGNAL(clicked()), this, SLOT(handleIdentityMatrix()));
+    l2->addWidget(identityButton);
+
+    QPushButton* zeroButton = new QPushButton("zeroMatrix()", getOperationsSet());
+    QObject::connect(zeroButton, SIGNAL(clicked()), this, SLOT(handleZeroMatrix()));
+    l2->addWidget(zeroButton);
 
     QVBoxLayout* ptr = qobject_cast<QVBoxLayout*>(getOperationsSet()->layout());
     if (!ptr)    
@@ -258,6 +267,14 @@ void SquareMatrixKalk::handleIsDiagonal() {
     catch(KalkException& e) {
         exceptionHandling(e);
     }
+}
+
+void SquareMatrixKalk::handleIdentityMatrix() {
+    controller->displayMatrix(SquareMatrix::identityMatrix(getColBox()->value()), "Risultato identityMatrix");
+}
+
+void SquareMatrixKalk::handleZeroMatrix() {
+    controller->displayMatrix(SquareMatrix::zeroMatrix(getColBox()->value()), "Risultato zeroMatrix");
 }
 
 void SquareMatrixKalk::handleSquareMatrixObtainResult()

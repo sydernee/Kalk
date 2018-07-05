@@ -1,11 +1,10 @@
 #include "SquareMatrixController.h"
 #include "../view/SquareMatrixKalk.h"
 
-SquareMatrixController::SquareMatrixController(/*MatrixKalk* _view, */Matrix* _mat1, Matrix* _mat2)
-    : MatrixController(/*_view, */_mat1, _mat2)
+SquareMatrixController::SquareMatrixController(Matrix* _mat1, Matrix* _mat2)
+    : MatrixController(_mat1, _mat2)
 {
-    if (/*(_view != nullptr && !qobject_cast<SquareMatrixKalk*>(_view))
-            || */(_mat1 != nullptr && !dynamic_cast<SquareMatrix*>(_mat1))
+    if ((_mat1 != nullptr && !dynamic_cast<SquareMatrix*>(_mat1))
             || (_mat2 != nullptr && !dynamic_cast<SquareMatrix*>(_mat2)))
     {
         throw InvalidMatrixTypeException("SquareMatrixController::SquareMatrixController(): Invalid Matrix type");
@@ -26,20 +25,6 @@ void SquareMatrixController::buildMatrix(unsigned int rows, unsigned int cols, i
     MatrixController::buildMatrix(rows,cols,whichMatrix);
 }
 
-//void SquareMatrixController::buildMatrix2(QVector<KeypadInput*> cells, unsigned int rows, unsigned int cols) {
-//    if (rows != cols)
-//        throw InvalidMatrixIndexes("SquareMatrixController::buildMatrix2(): rows != cols.");
-
-//    MatrixController::buildMatrix2(cells,rows,cols);
-//}
-
-//void SquareMatrixController::buildMatrix2(unsigned int rows, unsigned int cols) {
-//    if (rows != cols)
-//        throw InvalidMatrixIndexes("SquareMatrixController::buildMatrix2(): rows != cols.");
-
-//    MatrixController::buildMatrix2(rows,cols);
-//}
-
 //SETTERS
 
 void SquareMatrixController::setMatrix(const Matrix& mat, int whichMatrix) {
@@ -48,13 +33,6 @@ void SquareMatrixController::setMatrix(const Matrix& mat, int whichMatrix) {
 
     MatrixController::setMatrix(mat, whichMatrix);
 }
-
-//void SquareMatrixController::setMatrix2(const Matrix& mat) {
-//    if (mat.rowCount() != mat.colCount())
-//        throw InvalidMatrixTypeException("SquareMatrixController::setMatrix2(): Parameter mat is not a SquareMatrix.");
-
-//    MatrixController::setMatrix2(mat);
-//}
 
 //operations
 

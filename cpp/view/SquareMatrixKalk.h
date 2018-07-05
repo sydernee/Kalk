@@ -31,6 +31,9 @@ public slots:
     virtual void handleSupTriangular();
     virtual void handleInfTriangular();
     virtual void handleIsDiagonal();
+    virtual void handleIdentityMatrix();
+    virtual void handleZeroMatrix();
+
     void handleSquareMatrixObtainResult();
 };
 

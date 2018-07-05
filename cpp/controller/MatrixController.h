@@ -12,7 +12,7 @@
 #include "../model/datatypes/SquareMatrix.h"
 #include "../view/KeypadInput.h"
 
-class MatrixKalk;
+//class MatrixKalk;
 
 class MatrixController //: public QObject
 {
@@ -21,22 +21,22 @@ class MatrixController //: public QObject
 private:
     Matrix* matrix1;
     Matrix* matrix2;
-    MatrixKalk* view;
+//    MatrixKalk* view;
 public:
-    MatrixController(MatrixKalk* = nullptr, Matrix* = nullptr, Matrix* = nullptr);
+    MatrixController(/*MatrixKalk* = nullptr, */Matrix* = nullptr, Matrix* = nullptr);
     virtual ~MatrixController();
 
-    virtual void buildMatrix1(QVector<KeypadInput*>, unsigned int, unsigned int);  //costruisce matrix1
-    virtual void buildMatrix1(unsigned int, unsigned int); //costruisce matrix1 con celle e valori di default
-    virtual void setMatrix1(const Matrix&);
-    virtual Matrix*& getMatrix1();
-    virtual Matrix* getMatrix1() const;
+    virtual void buildMatrix(const QVector<KeypadInput*>&, unsigned int, unsigned int, int whichMatrix = 1);  //costruisce matrix1
+    virtual void buildMatrix(unsigned int, unsigned int, int whichMatrix = 1); //costruisce matrix1 con celle e valori di default
+    virtual void setMatrix(const Matrix&, int whichMatrix = 1);
+    virtual Matrix*& getMatrix(int whichMatrix = 1);
+    virtual Matrix* getMatrix(int whichMatrix = 1) const;
 
-    virtual void buildMatrix2(QVector<KeypadInput*>, unsigned int, unsigned int); //costruisce matrix2
-    virtual void buildMatrix2(unsigned int, unsigned int);  //costruisce matrix2 con celle e valori di default
-    virtual void setMatrix2(const Matrix&);
-    virtual Matrix*& getMatrix2();
-    virtual Matrix* getMatrix2() const;
+//    virtual void buildMatrix2(QVector<KeypadInput*>, unsigned int, unsigned int); //costruisce matrix2
+//    virtual void buildMatrix2(unsigned int, unsigned int);  //costruisce matrix2 con celle e valori di default
+//    virtual void setMatrix2(const Matrix&);
+//    virtual Matrix*& getMatrix2();
+//    virtual Matrix* getMatrix2() const;
 
     static void displayMatrix(const Matrix& mat, const QString& = "");   //genera l'output in una nuova finestra del parametro
 

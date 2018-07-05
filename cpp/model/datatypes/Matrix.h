@@ -2,7 +2,7 @@
 #define MATRIX_H
 
 #include "../DataType.h"
-#include <vector>
+#include <QVector>
 #include <iostream>
 #include <initializer_list>
 
@@ -14,7 +14,7 @@ class Matrix : public DataType {
 
 private:
     unsigned int row, col;
-    std::vector<double> matrix; //1 dimensione, visto in 2 dimensioni in fase di implementazione
+    QVector<double> matrix; //1 dimensione, visto in 2 dimensioni in fase di implementazione
 
     //classe proxy per poter utilizzare l'operatore [][]
     class Row {
@@ -51,7 +51,7 @@ public:
     Matrix(unsigned int numRows, unsigned int numCols);
     Matrix(unsigned int numRows, unsigned int numCols, double value); //costruttore che inizializza tutti i campi al valore passato come parametro
     Matrix(unsigned int numRows, unsigned int numCols, std::initializer_list<double> list); //permette una costruzione e.g. Matrix(2,3, {1,2,1,...,2})
-    Matrix(unsigned int numRows, unsigned int numCols, std::vector<std::initializer_list<double>> list); //permette una costruzione e.g. Matrix(2,3, {1,2,1}, {2,2,3}})
+    Matrix(unsigned int numRows, unsigned int numCols, QVector<std::initializer_list<double>> list); //permette una costruzione e.g. Matrix(2,3, {1,2,1}, {2,2,3}})
 
     virtual void fill(double value, double range = 0); //assegna ad ogni cella value+i*range, i in [0,n[
 

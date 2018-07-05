@@ -47,8 +47,6 @@ MatrixKalk::MatrixKalk(MatrixController* _controller, QWidget *parent)
 
 }
 
-MatrixKalk::~MatrixKalk() {}
-
 //costruisce il set dei pulsanti per la selezione delle dimensioni
 void MatrixKalk::buildDimensionsGroupBox() {
     dimensionsGroupBox = new QGroupBox(this);
@@ -394,19 +392,19 @@ void MatrixKalk::handleObtainResult() {
     try {
         if (getOperationSelected() == SUM) {
             //istanzia l'operando di destra
-            controller->buildMatrix2(cells, rowBox->value(), colBox->value());
+            controller->buildMatrix(cells, rowBox->value(), colBox->value(), 2);
             MatrixController::displayMatrix(controller->sum(), "Risultato sum");
         }
 
         else if (getOperationSelected() == SUBTRACTION) {
             //istanzia l'operando di destra
-            controller->buildMatrix2(cells, rowBox->value(), colBox->value());
+            controller->buildMatrix(cells, rowBox->value(), colBox->value(), 2);
             MatrixController::displayMatrix(controller->subtract(), "Risultato subtraction");
         }
 
         else if (getOperationSelected() == SCALAR_MULTIPLICATION) {
             //istanzia l'operando di destra
-            controller->buildMatrix2(cells, rowBox->value(), colBox->value());
+            controller->buildMatrix(cells, rowBox->value(), colBox->value(), 2);
             MatrixController::displayMatrix(controller->scalarMultiply(), "Risultato scalarMul");
         }
 
@@ -448,7 +446,7 @@ void MatrixKalk::handleObtainResult() {
 //sum button handler
 void MatrixKalk::sumClicked() { //n x m + n x m
     //Istanzia l'operando di sinistra
-    controller->buildMatrix1(cells, rowBox->value(), colBox->value());
+    controller->buildMatrix(cells, rowBox->value(), colBox->value());
 
     dimensionsGroupBox->hide();
     operationsSet->hide();
@@ -466,7 +464,7 @@ void MatrixKalk::sumClicked() { //n x m + n x m
 void MatrixKalk::subtractionClicked() { //n x m + n x m
     //Istanzia l'operando di sinistra
     //WARN: codice ripetuto
-    controller->buildMatrix1(cells, rowBox->value(), colBox->value());
+    controller->buildMatrix(cells, rowBox->value(), colBox->value());
 
     dimensionsGroupBox->hide();
     operationsSet->hide();
@@ -483,7 +481,7 @@ void MatrixKalk::subtractionClicked() { //n x m + n x m
 void MatrixKalk::scalarMultiplicationClicked() {
     //possibile prodotto solo tra n x m + m x l
 
-    controller->buildMatrix1(cells, rowBox->value(), colBox->value()); //costruisce l'operando di sx
+    controller->buildMatrix(cells, rowBox->value(), colBox->value()); //costruisce l'operando di sx
 
     operationsSet->hide();
     obtainResult->hide();
@@ -501,7 +499,7 @@ void MatrixKalk::scalarMultiplicationClicked() {
 
 void MatrixKalk::nonScalarMultiplicationClicked() {
     //Istanzia l'operando di sinistra
-    controller->buildMatrix1(cells, rowBox->value(), colBox->value());
+    controller->buildMatrix(cells, rowBox->value(), colBox->value());
 
     nonScalarMulDialog = new QDialog;
     nonScalarMulDialog->setAttribute(Qt::WA_DeleteOnClose);     //delete on close
@@ -528,7 +526,7 @@ void MatrixKalk::nonScalarMultiplicationClicked() {
 
 void MatrixKalk::transposedClicked() {
     try {
-        controller->buildMatrix1(cells, rowBox->value(), colBox->value());  //istanzia matrix1
+        controller->buildMatrix(cells, rowBox->value(), colBox->value());  //istanzia matrix1
         MatrixController::displayMatrix(controller->transposed(), "Risultato transposed()");          //display di matrix1->transposed()
     }
     catch(KalkException& e) {
@@ -538,7 +536,7 @@ void MatrixKalk::transposedClicked() {
 
 void MatrixKalk::swapRowsClicked() {
     //istanzia l'operando
-    controller->buildMatrix1(cells, rowBox->value(), colBox->value());
+    controller->buildMatrix(cells, rowBox->value(), colBox->value());
 
     swapDialog = new QDialog; //istanzia swapDialog
     swapDialog->setAttribute(Qt::WA_DeleteOnClose); //delete on close
@@ -575,7 +573,7 @@ void MatrixKalk::swapRowsClicked() {
 
 void MatrixKalk::swapColsClicked() {
     //istanzia l'operando
-    controller->buildMatrix1(cells, rowBox->value(), colBox->value());
+    controller->buildMatrix(cells, rowBox->value(), colBox->value());
 
     swapDialog = new QDialog;   //istanzia swapDialog
     swapDialog->setAttribute(Qt::WA_DeleteOnClose);  //delete on close
@@ -613,7 +611,7 @@ void MatrixKalk::swapColsClicked() {
 
 void MatrixKalk::substituteRowClicked() {
     //istanzia l'operando
-    controller->buildMatrix1(cells, rowBox->value(), colBox->value());
+    controller->buildMatrix(cells, rowBox->value(), colBox->value());
 
     substituteRowDialog = new QDialog;  //istanzia substituteRowDialog
     substituteRowDialog->setAttribute(Qt::WA_DeleteOnClose);        //delete on close

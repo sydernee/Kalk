@@ -1,6 +1,5 @@
 #include "Widget.h"
 #include "MatrixBuilder.h"
-#include "Keypad.h"
 #include <QRect>
 #include <QHBoxLayout>
 #include <QGridLayout>
@@ -8,7 +7,6 @@
 
 Widget::Widget(QWidget *parent)
     : QWidget(parent),
-//      keypad(new Keypad(this)),
       createMatrixKalk(new QPushButton("MatrixKalk", this))
 {
     setWindowTitle("Kalk"); //imposta il titolo della finestra
@@ -21,7 +19,6 @@ Widget::Widget(QWidget *parent)
 
     QVBoxLayout* mainLayout = new QVBoxLayout;
     mainLayout->addLayout(hblayout);
-//    mainLayout->addWidget(keypad);
 
     setLayout(mainLayout);
 }

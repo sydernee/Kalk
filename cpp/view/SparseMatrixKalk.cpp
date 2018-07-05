@@ -50,7 +50,7 @@ void SparseMatrixKalk::insertSparseOperations() {
 //SLOTS
 
 void SparseMatrixKalk::handleGetSparsity() {
-    controller->buildMatrix1(getCells(), getRowBox()->value(), getColBox()->value());
+    controller->buildMatrix(getCells(), getRowBox()->value(), getColBox()->value());
 
     QDialog* dialog = new QDialog;
     dialog->setAttribute(Qt::WA_DeleteOnClose); //delete on close
@@ -62,7 +62,7 @@ void SparseMatrixKalk::handleGetSparsity() {
 }
 
 void SparseMatrixKalk::handleIsDense() {
-    controller->buildMatrix1(getCells(), getRowBox()->value(), getColBox()->value());
+    controller->buildMatrix(getCells(), getRowBox()->value(), getColBox()->value());
 
     QDialog* dialog = new QDialog;
     dialog->setAttribute(Qt::WA_DeleteOnClose); //delete on close
@@ -85,7 +85,7 @@ void SparseMatrixKalk::handleIsDense() {
 }
 
 void SparseMatrixKalk::handleNonZeroRow() {
-    controller->buildMatrix1(getCells(), getRowBox()->value(), getColBox()->value());
+    controller->buildMatrix(getCells(), getRowBox()->value(), getColBox()->value());
 
     nonZeroDialog = new QDialog;                        //istanzia nonZeroDialog
     nonZeroDialog->setAttribute(Qt::WA_DeleteOnClose);  //delete on close
@@ -115,7 +115,7 @@ void SparseMatrixKalk::handleNonZeroRow() {
 }
 
 void SparseMatrixKalk::handleNonZeroCol() {
-    controller->buildMatrix1(getCells(), getRowBox()->value(), getColBox()->value());
+    controller->buildMatrix(getCells(), getRowBox()->value(), getColBox()->value());
 
     nonZeroDialog = new QDialog;                        //istanzia nonZeroDialog
     nonZeroDialog->setAttribute(Qt::WA_DeleteOnClose);  //delete on close

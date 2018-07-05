@@ -77,7 +77,7 @@ void SquareMatrixKalk::handleSelectSecondMatrixDimensions() {
 void SquareMatrixKalk::scalarMultiplicationClicked() {
     //istanzia la matrice
     try {
-        controller->buildMatrix1(getCells(), getRowBox()->value(), getColBox()->value());
+        controller->buildMatrix(getCells(), getRowBox()->value(), getColBox()->value());
 
         //mostra e nasconde i QWidget
         getDimensionsGroupBox()->hide();
@@ -100,7 +100,7 @@ void SquareMatrixKalk::scalarMultiplicationClicked() {
 
 void SquareMatrixKalk::handleDeterminant() {
     try {
-        controller->buildMatrix1(getCells(), getRowBox()->value(), getColBox()->value());
+        controller->buildMatrix(getCells(), getRowBox()->value(), getColBox()->value());
 
         QDialog* dialog = new QDialog;
         dialog->setAttribute(Qt::WA_DeleteOnClose); //delete on close
@@ -119,7 +119,7 @@ void SquareMatrixKalk::handleGetMinor() {
 
     try {
         //istanzia la matrice
-        controller->buildMatrix1(getCells(), getRowBox()->value(), getColBox()->value());
+        controller->buildMatrix(getCells(), getRowBox()->value(), getColBox()->value());
 
         minorDialog = new QDialog;   //istanzia minorDialog
         minorDialog->setAttribute(Qt::WA_DeleteOnClose); //delete on close
@@ -162,7 +162,7 @@ void SquareMatrixKalk::handleGetMinor() {
 
 void SquareMatrixKalk::handleIsSymmetric() {
     try {
-        controller->buildMatrix1(getCells(), getRowBox()->value(), getColBox()->value());
+        controller->buildMatrix(getCells(), getRowBox()->value(), getColBox()->value());
 
         QDialog* dialog = new QDialog;
         dialog->setAttribute(Qt::WA_DeleteOnClose); //delete on close
@@ -185,7 +185,7 @@ void SquareMatrixKalk::handleIsSymmetric() {
 void SquareMatrixKalk::handleSupTriangular() {
     try {
         //istanzia la matrice
-        controller->buildMatrix1(getCells(), getRowBox()->value(), getColBox()->value());
+        controller->buildMatrix(getCells(), getRowBox()->value(), getColBox()->value());
 
         QDialog* dialog = new QDialog;
         dialog->setAttribute(Qt::WA_DeleteOnClose); //delete on close
@@ -211,7 +211,7 @@ void SquareMatrixKalk::handleSupTriangular() {
 void SquareMatrixKalk::handleInfTriangular() {
     try {
         //istanzia la matrice
-        controller->buildMatrix1(getCells(), getRowBox()->value(), getColBox()->value());
+        controller->buildMatrix(getCells(), getRowBox()->value(), getColBox()->value());
 
         QDialog* dialog = new QDialog;
         dialog->setAttribute(Qt::WA_DeleteOnClose); //delete on close
@@ -237,7 +237,7 @@ void SquareMatrixKalk::handleInfTriangular() {
 void SquareMatrixKalk::handleIsDiagonal() {
     try {
         //istanzia la matrice
-        controller->buildMatrix1(getCells(), getRowBox()->value(), getColBox()->value());
+        controller->buildMatrix(getCells(), getRowBox()->value(), getColBox()->value());
 
         QDialog* dialog = new QDialog;
         dialog->setAttribute(Qt::WA_DeleteOnClose); //delete on close

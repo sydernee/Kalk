@@ -15,7 +15,7 @@ protected:
 public:
     SparseMatrix(unsigned int numRows, unsigned int numCols);
     SparseMatrix(unsigned int numRows, unsigned int numCols, std::initializer_list<double> list);
-    SparseMatrix(unsigned int numRows, unsigned int numCols, std::vector<std::initializer_list<double>> list);
+    SparseMatrix(unsigned int numRows, unsigned int numCols, QVector<std::initializer_list<double>> list);
 
     SparseMatrix(const SparseMatrix& mat);            //costruttore di copia
     SparseMatrix& operator=(const SparseMatrix& mat); //overload operatore di assegnazione
@@ -23,7 +23,7 @@ public:
     //setta a zero tutte le celle della matrice
     void clear(); //chiama fill() che è virtuale, non c'è bisogno del virtual
 
-    virtual void set(unsigned int row, unsigned int col, double value);
+    void set(unsigned int row, unsigned int col, double value) override;
     virtual double getSparsity() const; //restituisce la sparsità della matrice
     virtual bool isDense() const;       //la matrice è densa (50+% celle != 0)?
 

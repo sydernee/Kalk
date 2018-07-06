@@ -55,7 +55,9 @@ normale matrice, ossia: il calcolo del determinante (\texttt{determinant()}); fu
 booleano per determinare se la matrice è: triangolare superiore (\texttt{supTriangular()}), triangolare 
 inferiore (\texttt{infTriangular()}), diagonale (\texttt{isDiagonal()}) e simmetrica (\texttt{isSymmetric()});
 la funzione \texttt{getMinor()}, che restituisce una matrice con dimensione ridotta di uno rispetto alla 
-\texttt{SquareMatrix} d'invocazione, in cui sono state rimosse la riga e la colonna passate come parametro.
+\texttt{SquareMatrix} d'invocazione, in cui sono state rimosse la riga e la colonna passate come parametro. Sono infine presenti
+\texttt{zeroMatrix()} e \texttt{identityMatrix}, due metodi statici che restituiscono una \texttt{SquareMatrix} di zeri o identità in 
+base al valore intero passato come parametro.
 
 \subsubsection{SparseMatrix}
 \texttt{SparseMatrix} è un'altra classe derivata da \texttt{Matrix}. Una matrice sparsa è una normale matrice
@@ -111,23 +113,24 @@ di memoria. Una rete ha:
     \item \texttt{QList<QPair<QSharedPointer<User>, QSharedPointer<User>>> following}: lista di coppie
     \texttt{User*} - \texttt{User*}, in cui il primo utente ``segue'' il secondo.
 \end{itemize}
+La classe offre alcune funzioni di utilità, tra cui \texttt{addUser()}, \texttt{removeUser()}, \texttt{addFollower()}, \texttt{isFollowerOf()}, \texttt{size()} \dots
 
-Le funzioni di utilità che offre la classe sono:
-\begin{itemize}[noitemsep]
-    \item \texttt{size()} restituisce il numero di utenti nella rete;
-    \item \texttt{addUser()} aggiunge un utente alla rete (se non già presente, altrimenti lancia un'eccezione);
-    \item \texttt{isUserOfTheNetwork()} restituisce un booleano che è \texttt{true} se e solo se l'utente è presente
-    nella rete;
-    \item \texttt{removeUser()} rimuove un utente con un determinato \texttt{username};
-    \item \texttt{addFollower()} aggiunge una coppia (\texttt{QPair}) di puntatori a utenti a \texttt{followed} (il primo segue
-    il secondo);
-    \item \texttt{removeFollower()} rimuove una coppia da \texttt{following};
-    \item \texttt{isFollowerOf()} verifica se il primo \texttt{User} segue il secondo;
-    \item \texttt{getFollower()} restituisce un contenitore (\texttt{QSet}) con i puntatori a utenti seguiti da un certo \texttt{User};
-    \item \texttt{getFollowed()} restituisce un contenitore (\texttt{QSet}) con i puntatori a utenti che seguono un certo \texttt{User}.
-\end{itemize}
+% Le funzioni di utilità che offre la classe sono:
+% \begin{itemize}[noitemsep]
+%     \item \texttt{size()} restituisce il numero di utenti nella rete;
+%     \item \texttt{addUser()} aggiunge un utente alla rete (se non già presente, altrimenti lancia un'eccezione);
+%     \item \texttt{isUserOfTheNetwork()} restituisce un booleano che è \texttt{true} se e solo se l'utente è presente
+%     nella rete;
+%     \item \texttt{removeUser()} rimuove un utente con un determinato \texttt{username};
+%     \item \texttt{addFollower()} aggiunge una coppia (\texttt{QPair}) di puntatori a utenti a \texttt{followed} (il primo segue
+%     il secondo);
+%     \item \texttt{removeFollower()} rimuove una coppia da \texttt{following};
+%     \item \texttt{isFollowerOf()} verifica se il primo \texttt{User} segue il secondo;
+%     \item \texttt{getFollower()} restituisce un contenitore (\texttt{QSet}) con i puntatori a utenti seguiti da un certo \texttt{User};
+%     \item \texttt{getFollowed()} restituisce un contenitore (\texttt{QSet}) con i puntatori a utenti che seguono un certo \texttt{User}.
+% \end{itemize}
 
-Infine la classe offre una serie di operazioni insiemistiche tra due \texttt{Network}: 
+Infine sono presenti una serie di operazioni insiemistiche tra due \texttt{Network}: 
 \begin{itemize}[noitemsep]
     \item \texttt{getUnion()} restituisce un \texttt{QSet} in cui sono presenti i puntatori a tutti gli utenti
     in comune e non tra le due reti;
@@ -173,3 +176,39 @@ e della moltiplicazione scalare, per gestire correttamente l'assenza del pulsant
 metodi per il calcolo delle operazioni (i relativi slot) sono definiti come \texttt{virtual}.
 
 \subsubsection{NetworkKalk}
+
+\subsection{Controller}
+
+Il \emph{controller} si occupa di effettuare le operazioni di \texttt{Kalk} sui tipi di dato senza far interagire direttamente il modello con la vista.
+
+\subsubsection{Gerarchia MatrixController}
+
+Nella classe base \texttt{MatrixController} sono presenti due campi dato puntatore: \texttt{Matrix *matrix1, *matrix2}. Per accedere a questi campi sono 
+presenti le funzioni \texttt{getMatrix()} in lettura, \texttt{buildMatrix()} e \texttt{setMatrix()} in scrittura, che accettano un parametro 
+intero, \texttt{whichMatrix}, per decidere a quale puntatore accedere (per operazioni unarie si utilizza solo il primo). 
+Sono poi presenti le funzioni per le operazioni tra matrici, tra cui \texttt{sum()}, \texttt{transposed()}, etc \dots \par
+Da \texttt{MatrixController} derivano \texttt{SquareMatrixController} e \texttt{SparseMatrixController}, classi derivate del controller usate rispettivamente 
+da \texttt{SquareMatrixKalk} e \texttt{SparseMatrixKalk} per gestire le operzioni assenti nella classe base del modello.
+
+\paragraph{Polimorfismo} 
+I metodi \texttt{getMatrix()}, \texttt{setMatrix()} e \texttt{buildMatrix()} sono dichiarati come virtuali e overridati nella classe 
+\texttt{SparseMatrixController} per restituire un oggetto (allocato nello heap) del tipo dinamico adeguato.\par
+I metodi di che si occupano di interfacciarsi con il modello, invece, non sono virtuali: questo perchè restituiscono un oggetto 
+temporaneo e non un riferimento: nelle classi derivate andrebbe persa dell'informazione.
+
+\subsection{Eccezioni}
+
+Le eccezioni usate in \texttt{Kalk} derivano tutte dalla classe astratta \texttt{KalkException}, la quale deriva a sua volta da \texttt{QException}.
+\texttt{KalkException} aggiunge alla classe padre il campo \texttt{QString message} accessibile con il metodo \texttt{getMessage()}, e un 
+costruttore a un parametro che permette di costruire il campo dati stringa in fase di costruzione. \par
+Nella GUI, quando viene sollevata e catturata un'eccezione, viene invocata la funzione esterna \texttt{exceptionHandling(KalkException}\verb|&| \texttt{e)}, che si occupa di costruire un 
+widget \texttt{QErrorMessage} che mostra la fonte del problema e l'errore riscontrato.
+
+\section{Java}
+
+In \texttt{Java} è stato implementato solo il modello di Kalk, e una classe \texttt{Use} che include il metodo \texttt{main()}, con una 
+serie di esempi di utilizzo delle funzionalità del modello.\par
+Il comportamento e l'implementazione sono pressochè identici: le differenze rispetto al \texttt{C++} sono limitate, in particolare 
+sull'uso dei contenitori: per \texttt{Matrix} si è usato \texttt{ArrayList} invece di \texttt{QVector}, in \texttt{Network} sono stati 
+usati \texttt{List}, \texttt{Set} e \texttt{AbstractMap} invece di \texttt{QList}, \texttt{QSet} e \texttt{QPair}, e sulle eccezioni, 
+in cui le eccezioni usate sono raccolte nella cartella \textbf{kalkException}\verb|/| e derivano dalla classe \texttt{RuntimeException}.

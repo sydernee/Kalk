@@ -2,6 +2,7 @@ package dataTypes;
 
 import kalkException.TooFewArgumentsException;
 import kalkException.TooManyArgumentsException;
+import java.util.ArrayList;
 
 public class SparseMatrix extends Matrix {
 	//fields
@@ -64,7 +65,34 @@ public class SparseMatrix extends Matrix {
 	public boolean isDense() {
 		if (getSparsity() <= 0.5)
 			return true;
-		return false;
+		return false;	
+	}
+	
+	public ArrayList<Double> nonZeroRow(int i) throws IndexOutOfBoundsException, NegativeArraySizeException {
+		if (i >=  getRows())
+			throw new IndexOutOfBoundsException("SparseMatrix.nonZeroRow(): out of bounds index.");
+		else if (i < 0)
+			throw new NegativeArraySizeException("SparseMatrix.nonZeroRow(): invalid negative index.");
 		
+		ArrayList<Double> res = new ArrayList<Double>();
+		for (int j = 0; j < getCols(); j++) {
+			if (get(i, j) != 0)
+				res.add(get(i,j));
+		}
+		return res;
+	}
+	
+	public ArrayList<Double> nonZeroCol(int j) throws IndexOutOfBoundsException, NegativeArraySizeException {
+		if (j >=  getCols())
+			throw new IndexOutOfBoundsException("SparseMatrix.nonZeroRow(): out of bounds index.");
+		else if (j < 0)
+			throw new NegativeArraySizeException("SparseMatrix.nonZeroRow(): invalid negative index.");
+		
+		ArrayList<Double> res = new ArrayList<Double>();
+		for (int i = 0; i < getRows(); i++) {
+			if (get(i, j) != 0)
+				res.add(get(i,j));
+		}
+		return res;
 	}
 }

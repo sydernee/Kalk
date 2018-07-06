@@ -1,4 +1,6 @@
-import kalkException.*;
+package dataTypes;
+
+//import kalkException.*;
 
 public class User {
 	//fields
@@ -17,6 +19,11 @@ public class User {
     String getUsername() {return username;}
     String getName() {return name;}
     String getSurname() {return surname;}
+    
+    @Override
+    public String toString() {
+		return username;
+    }
    
     void setName(final String n) {name=n;}
     void setSurname(final String s) {surname=s;}

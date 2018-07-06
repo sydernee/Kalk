@@ -9,15 +9,18 @@
 Widget::Widget(QWidget *parent)
     : QWidget(parent),
 //      keypad(new Keypad(this)),
-      createMatrixKalk(new QPushButton("MatrixKalk", this))
+      createMatrixKalk(new QPushButton("MatrixKalk", this)),
+      createNetworkKalk(new QPushButton("NetworkKalk", this))
 {
     setWindowTitle("Kalk"); //imposta il titolo della finestra
     setMinimumSize(150,75); //imposta le dimensioni minime della finestra
 
     connect(createMatrixKalk, SIGNAL(clicked()), this, SLOT(handleCreateMatrixKalkButton()));
+    connect(createNetworkKalk, SIGNAL(clicked()), this, SLOT(handleCreateNetworkKalkButton()));
 
     QHBoxLayout* hblayout = new QHBoxLayout;
     hblayout->addWidget(createMatrixKalk);
+    hblayout->addWidget(createNetworkKalk);    
 
     QVBoxLayout* mainLayout = new QVBoxLayout;
     mainLayout->addLayout(hblayout);

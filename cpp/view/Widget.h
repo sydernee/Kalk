@@ -12,12 +12,14 @@ class Widget : public QWidget
 private:
 //    Keypad* keypad;
     QPushButton* createMatrixKalk;
+    QPushButton* createNetworkKalk;
 
 private slots:
     void handleNumButtons();
     void handleDotButton();
     void handleAssignmentButton();
     void handleCreateMatrixKalkButton();
+    void handleCreateNetworkKalkButton();
     void showWidget();
 
 public:

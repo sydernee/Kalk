@@ -77,6 +77,7 @@ void MatrixBuilder::handleBackButton() {
         delete pages[1];
         pages[1] = nullptr;
         stackedWidget->setCurrentWidget(pages[0]); //imposta pages[0] come attivo
+        setWindowTitle("Scegli il tipo di matrice");
 
         //ridimensionamento finestra
         setMinimumSize(wWindowSize,hWindowSize);
@@ -137,6 +138,13 @@ void MatrixBuilder::handleMatrixSelection() {
         stackedWidget->addWidget(pages[2]);
         stackedWidget->setCurrentWidget(pages[1]);
         setWindowTitle("MatrixKalk");
+
+        //aggiusta il focus
+        if (choice == "Matrice Quadrata")
+            qobject_cast<MatrixKalk*>(stackedWidget->currentWidget())->getColBox()->setFocus();
+        else
+            qobject_cast<MatrixKalk*>(stackedWidget->currentWidget())->getRowBox()->setFocus();
+
     }
     catch(KalkException& e) {
         exceptionHandling(e);

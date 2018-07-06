@@ -35,24 +35,22 @@ SOURCES += \
     model/datatypes/SparseMatrix.cpp \
     model/datatypes/User.cpp \
     model/datatypes/Network.cpp \
-#   model/datatypes/Number.cpp \
+    view/KeypadInput.cpp \
     view/Widget.cpp \
     view/MatrixBuilder.cpp \
-    view/Keypad.cpp \
-    view/KeypadInput.cpp \
-    controller/MatrixController.cpp \
+    view/MatrixKalk.cpp \
     view/SquareMatrixKalk.cpp \
-    controller/SquareMatrixController.cpp \
     view/SparseMatrixKalk.cpp \
+    controller/MatrixController.cpp \
+    controller/SquareMatrixController.cpp \
     controller/SparseMatrixController.cpp \
+    exceptions/KalkException.cpp \
     exceptions/IndexOutOfBoundsException.cpp \
     exceptions/ZeroMultiplierException.cpp \
     exceptions/InvalidMatrixIndexes.cpp \
     exceptions/NullPointerException.cpp \
-    exceptions/KalkException.cpp \
     exceptions/InvalidMatrixTypeException.cpp \
-    exceptions/InvalidLayoutException.cpp \
-    view/MatrixKalk.cpp
+    exceptions/InvalidLayoutException.cpp
 
 HEADERS += \
     model/DataType.h \
@@ -61,24 +59,22 @@ HEADERS += \
     model/datatypes/SparseMatrix.h \
     model/datatypes/Network.h \
     model/datatypes/User.h \
-#   model/datatypes/Number.h \
+    view/KeypadInput.h \
     view/Widget.h \
     view/MatrixBuilder.h \
-    view/Keypad.h \
-    view/KeypadInput.h \
-    controller/MatrixController.h \
+    view/MatrixKalk.h \
     view/SquareMatrixKalk.h \
-    controller/SquareMatrixController.h \
     view/SparseMatrixKalk.h \
+    controller/MatrixController.h \
+    controller/SquareMatrixController.h \
     controller/SparseMatrixController.h \
+    exceptions/KalkException.h \
     exceptions/IndexOutOfBoundsException.h \
     exceptions/ZeroMultiplierException.h \
     exceptions/InvalidMatrixIndexes.h \
     exceptions/NullPointerException.h \
-    exceptions/KalkException.h \
     exceptions/InvalidMatrixTypeException.h \
-    exceptions/InvalidLayoutException.h \
-    view/MatrixKalk.h
+    exceptions/InvalidLayoutException.h
 
 RESOURCES += \
     resources.qrc

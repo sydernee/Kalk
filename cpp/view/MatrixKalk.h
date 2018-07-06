@@ -16,6 +16,8 @@
 #include <QPushButton>
 #include <cfloat>
 
+#include <QDebug>
+
 enum Operation {
     //Matrix
     SUM,
@@ -81,15 +83,12 @@ protected:
 
 public:
     explicit MatrixKalk(MatrixController*, QWidget *parent = nullptr);
-    ~MatrixKalk();
 
     //costruisce i pulsanti per le dimensioni e restituisce il layout
     void buildDimensionsGroupBox();
 
     //costruisce il set di pulsanti per le operazioni
     void buildOperationsSet();
-
-
 
     void clearCells(); //delete cells[i] per ogni i in 0..n-1 e svuota cells
     void resetCells(); //cells[i]->setText("") per ogni i in 0..n-1

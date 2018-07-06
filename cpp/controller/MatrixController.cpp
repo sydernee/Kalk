@@ -3,10 +3,9 @@
 #include <QGridLayout>
 #include <QLabel>
 
-MatrixController::MatrixController(MatrixKalk* _view, Matrix* _matrix1, Matrix* _matrix2)
+MatrixController::MatrixController(Matrix* _matrix1, Matrix* _matrix2)
     : matrix1(_matrix1), //copia di puntatori
-      matrix2(_matrix2),
-      view(_view)
+      matrix2(_matrix2)
 {}
 
 MatrixController::~MatrixController() {
@@ -14,97 +13,59 @@ MatrixController::~MatrixController() {
     delete matrix2;
 }
 
-void MatrixController::buildMatrix1(QVector<KeypadInput*> cells, unsigned int rows, unsigned int cols) {
+void MatrixController::buildMatrix(const QVector<KeypadInput*>& cells, unsigned int rows, unsigned int cols, int whichMatrix) {
     //PRE: cells[n] viene visto come cells[rows][cols] e sono le corrette dimensioni della matrice che si vuole costruire
-    if (matrix1 != nullptr) {
-        delete matrix1;
+    if (getMatrix(whichMatrix) != nullptr) {
+        delete getMatrix(whichMatrix);
     }
     if (rows == cols)
-        matrix1 = new SquareMatrix(rows, cols); //alloca una SquareMatrix se le dimensioni sono uguali
+        (getMatrix(whichMatrix)) = new SquareMatrix(rows, cols); //alloca una SquareMatrix se le dimensioni sono uguali
     else
-        matrix1 = new Matrix(rows, cols); //alloca matrix1 nello heap
+        (getMatrix(whichMatrix)) = new Matrix(rows, cols); //alloca mat nello heap
 
-    if (!cells.isEmpty()) //se cells non è vuoto, imposta il valore delle celle di matrix1
+    if (!cells.isEmpty()) //se cells non è vuoto, imposta il valore delle celle di mat
         for (unsigned int i = 0; i < rows; i++)
             for (unsigned int j = 0; j < cols; j++)
-                matrix1->set(i,j,cells[i*cols+j]->text().toDouble());
+                (getMatrix(whichMatrix))->set(i,j,cells[i*cols+j]->text().toDouble());
 }
 
-void MatrixController::buildMatrix1(unsigned int rows, unsigned int cols) {
-    if (matrix1 != nullptr)
-        delete matrix1;
+void MatrixController::buildMatrix(unsigned int rows, unsigned int cols, int whichMatrix) {
+    if (getMatrix(whichMatrix) != nullptr)
+        delete getMatrix(whichMatrix);
 
     if (rows == cols)
-        matrix1 = new SquareMatrix(rows, cols); //alloca una SquareMatrix se le dimensioni sono uguali
+        getMatrix(whichMatrix) = new SquareMatrix(rows, cols); //alloca una SquareMatrix se le dimensioni sono uguali
     else
-        matrix1 = new Matrix(rows, cols); //alloca matrix1 nello heap
-}
-
-void MatrixController::buildMatrix2(QVector<KeypadInput*> cells, unsigned int rows, unsigned int cols) {
-    //PRE: cells[n] viene visto come cells[rows][cols] e sono le corrette dimensioni della matrice che si vuole costruire
-    if (matrix2 != nullptr)
-        delete matrix2;
-
-    if (rows == cols)
-        matrix2 = new SquareMatrix(rows, cols); //alloca una SquareMatrix se le dimensioni sono uguali
-    else
-        matrix2 = new Matrix(rows, cols); //alloca matrix2 nello heap
-
-    if (!cells.isEmpty()) //se cells non è vuoto, imposta il valore delle celle di matrix2
-        for (unsigned int i = 0; i < rows; i++)
-            for (unsigned int j = 0; j < cols; j++)
-                matrix2->set(i,j,cells[i*cols+j]->text().toDouble());
-}
-
-void MatrixController::buildMatrix2(unsigned int rows, unsigned int cols) {
-    if (matrix2 != nullptr)
-        delete matrix2;
-    if (rows == cols)
-        matrix2 = new SquareMatrix(rows, cols); //alloca una SquareMatrix se le dimensioni sono uguali
-    else
-        matrix2 = new Matrix(rows, cols); //alloca matrix1 nello heap;
+        getMatrix(whichMatrix) = new Matrix(rows, cols); //alloca mat nello heap
 }
 
 //SETTERS
 
-void MatrixController::setMatrix1(const Matrix& mat) {
-    if (matrix1 != nullptr)
-        delete matrix1;
+void MatrixController::setMatrix(const Matrix& matrix, int whichMatrix) {
+    if (getMatrix(whichMatrix) != nullptr)
+        delete getMatrix(whichMatrix);
 
-    const Matrix* ptr = &mat;
+    const Matrix* ptr = &matrix;
     if (dynamic_cast<const SquareMatrix*>(ptr))
-        matrix1 = new SquareMatrix(static_cast<const SquareMatrix&>(mat));
+        getMatrix(whichMatrix) = new SquareMatrix(static_cast<const SquareMatrix&>(matrix));
     else
-        matrix1 = new Matrix(mat);
-}
-
-void MatrixController::setMatrix2(const Matrix& mat) {
-    if (matrix2 != nullptr)
-        delete matrix2;
-
-    const Matrix* ptr = &mat;
-    if (dynamic_cast<const SquareMatrix*>(ptr))
-        matrix2= new SquareMatrix(static_cast<const SquareMatrix&>(mat));
-    else
-        matrix2 = new Matrix(mat);
+        getMatrix(whichMatrix) = new Matrix(matrix);
 }
 
 //GETTERS
 
-Matrix*& MatrixController::getMatrix1() {
-    return matrix1;
+Matrix*& MatrixController::getMatrix(int whichMatrix) {
+    if (whichMatrix == 2)
+        return matrix2;
+    else
+        return matrix1;
 }
 
-Matrix* MatrixController::getMatrix1() const {
-    return matrix1;
-}
-
-Matrix*& MatrixController::getMatrix2() {
-    return matrix2;
-}
-
-Matrix* MatrixController::getMatrix2() const {
-    return matrix2;
+Matrix* MatrixController::getMatrix(int whichMatrix) const {
+    if (whichMatrix == 2)
+        return matrix2;
+    else
+        return matrix1;
 }
 
 //output

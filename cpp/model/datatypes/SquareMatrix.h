@@ -8,7 +8,7 @@ public:
     SquareMatrix(unsigned int dimension);
     SquareMatrix(unsigned int dimension, double value);
     SquareMatrix(unsigned int dimension, std::initializer_list<double> list);
-    SquareMatrix(unsigned int dimension, std::vector<std::initializer_list<double>> list);
+    SquareMatrix(unsigned int dimension, QVector<std::initializer_list<double>> list);
 
     SquareMatrix(const SquareMatrix& mat); //costruttore di copia profondo
     SquareMatrix& operator=(const SquareMatrix& mat); //assegnazione profonda

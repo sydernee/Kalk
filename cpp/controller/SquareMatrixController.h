@@ -8,25 +8,21 @@ class SquareMatrix;
 
 class SquareMatrixController : public MatrixController {
 public:
-    SquareMatrixController(MatrixKalk* = nullptr, Matrix* = nullptr, Matrix* = nullptr);
-//    virtual ~SquareMatrixController();
+    SquareMatrixController(Matrix* = nullptr, Matrix* = nullptr);
 
-    void buildMatrix1(QVector<KeypadInput*>, unsigned int, unsigned int);
-    void buildMatrix1(unsigned int, unsigned int);
-    void setMatrix1(const Matrix&);
-
-    void buildMatrix2(QVector<KeypadInput*>, unsigned int, unsigned int);
-    void buildMatrix2(unsigned int, unsigned int);
-    void setMatrix2(const Matrix&);
+    //matrix2 if whichMatrix=2, matrix2 else
+    void buildMatrix(const QVector<KeypadInput*>&, unsigned int, unsigned int, int whichMatrix = 1) override;
+    void buildMatrix(unsigned int, unsigned int, int whichMatrix = 1) override;
+    void setMatrix(const Matrix&, int whichMatrix = 1) override;
 
     //operations
 
-    double determinant() const;
+    virtual double determinant() const;
     SquareMatrix getMinor(unsigned int, unsigned int) const;
-    bool isSupTriangular() const;
-    bool isInfTriangular() const;
-    bool isDiagonal() const;
-    bool isSymmetric() const;
+    virtual bool isSupTriangular() const;
+    virtual bool isInfTriangular() const;
+    virtual bool isDiagonal() const;
+    virtual bool isSymmetric() const;
 };
 
 #endif // SQUAREMATRIXCONTROLLER_H

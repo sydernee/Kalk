@@ -9,7 +9,7 @@ SquareMatrix::SquareMatrix(unsigned int n, double val) :
 SquareMatrix::SquareMatrix(unsigned int n, std::initializer_list<double> l) :
     Matrix(n, n, l) {}
 
-SquareMatrix::SquareMatrix(unsigned int n, std::vector<std::initializer_list<double>> l) :
+SquareMatrix::SquareMatrix(unsigned int n, QVector<std::initializer_list<double>> l) :
     Matrix(n, n, l) {}
 
 SquareMatrix::SquareMatrix(const SquareMatrix& mat) :

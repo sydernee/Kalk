@@ -10,7 +10,6 @@ class Widget : public QWidget
 {
     Q_OBJECT
 private:
-//    Keypad* keypad;
     QPushButton* createMatrixKalk;
     QPushButton* createNetworkKalk;
 

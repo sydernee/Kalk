@@ -18,7 +18,7 @@ private slots:
     void handleDotButton();
     void handleAssignmentButton();
     void handleCreateMatrixKalkButton();
-    void handleCreateNetworkKalkButton();
+    void handleNetworkManagerKalkButton();
     void showWidget();
 
 public:

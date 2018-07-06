@@ -1,5 +1,6 @@
 #include "Widget.h"
 #include "MatrixBuilder.h"
+#include "NetworkManager.h"
 #include <QRect>
 #include <QHBoxLayout>
 #include <QGridLayout>
@@ -15,7 +16,7 @@ Widget::Widget(QWidget *parent)
     setMinimumSize(150,75); //imposta le dimensioni minime della finestra
 
     connect(createMatrixKalk, SIGNAL(clicked()), this, SLOT(handleCreateMatrixKalkButton()));
-    connect(createNetworkKalk, SIGNAL(clicked()), this, SLOT(handleCreateNetworkKalkButton()));
+    connect(createNetworkKalk, SIGNAL(clicked()), this, SLOT(handleNetworkManagerKalkButton()));
 
     QHBoxLayout* hblayout = new QHBoxLayout;
     hblayout->addWidget(createMatrixKalk);
@@ -42,6 +43,16 @@ void Widget::handleCreateMatrixKalkButton() {
     matrixBuilder->show();
 
     QObject::connect(matrixBuilder, SIGNAL(matrixBuilderCloseSignal()), this, SLOT(showWidget()));
+    hide();
+}
+
+void Widget::handleNetworkManagerKalkButton() {
+    QWidget* networkManager = new NetworkManager();
+    networkManager->setAttribute(Qt::WA_DeleteOnClose); //delete on close
+    networkManager->setMinimumSize(300,200);
+    networkManager->show();
+
+    QObject::connect(networkManager, SIGNAL(networkManagerCloseSignal()), this, SLOT(showWidget()));
     hide();
 }
 

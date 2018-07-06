@@ -41,10 +41,12 @@ SOURCES += \
     view/MatrixKalk.cpp \
     view/SquareMatrixKalk.cpp \
     view/SparseMatrixKalk.cpp \
+    view/NetworkManager.cpp \
     controller/MatrixController.cpp \
     controller/SquareMatrixController.cpp \
     controller/SparseMatrixController.cpp \
     exceptions/KalkException.cpp \
+    controller/NetworkController.cpp \
     exceptions/IndexOutOfBoundsException.cpp \
     exceptions/ZeroMultiplierException.cpp \
     exceptions/InvalidMatrixIndexes.cpp \
@@ -65,6 +67,7 @@ HEADERS += \
     view/MatrixKalk.h \
     view/SquareMatrixKalk.h \
     view/SparseMatrixKalk.h \
+    view/NetworkManager.h \
     controller/MatrixController.h \
     controller/SquareMatrixController.h \
     controller/SparseMatrixController.h \

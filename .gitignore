@@ -34,9 +34,33 @@
 # Qt temp files
 Kalc.pro.*
 *.pro.user
+*.pro.user.*
 *.autosave
 .qmake.stash
 Kalk
-build-kalk-Desktop*
+build-*
+kalk
+object_script.*.Release
+object_script.*.Debug
+*_plugin_import.cpp
+/.qmake.cache
+/.qmake.stash
+*.qbs.user
+*.qbs.user.*
+*.moc
+moc_*.cpp
+moc_*.h
+qrc_*.cpp
+ui_*.h
+*.qmlc
+*.jsc
+
+# Qt unit tests
+target_wrapper.*
+
+# QtCreator
+*.autosave
+
+
 
 Makefile

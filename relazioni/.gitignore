@@ -2,6 +2,6 @@
 *.fdb_latexmk
 *.fls
 *.log
-kalk.pdf
+relazione.pdf
 *.gz
 *.toc

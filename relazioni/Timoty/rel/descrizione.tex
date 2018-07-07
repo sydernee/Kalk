@@ -18,12 +18,13 @@ I file sono organizzati principalmente in 4 cartelle:
 
 \subsection{Modello}
 Il \emph{modello} è la parte logica dell'applicativo. È stato implementato in
-modo sia totalmente indipendente dalla \emph{view}. \par
+modo che fosse totalmente indipendente dalla \emph{view}. \par
 Ogni modello di calcolo di Kalk deriva dalla classe \texttt{DataType}, una classe
 astratta che non offre alcuna vera funzionalità (poichè si propone a un livello di astrazione
 troppo alto, dato che da essa può derivare un qualunque tipo di classe. È stata usata solo per
-raggruppare in modo coerente i tipi di dato usati nella calcolatrice), oltre a offrire un \emph{distruttore %
-virtuale puro}.
+raggruppare in modo coerente i tipi di dato usati nella calcolatrice: ad esempio, \texttt{User},
+che non è un tipo di dato utilizzato direttamente da Kalk, non deriva da \texttt{DataType}), 
+oltre a offrire un \emph{distruttore virtuale puro}.
 \subsubsection{Matrix}
 Il primo tipo di calcolo è \texttt{Matrix}, una classe rappresenta le matrici matematiche.
 Le celle sono memorizzate in un \texttt{QVector<double>}; sono presenti
@@ -33,7 +34,7 @@ Essi sono accessibili in lettura attraverso le funzioni \texttt{rowCount()} e
 
 È possibile accedere alle celle con la funzione \texttt{double get(i,j)}, 
 oppure attraverso l'operatore di subscripting \texttt{[][]}: per implementarlo, sono presenti due classi interne
-\texttt{Row} e \texttt{CRow} che si occupano di gestire la chiamata nitidificata dell'operatore 
+\texttt{Row} e \texttt{CRow} che si occupano di gestire la chiamata nidificata dell'operatore 
 \texttt{[]}. \texttt{CRow} è la versione costante di \texttt{Row}. L'operatore \texttt{[][]} comunque è meno
 efficiente di \texttt{get(i,j)}, poichè passa attraverso l'istanziazione di un oggetto \texttt{Row/CRow}.
 Allo stesso modo, è possibile accedere in scrittura alle celle con la funzione \mbox{\texttt{void set(i,j,k)}}, con 
@@ -63,10 +64,10 @@ base al valore intero passato come parametro.
 \texttt{SparseMatrix} è un'altra classe derivata da \texttt{Matrix}. Una matrice sparsa è una normale matrice
 che tendenzialmente ha molte celle con valore nullo (0). Aggiunge i campi \texttt{sparsity} e 
 \texttt{dirtyBit}. Il primo viene inizialmente posto a $-1$, poichè il calcolo della sparsità avrebbe costo $O(n)$,
-e per scelta progettuale questo calcolo viene rimandato a quando la sparsità viene esplicitamente richiesta. 
+e per scelta progettuale questo calcolo è rimandato a quando la sparsità verrà esplicitamente richiesta. 
 In caso la matrice venga modificata, il \texttt{dirtyBit} viene posto a \texttt{true} in modo da ricordare che
 la sparsità va ricalcolata.\par
-Le operazioni che offre sono: \texttt{getSparsity()} per ottenere il valore della sparsità; \texttt{isDense()}
+Le operazioni che offre sono: \texttt{getSparsity()} per ottenere il valore della sparsità (è un valore compreso tra 0 e 1 che è direttamente proporzionale al numero di celle nulle); \texttt{isDense()}
 per sapere se la matrice è \emph{densa} (ossia sparsità $\leq 0.5$); \texttt{nonZeroRow()} restituisce i valori
 (in un \texttt{QVector<double>}) $\neq 0$ nella riga passata come parametro, e l'analoga \texttt{nonZeroCol()},
 che fa lo stesso ma con la colonna passata come parametro.
@@ -83,7 +84,6 @@ che fa lo stesso ma con la colonna passata come parametro.
         \texttt{Matrix operator +(const Matrix}\verb|&|\texttt{, const Matrix}\verb|&|\texttt{)} \\
         \texttt{SquareMatrix operator +(const SquareMatrix}\verb|&|\texttt{, const SquareMatrix}\verb|&|\texttt{)}
     \end{center}
-    A run-time verrà scelta la funzione che con i parametri con il corretto tipo dinamico.
     
     \item Anche per l'operatore di assegnazione \texttt{operator=}, è stato scelto di non usare funzioni virtuali:
     questo perchè nel linguaggio non è necessario dichiarare virtuale tale operatore.
@@ -102,11 +102,11 @@ Per il resto, gran parte delle funzioni sono dichiarate come \texttt{virtual}, a
 \subsubsection{Network}
 \texttt{Network} è una classe che ha lo scopo di simulare una rete di \emph{utenti} interconnessi, in modo simile
 a un \emph{social network} (ovviamente in forma molto semplificata).
-L'utente è rappresentato tramite la classe \texttt{User}, composta da \texttt{username}, che deve essere
-univoco all'interno di una stessa rete, \texttt{name} e \texttt{surname}. \par
+L'utente è rappresentato tramite la classe \texttt{User}, composta da un campo \texttt{username}, che deve essere
+univoco all'interno di una stessa rete. \par
 Ogni rete è rappresentata da un oggetto \texttt{Network}. Per i puntatori usati in questa classe si è scelto
 di usare gli smart pointer offerti da \texttt{Qt} con la classe \texttt{QSharedPointer}, per non aver problemi di gestione
-di memoria. Una rete ha:
+della memoria. Una rete ha:
 \begin{itemize}
     \item \texttt{QString name}: rappresenta il nome della rete;
     \item \texttt{QList<QSharedPointer<User>> userlist}: lista di utenti iscritti alla rete;
@@ -153,10 +153,10 @@ interamente a mano, poichè, data la scarsa complessità della GUI, sarebbe stat
 il codice scritto in automatico dall'IDE.\par
 Il widget iniziale è dato dalla classe 
 \texttt{Widget} che deriva da \texttt{QWidget}. Da esso è possibile selezionare se usare \texttt{MatrixKalk} 
-o \texttt{NetworkKalk}
+o \texttt{NetworkKalk}.
 
 \subsubsection{Gerarchia MatrixKalk}
-La prima classe con cui l'utente si trova ad interagire e \texttt{MatrixBuilder}, che deriva da \texttt{QWidget}.
+La prima classe con cui l'utente si trova ad interagire è \texttt{MatrixBuilder}, che deriva da \texttt{QWidget}.
 Questo widget sarà l'istanza principale per \texttt{MatrixKalk}. Inizialmente permette di selezionare con quali 
 matrici si vogliono effettuare operazioni di calcolo: ``Matrice'', ``Matrice Quadrata'' o ``Matrice Sparsa''.
 In base a cosa l'utente sceglierà, verrà creata un'istanza della classe \texttt{MatrixKalk} per le matrici, 
@@ -164,9 +164,6 @@ In base a cosa l'utente sceglierà, verrà creata un'istanza della classe \textt
 (anch'essa deriva da \texttt{MatrixKalk}) per le matrici sparse, con relativi controller.\par
 Per i campi di input numerici è stata implementata \texttt{KeypadInput}, derivata da \texttt{QLineEdit}, per poter controllare che non vengano inseriti
 input non validi.
-% È presente nella classe un campo \texttt{stackedWidget} di tipo \texttt{QStackedWidget*},
-% che si occuperà di tenere in memoria più widget contemporaneamente ma di tenerne attivo solamente uno.
-% Il primo (\texttt{pages[0]}) è per la selezione delle matrici, mentre il secondo (\texttt{pages[1]}) è quello in cui c'è il calcolo effettivo delle matrici.
 
 \paragraph{Polimorfismo in MatrixKalk} I metodi utilizzati per la costruzione (come ad esempio \texttt{buildDimensionsGroupBox()}) sono 
 stati dichiarati non virtuali. Questo
@@ -176,6 +173,10 @@ e della moltiplicazione scalare, per gestire correttamente l'assenza del pulsant
 metodi per il calcolo delle operazioni (i relativi slot) sono definiti come \texttt{virtual}.
 
 \subsubsection{NetworkKalk}
+Per \texttt{NetworkKalk} tutte le operazioni vengono gestite attraverso un'unica grande finestra (classe \texttt{NetworkManager}), che permette di 
+effettuare tutte le operazioni implementate:
+è possibile creare e rimuovere utenti e reti, aggiungere o rimuovere un utente da una rete, aggiungere un utente creato a una rete.\par
+Infine, nel pannello in fondo, è possibile effettuare le operazioni insiemistiche tra due reti: unione, intersezione, complemento relativo e differenza simmetrica.
 
 \subsection{Controller}
 
@@ -210,5 +211,5 @@ In \texttt{Java} è stato implementato solo il modello di Kalk, e una classe \te
 serie di esempi di utilizzo delle funzionalità del modello.\par
 Il comportamento e l'implementazione sono pressochè identici: le differenze rispetto al \texttt{C++} sono limitate, in particolare 
 sull'uso dei contenitori: per \texttt{Matrix} si è usato \texttt{ArrayList} invece di \texttt{QVector}, in \texttt{Network} sono stati 
-usati \texttt{List}, \texttt{Set} e \texttt{AbstractMap} invece di \texttt{QList}, \texttt{QSet} e \texttt{QPair}, e sulle eccezioni, 
+usati \texttt{LinkedList}, \texttt{HashSet} e \texttt{AbstractMap.SimpleEntry} invece di \texttt{QList}, \texttt{QSet} e \texttt{QPair}, e sulle eccezioni, 
 in cui le eccezioni usate sono raccolte nella cartella \textbf{kalkException}\verb|/| e derivano dalla classe \texttt{RuntimeException}.

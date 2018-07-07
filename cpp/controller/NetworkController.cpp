@@ -1,1 +1,89 @@
-//placeholder
+//()
+#include "NetworkController.h"
+
+//ctor
+NetworkController::NetworkController(NetworkManager* v)
+    : view(v)
+{
+    // empty
+}
+
+
+//dtor
+NetworkController::~NetworkController() {
+
+}
+
+bool NetworkController::existUsername(QString username) const {
+    bool found = false;
+    for (auto it = gUsers.cbegin(); it!=gUsers.cend() && !found; ++it) {
+        if ((*it)->getUsername() == username)
+            return true;
+    }
+    return false;
+}
+
+bool NetworkController::createGlobalUser(QString username,QString name,QString surname) {
+    if (existUsername(username)) {return false;}
+    
+    qDebug() << "Aggiungo " << username << "agli utenti";
+    gUsers.append(QSharedPointer<User>(new User(username,name,surname)));
+    return true;
+}
+
+QVector<QString> NetworkController::getUserData(int pos) {
+    qDebug() << "Carico i dati di " << gUsers[pos]->getUsername();    
+    QVector<QString> res;
+    res.push_back(gUsers[pos]->getUsername());
+    res.push_back(gUsers[pos]->getName());
+    res.push_back(gUsers[pos]->getSurname());        
+    
+    return res;
+}
+//QVector<QString> NetworkController::getUserData(QString); TODO 
+
+void NetworkController::setUserData(int pos, QString name, QString surname) { //modifica i dati di un user data la sua pos nel model
+    qDebug() << "Modifico i dati di " << gUsers[pos]->getUsername();    
+    gUsers[pos]->setName(name);
+    gUsers[pos]->setSurname(surname);
+}
+
+void NetworkController::deleteUser(int pos) {
+    gUsers.removeAt(pos);
+}
+
+bool NetworkController::existNet(QString netname) const {
+    bool found = false;
+    for (auto it = netlist.cbegin(); it!=netlist.cend() && !found; ++it) {
+        if ((*it)->getName() == netname)
+            return true;
+    }
+    return false;
+}
+
+
+bool NetworkController::createNet(QString netname) {
+    if (existNet(netname)) {return false;}
+    
+    netlist.append(QSharedPointer<Network>(new Network(netname)));
+    return true;
+}
+
+//void NetworkController::setUserData(int, QString, QString); TODO //modifica i dati di un user dato il suo username, name e surname
+
+QString NetworkController::getNetName(int pos) const {
+    qDebug() << "Carico il nome della rete " << pos << ": " << netlist[pos]->getName(); 
+    return netlist[pos]->getName();   
+}
+
+bool NetworkController::renameNet(int pos, QString netname) {
+    if (existNet(netname)) {return false;}
+    
+    netlist[pos]->setName(netname);
+    return true;
+}
+
+void NetworkController::deleteNet(int pos) {
+    netlist.removeAt(pos);
+}
+//()

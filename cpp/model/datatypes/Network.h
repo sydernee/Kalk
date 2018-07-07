@@ -40,7 +40,7 @@ public:
     virtual QSet<QSharedPointer<User>> getRelativeComplement(const Network&) const;  // B - A  
     virtual QSet<QSharedPointer<User>> getSymmetricDifference(const Network&) const;
     
-    virtual ~Network() = default;
+    virtual ~Network();
 };
 
 #endif // NETWORK_H

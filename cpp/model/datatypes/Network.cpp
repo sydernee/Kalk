@@ -1,12 +1,15 @@
 #include "Network.h"
 
-Network::Network(QString n) : name(n),userlist() {}
+Network::Network(QString n) : name(n),userlist() {qDebug() << "Creata la rete " << n;}
 
-Network::Network(QSet<QSharedPointer<User>> ul, QString n) : name(n), userlist(ul.toList()) {}
+Network::Network(QSet<QSharedPointer<User>> ul, QString n) : name(n), userlist(ul.toList()) {qDebug() << "Creata la rete " << n;}
 
 QString Network::getName() {return name;}
 
-void Network::setName(QString n) { name = n; }
+void Network::setName(QString n) {
+    qDebug() << "Rinomino la rete " << name << "con il nome " << n;
+    name = n;
+}
 
 unsigned int Network::size() const {
     return userlist.size();
@@ -116,4 +119,8 @@ QSet<QSharedPointer<User>> Network::getRelativeComplement(const Network& net) co
 
 QSet<QSharedPointer<User>> Network::getSymmetricDifference(const Network& net) const {
     return getUnion(net) - getIntersection(net); 
+}
+
+Network::~Network() {
+    qDebug() << "Eliminata la rete " << getName();
 }

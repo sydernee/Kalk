@@ -9,15 +9,19 @@
 class User {
 private:
    QString username;
+   QString name;
+   QString surname;
 public:
-   User(QString);
+   User(QString,QString="",QString="");
    
-   virtual bool operator==(const User&) const; //due utenti sono uguali se hanno lo stesso username
-
-   QString getUsername() const;
-   void changeUsername(QString); // eccezione se lo username già è presente
-	virtual ~User();
+   virtual QString getUsername() const;
+   virtual QString getName() const;
+   virtual QString getSurname() const;
+   
+   virtual void setName(QString);
+   virtual void setSurname(QString);
+   
+   virtual ~User();
 };
 
 #endif // USER_H
-

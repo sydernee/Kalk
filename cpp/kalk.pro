@@ -45,8 +45,8 @@ SOURCES += \
     controller/MatrixController.cpp \
     controller/SquareMatrixController.cpp \
     controller/SparseMatrixController.cpp \
-    exceptions/KalkException.cpp \
     controller/NetworkController.cpp \
+    exceptions/KalkException.cpp \
     exceptions/IndexOutOfBoundsException.cpp \
     exceptions/ZeroMultiplierException.cpp \
     exceptions/InvalidMatrixIndexes.cpp \
@@ -71,6 +71,7 @@ HEADERS += \
     controller/MatrixController.h \
     controller/SquareMatrixController.h \
     controller/SparseMatrixController.h \
+    controller/NetworkController.h \
     exceptions/KalkException.h \
     exceptions/IndexOutOfBoundsException.h \
     exceptions/ZeroMultiplierException.h \

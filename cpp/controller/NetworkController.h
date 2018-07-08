@@ -62,7 +62,7 @@ public:
     virtual QStringList getFollower(int, QString) const;
     virtual QStringList getFollowed(int, QString) const;
     
-    virtual void removeFollower(QString, QString, int);
+    virtual void removeFollowed(QString, QString, int);
 };
 
 //()

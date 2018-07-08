@@ -1,12 +1,5 @@
 #include "NetworkManager.h"
 
-//TODO : rimuovo le ridondanze, e.g.     QListWidget* netUserInsRemUser = new QListWidget();    QListWidget* gulInsRemUser = new QListWidget();
-
-//evito un disallineamento tra currentRow ed elemento selezionato TODO
-//bool isValidNetsList {return validNetsList;}
-//void setValidNetslist(bool b) {validNetsList = b;}
-//bool isValiUserGList {return validUserGList;}
-//void setValidNetGlist(bool b) {validUserGList = b;}
 
 
 NetworkManager::NetworkManager(QWidget *parent)
@@ -22,18 +15,6 @@ NetworkManager::NetworkManager(QWidget *parent)
     resize(wWindowSize,hWindowSize);
     
     QString groupBoxStyle = "QGroupBox{border:2px solid gray;border-radius:5px;margin-top: 1ex;} QGroupBox::title{subcontrol-origin: margin;subcontrol-position:top center;padding:0 3px;}";
-    /*createUserGroupBox->setStyleSheet("
-        QGroupBox {
-            border:2px solid gray;
-            border-radius:5px;
-            margin-top: 1ex;
-        } 
-        QGroupBox::title {
-            subcontrol-origin: margin;
-            subcontrol-position:top center;
-            padding:0 3px;}
-    ");
-*/
 
     QHBoxLayout *backButtonGroup = new QHBoxLayout;
     QSpacerItem *spacer = new QSpacerItem(0, 0, QSizePolicy::Expanding, QSizePolicy::Minimum);
@@ -201,9 +182,9 @@ NetworkManager::NetworkManager(QWidget *parent)
     connect(gulFollowerNetUser, SIGNAL(itemClicked(QListWidgetItem*)), this, SLOT(showFollowed()));
     gulFollowerLabel = new QLabel(tr("Utenti che ti seguono"));
     gulFollower = new QListWidget();
-    connect(gulFollower, SIGNAL(itemClicked(QListWidgetItem*)), this, SLOT(userFollowerClicked())); 
     gulFollowedLabel = new QLabel(tr("Utenti che segui"));
     gulFollowed = new QListWidget();
+    connect(gulFollowed, SIGNAL(itemClicked(QListWidgetItem*)), this, SLOT(userFollowedClicked())); 
     gulFollowerSelUserLabel = new QLabel(tr("Utenti selezionabili"));
     gulFollowerSelUser = new QListWidget();
     connect(gulFollowerSelUser,SIGNAL(itemSelectionChanged()), this, SLOT(setNewFollowerButtonStatus()));
@@ -222,11 +203,11 @@ NetworkManager::NetworkManager(QWidget *parent)
     
     btnAddFollower = new QPushButton(tr("Segui l'utente "));
     connect(btnAddFollower, SIGNAL(clicked()), this, SLOT(addFollowerClicked()));
-    btnRemoveFollower = new QPushButton(tr("Smetti di seguire")); //attivo solo quando sto visualizzando i follower
-    connect(btnRemoveFollower, SIGNAL(clicked()), this, SLOT(removeFollowerClicked()));
+    btnRemoveFollowed = new QPushButton(tr("Smetti di seguire")); //attivo solo quando sto visualizzando i follower
+    connect(btnRemoveFollowed, SIGNAL(clicked()), this, SLOT(removeFollowerClicked()));
 
     gulFollowerButtonGroup->addWidget(btnAddFollower);
-    gulFollowerButtonGroup->addWidget(btnRemoveFollower);
+    gulFollowerButtonGroup->addWidget(btnRemoveFollowed);
 
     followerGroup = new QHBoxLayout;
     followerGroup->addLayout(gulFollowerNetLayout);
@@ -338,6 +319,7 @@ void NetworkManager::setInsRemButtonStatus() {
         getSelectedRow(netInsRemUser) == netInsRemUser->currentRow()
     ) {
         btnIRAddUser->setEnabled(true);
+        btnIRRemoveUser->setEnabled(true);
     } else {
         btnIRAddUser->setEnabled(false);
         btnIRRemoveUser->setEnabled(false);
@@ -377,7 +359,7 @@ void NetworkManager::disableButtons() {
 
     //3 - Following e Follower
     btnAddFollower->setEnabled(false);
-    btnRemoveFollower->setEnabled(false);
+    btnRemoveFollowed->setEnabled(false);
 
     //4-Operazioni tra matrici
     btnGetUnion->setEnabled(false);
@@ -436,6 +418,12 @@ void NetworkManager::deleteGlobalUserClicked() {
     controller->deleteUser(gulCreateUser->currentRow());
     gulCreateUser->takeItem(gulCreateUser->currentRow());
     gulInsRemUser->takeItem(gulCreateUser->currentRow());
+    
+    netUserInsRemUser->clear();
+    gulFollowerNetUser->clear();
+    gulFollower->clear();
+    gulFollowed->clear();
+    gulFollowerSelUser->clear();
     
     resetGlobalUserData();
     disableButtons();
@@ -505,7 +493,7 @@ void NetworkManager::modifyNetNameClicked() {
         (gul1netOp->item(posNetModify))->setText(netname);
         
         resetNetData();
-        // TODO : emetto un segnale che ho inserito una rete, la netGlobalList è variata
+
     } else {
         QErrorMessage* err = new QErrorMessage;
         err->setAttribute(Qt::WA_DeleteOnClose);
@@ -646,23 +634,22 @@ void NetworkManager::showFollowerNetworks() {
     qDebug() << gulFollowerNet->currentRow();
     QStringList users = controller->getNetworkUsers(gulFollowerNet->currentRow());
     
+       
     gulFollowerNetUser->clear();
     gulFollower->clear();
     gulFollowed->clear();
     gulFollowerSelUser->clear();
   
-    foreach (auto strUser, users) {
-        gulFollowerNetUser->addItem(strUser);
-        
+    if (users.size() > 0) {
+        foreach (auto strUser, users) {
+            gulFollowerNetUser->addItem(strUser);
+            gulFollowerSelUser->addItem(strUser);   
+        }
     }
 }
 
 void NetworkManager::setNewFollowerButtonStatus() {
-    qDebug() << "gulFollowerNetUser->currentRow(): " << gulFollowerNetUser->currentRow(); 
-    qDebug() << "getSelectedRow(gulFollowerNetUser): " << getSelectedRow(gulFollowerNetUser);
-    qDebug() << "gulFollowerSelUser->currentRow(): " << gulFollowerSelUser->currentRow();
-    qDebug() << "getSelectedRow(gulFollowerSelUser): " << getSelectedRow(gulFollowerSelUser);
-    qDebug() << "============";
+    qDebug() << "setNewFollowerButtonStatus()";
         
     if (gulFollowerNetUser->currentRow() > -1 && 
         gulFollowerSelUser->currentRow() > -1 &&
@@ -672,7 +659,7 @@ void NetworkManager::setNewFollowerButtonStatus() {
         btnAddFollower->setEnabled(true);
     } else {
         btnAddFollower->setEnabled(false);
-        btnRemoveFollower->setEnabled(false);
+        btnRemoveFollowed->setEnabled(false);
     }
 }
 
@@ -687,7 +674,7 @@ void NetworkManager::addFollowerClicked() {
     showFollowed();
     
     btnAddFollower->setEnabled(false);
-    btnRemoveFollower->setEnabled(false);
+    btnRemoveFollowed->setEnabled(false);
 }
 
 void NetworkManager::showFollower() {
@@ -712,23 +699,23 @@ void NetworkManager::showFollowed() {
     }
 }
 
-void NetworkManager::userFollowerClicked() {
+void NetworkManager::userFollowedClicked() {
     btnAddFollower->setEnabled(false);
-    btnRemoveFollower->setEnabled(true);
+    btnRemoveFollowed->setEnabled(true);
 }
 
 void NetworkManager::removeFollowerClicked() {
     QString followerName = gulFollowerNetUser->selectedItems().first()->text();
-    QString followedName      = gulFollower->selectedItems().first()->text();
+    QString followedName      = gulFollowed->selectedItems().first()->text();
     int netPos           = gulFollowerNet->currentRow();
 
-    controller->removeFollower(followerName, followedName, netPos);
+    controller->removeFollowed(followerName, followedName, netPos);
 
     showFollower();
     showFollowed();
     
     btnAddFollower->setEnabled(false);
-    btnRemoveFollower->setEnabled(false);
+    btnRemoveFollowed->setEnabled(false);
 }
 
 /*

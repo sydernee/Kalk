@@ -119,7 +119,7 @@ private:
     QListWidget* gulFollowerSelUser;
 
     QPushButton* btnAddFollower;
-    QPushButton* btnRemoveFollower;
+    QPushButton* btnRemoveFollowed;
 
     QHBoxLayout* followerGroup;
 
@@ -199,7 +199,7 @@ public slots:
     virtual void showFollower();
     virtual void showFollowed();
     
-    virtual void userFollowerClicked();
+    virtual void userFollowedClicked();
     
     virtual void removeFollowerClicked();
     

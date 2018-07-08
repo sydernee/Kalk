@@ -103,8 +103,7 @@ QStringList NetworkController::getNetworkUsers(int pos) {
     
     QSet<QSharedPointer<User>>  users = netlist[pos]->getUsers();
     
-    qDebug() << "HERE";
-    for (auto it = users.cbegin(); it != users.cend(); ++it) {
+    for (auto it = users.begin(); it != users.end(); ++it) {
         res << (*it)->getUsername();
     }
     
@@ -208,7 +207,7 @@ QStringList NetworkController::getFollowed(int netPos, QString username) const {
     return res;
 }
 
-void NetworkController::removeFollower(QString followerName,QString  followedName, int netPos) {
+void NetworkController::removeFollowed(QString followerName,QString  followedName, int netPos) {
     netlist[netPos]->removeFollower(getUserSmartPtrByUsername(followerName), getUserSmartPtrByUsername(followedName));
 }
 //()

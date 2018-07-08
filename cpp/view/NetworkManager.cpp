@@ -327,7 +327,7 @@ void NetworkManager::setInsRemButtonStatus() {
 }
 
 
-void NetworkManager::setOperationNetButtonStatus() { //TODONOW
+void NetworkManager::setOperationNetButtonStatus() { 
     qDebug() << "gul0netOp->currentRow(): " << gul0netOp->currentRow(); 
     qDebug() << "getSelectedRow(gul0netOp): " << getSelectedRow(gul0netOp);
     qDebug() << "gul1netOp->currentRow(): " << gul1netOp->currentRow();
@@ -382,7 +382,7 @@ void NetworkManager::createGlobalUserClicked() {
         gulCreateUser->addItem(username);
         gulInsRemUser->addItem(username);
         resetGlobalUserData();
-        // TODO : emetto un segnale che ho inserito un utente, la userGlobalList è variata
+
     } else {
         QErrorMessage* err = new QErrorMessage;
         err->setAttribute(Qt::WA_DeleteOnClose);
@@ -458,7 +458,6 @@ void NetworkManager::createNetClicked() {
         gul0netOp->addItem(netname);
         gul1netOp->addItem(netname);
         resetNetData();
-        // TODO : emetto un segnale che ho inserito una rete, la netGlobalList è variata
     } else {
         QErrorMessage* err = new QErrorMessage;
         err->setAttribute(Qt::WA_DeleteOnClose);
@@ -574,7 +573,7 @@ void NetworkManager::deleteUserFromNetworkClicked() {
     controller->removeUserFromNetwork(posNet, username);
     
     btnIRRemoveUser->setEnabled(false);
-    //TODO aggiorno la visualizzazione 
+
 }
 
 void NetworkManager::calculateUnion() {

@@ -2,7 +2,6 @@
 #define MATRIXCONTROLLER_H
 
 #include <QVector>
-//#include <QObject>
 
 #include "../exceptions/InvalidMatrixTypeException.h"
 #include "../exceptions/NullPointerException.h"
@@ -12,12 +11,9 @@
 #include "../model/datatypes/SquareMatrix.h"
 #include "../view/KeypadInput.h"
 
-//class MatrixKalk;
 
-class MatrixController //: public QObject
+class MatrixController
 {
-    //Q_OBJECT //worth it?
-
 private:
     Matrix* matrix1;
     Matrix* matrix2;

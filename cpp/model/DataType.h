@@ -6,7 +6,6 @@
 class DataType {
 public:
     virtual ~DataType() = default;
-    // virtual QString toString() const = 0;
 };
 
 #endif // DATATYPE_H

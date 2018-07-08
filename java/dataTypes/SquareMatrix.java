@@ -5,12 +5,6 @@ import kalkException.TooFewArgumentsException;
 import kalkException.TooManyArgumentsException;
 
 public class SquareMatrix extends Matrix {
-	//static fields, makes sense ?
-//	public static SquareMatrix IDENTITY_MATRIX2x2;
-//	public static SquareMatrix IDENTITY_MATRIX3x3;
-//	public static SquareMatrix IDENTITY_MATRIX4x4;
-	
-	
 	//constructors
 	
 	public SquareMatrix(int dim) throws NegativeArraySizeException {

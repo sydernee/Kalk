@@ -38,6 +38,7 @@ private:
     const int hCreatorWindowSize = 1200;
     const int wCreatorWindowSize = 1600;
     
+    
     //1.1-groupbox creazione utente
     QGroupBox* createUserGroupBox; 
     QHBoxLayout* createUserGroup;
@@ -78,24 +79,23 @@ private:
     QHBoxLayout* createUserNetGroup;
 
     //2 - Inserimento, rimozione e visualizzazione di un utente in una rete
-    QGroupBox* insRemViewUserGroupBox;
-    QVBoxLayout* insRemViewUserList0Layout;
-    QVBoxLayout* insRemViewUserList1Layout;
-    QVBoxLayout* insRemViewUserList2Layout;
-    QVBoxLayout* insRemViewUserButtonGroup;
+    QGroupBox* InsRemUserGroupBox;
+    QVBoxLayout* InsRemUserList0Layout;
+    QVBoxLayout* InsRemUserList1Layout;
+    QVBoxLayout* InsRemUserList2Layout;
+    QVBoxLayout* InsRemUserButtonGroup;
     
-    QLabel* netInsRemViewUserLabel;
-    QListWidget* netInsRemViewUser;
-    QLabel* netUserInsRemViewUserLabel;
-    QListWidget* netUserInsRemViewUser;
-    QLabel* gulInsRemViewUserLabel;
-    QListWidget* gulInsRemViewUser;
+    QLabel* netInsRemUserLabel;
+    QListWidget* netInsRemUser;
+    QLabel* netUserInsRemUserLabel;
+    QListWidget* netUserInsRemUser;
+    QLabel* gulInsRemUserLabel;
+    QListWidget* gulInsRemUser;
     
-    QPushButton* btnIRVAddUser;
-    QPushButton* btnIRVRemoveUser;
-    QPushButton* btnIRVViewProfile;
+    QPushButton* btnIRAddUser;
+    QPushButton* btnIRRemoveUser;
 
-    QHBoxLayout* insRemViewUserGroup;
+    QHBoxLayout* InsRemUserGroup;
     
     //3 - Following e Follower
     QGroupBox* followerGroupBox;
@@ -143,6 +143,9 @@ private:
     // set layout
     QVBoxLayout *layout;
 
+protected:
+    int getSelectedRow(QListWidget*); //data una QListWidget*, ritorna la posizione del suo primo elemento
+
 public:
     explicit NetworkManager(QWidget *parent = nullptr);
     ~NetworkManager();
@@ -153,20 +156,34 @@ signals:
 private slots:
     void handleBackButton();
     
+protected slots:
+    virtual void setInsRemButtonStatus();
+    virtual void setOperationNetButtonStatus();
+    virtual void disableButtons(); // disabilito i bottoni dei box >= 2 
+    
 public slots:
-    void createGlobalUserClicked();
-    void showGlobalUserData(QListWidgetItem*);
-    void modifyGlobalUserDataClicked();
-    void deleteGlobalUserClicked();
-    void resetGlobalUserData(); 
+    virtual void createGlobalUserClicked();
+    virtual void showGlobalUserData(QListWidgetItem*);
+    virtual void modifyGlobalUserDataClicked();
+    virtual void deleteGlobalUserClicked();
+    virtual void resetGlobalUserData(); 
     
-    void createNetClicked();
-    void modifyNetNameClicked(); 
-    void showNetName(QListWidgetItem*);
-    void deleteNetClicked();          
-    void resetNetData();        
+    virtual void createNetClicked();
+    virtual void modifyNetNameClicked(); 
+    virtual void showNetName(QListWidgetItem*);
+    virtual void deleteNetClicked();          
+    virtual void resetNetData();        
     
-    void addUserToNetwork();
-    void showNetworkUser();
+    virtual void addUserToNetwork();
+    virtual void showNetworkUser();
+    
+    virtual void selectedUserNetwork();
+    virtual void deleteUserFromNetworkClicked();
+    
+    virtual void calculateUnion();
+    virtual void calculateIntersection();    
+    virtual void calculateRelativeComplement();    
+    virtual void calculateSymmetricDifference();    
+    
 };
 #endif //NETWORKMANAGER_H

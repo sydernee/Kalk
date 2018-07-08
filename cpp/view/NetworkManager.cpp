@@ -1,11 +1,20 @@
 #include "NetworkManager.h"
 
-//TODO : rimuovo le ridondanze, e.g.     QListWidget* netUserInsRemViewUser = new QListWidget();    QListWidget* gulInsRemViewUser = new QListWidget();
+//TODO : rimuovo le ridondanze, e.g.     QListWidget* netUserInsRemUser = new QListWidget();    QListWidget* gulInsRemUser = new QListWidget();
+
+//evito un disallineamento tra currentRow ed elemento selezionato TODO
+//bool isValidNetsList {return validNetsList;}
+//void setValidNetslist(bool b) {validNetsList = b;}
+//bool isValiUserGList {return validUserGList;}
+//void setValidNetGlist(bool b) {validUserGList = b;}
+
 
 NetworkManager::NetworkManager(QWidget *parent)
     : QWidget(parent),
       backButton(new QPushButton("Torna indietro", this)),
-    controller(new NetworkController(this))
+    controller(new NetworkController(this))//,
+    //validNetsList(false),
+    //validUserGList(false)
 {
     setWindowTitle("Network Manager: gestisci i tuoi social"); //imposta il titolo della finestra
 
@@ -35,7 +44,7 @@ NetworkManager::NetworkManager(QWidget *parent)
     createUserGroupBox = new QGroupBox(tr("Creazione degli utenti")); 
     createUserGroup = new QHBoxLayout;
     gulCreateUser = new QListWidget();
-    connect(gulCreateUser, SIGNAL(itemDoubleClicked(QListWidgetItem*)), this, SLOT(showGlobalUserData(QListWidgetItem*)));
+    connect(gulCreateUser, SIGNAL(itemClicked(QListWidgetItem*)), this, SLOT(showGlobalUserData(QListWidgetItem*)));
 
     userData = new QGridLayout;
     lblUsername = new QLabel(tr("Username"));
@@ -84,7 +93,7 @@ NetworkManager::NetworkManager(QWidget *parent)
     createNetGroupBox = new QGroupBox(tr("Creazione delle reti")); 
     createNetGroup = new QHBoxLayout;
     gulCreateNet = new QListWidget();
-    connect(gulCreateNet, SIGNAL(itemDoubleClicked(QListWidgetItem*)), this, SLOT(showNetName(QListWidgetItem*)));
+    connect(gulCreateNet, SIGNAL(itemClicked(QListWidgetItem*)), this, SLOT(showNetName(QListWidgetItem*)));
     netData = new QFormLayout;
     netData->addRow(tr("Netname"), edtNetname);
 
@@ -125,44 +134,52 @@ NetworkManager::NetworkManager(QWidget *parent)
     btnRemoveNet->setEnabled(false);
     
     //2 - Inserimento, rimozione e visualizzazione di un utente in una rete
-    insRemViewUserGroupBox = new QGroupBox(tr("Inserimento, rimozione e visualizzazione di un utente in una rete"));
-    insRemViewUserList0Layout = new QVBoxLayout;
-    insRemViewUserList1Layout = new QVBoxLayout;
-    insRemViewUserList2Layout = new QVBoxLayout;
-    insRemViewUserButtonGroup = new QVBoxLayout;
+    InsRemUserGroupBox = new QGroupBox(tr("Inserimento, rimozione e visualizzazione degli utenti in una rete"));
+    InsRemUserList0Layout = new QVBoxLayout;
+    InsRemUserList1Layout = new QVBoxLayout;
+    InsRemUserList2Layout = new QVBoxLayout;
+    InsRemUserButtonGroup = new QVBoxLayout;
     
-    netInsRemViewUserLabel = new QLabel(tr("Reti disponibili"));
-    netInsRemViewUser = new QListWidget();
-    connect(netInsRemViewUser, SIGNAL(itemDoubleClicked(QListWidgetItem*)), this, SLOT(showNetworkUser()));    
-    netUserInsRemViewUserLabel = new QLabel(tr("Utenti della rete selezionata"));
-    netUserInsRemViewUser = new QListWidget();
-    gulInsRemViewUserLabel = new QLabel(tr("Utenti globalmente esistenti"));
-    gulInsRemViewUser = new QListWidget();
-
-    insRemViewUserList0Layout->addWidget(netInsRemViewUserLabel);
-    insRemViewUserList0Layout->addWidget(netInsRemViewUser);
-    insRemViewUserList1Layout->addWidget(netUserInsRemViewUserLabel);
-    insRemViewUserList1Layout->addWidget(netUserInsRemViewUser);
-    insRemViewUserList2Layout->addWidget(gulInsRemViewUserLabel);
-    insRemViewUserList2Layout->addWidget(gulInsRemViewUser);
+    netInsRemUserLabel = new QLabel(tr("Reti disponibili"));
+    netInsRemUser = new QListWidget();
+    connect(netInsRemUser, SIGNAL(itemClicked(QListWidgetItem*)), this, SLOT(showNetworkUser()));
+    connect(netInsRemUser,SIGNAL(itemSelectionChanged()), this, SLOT(setInsRemButtonStatus()));
+    connect(netInsRemUser, SIGNAL(itemClicked(QListWidgetItem*)), this, SLOT(setInsRemButtonStatus()));
+    netUserInsRemUserLabel = new QLabel(tr("Utenti della rete selezionata"));
+    netUserInsRemUser = new QListWidget();
+    connect(netUserInsRemUser, SIGNAL(itemClicked(QListWidgetItem*)), this, SLOT(selectedUserNetwork()));
+    gulInsRemUserLabel = new QLabel(tr("Utenti globalmente esistenti"));
+    gulInsRemUser = new QListWidget();
+    connect(gulInsRemUser,SIGNAL(itemSelectionChanged()), this, SLOT(setInsRemButtonStatus()));
+    connect(gulInsRemUser, SIGNAL(itemClicked(QListWidgetItem*)), this, SLOT(setInsRemButtonStatus()));    
     
-    btnIRVAddUser = new QPushButton(tr("Aggiungi l'utente selezionato"));
-    connect(btnIRVAddUser, SIGNAL(clicked()), this, SLOT(addUserToNetwork()));
-    btnIRVRemoveUser = new QPushButton(tr("Rimuovi l'utente selezionato"));
-    btnIRVViewProfile = new QPushButton(tr("Visualizza l'utente selezionato"));
 
-    insRemViewUserButtonGroup->addWidget(btnIRVAddUser);
-    insRemViewUserButtonGroup->addWidget(btnIRVRemoveUser);
-    insRemViewUserButtonGroup->addWidget(btnIRVViewProfile);
-
-    insRemViewUserGroup = new QHBoxLayout;
-    insRemViewUserGroup->addLayout(insRemViewUserList0Layout);
-    insRemViewUserGroup->addLayout(insRemViewUserList1Layout);
-    insRemViewUserGroup->addLayout(insRemViewUserList2Layout);
-    insRemViewUserGroup->addLayout(insRemViewUserButtonGroup);
+    InsRemUserList0Layout->addWidget(netInsRemUserLabel);
+    InsRemUserList0Layout->addWidget(netInsRemUser);
+    InsRemUserList1Layout->addWidget(netUserInsRemUserLabel);
+    InsRemUserList1Layout->addWidget(netUserInsRemUser);
+    InsRemUserList2Layout->addWidget(gulInsRemUserLabel);
+    InsRemUserList2Layout->addWidget(gulInsRemUser);
     
-    insRemViewUserGroupBox->setLayout(insRemViewUserGroup);
-    insRemViewUserGroupBox->setStyleSheet(groupBoxStyle);
+    btnIRAddUser = new QPushButton(tr("Aggiungi l'utente selezionato"));
+    connect(btnIRAddUser, SIGNAL(clicked()), this, SLOT(addUserToNetwork()));
+    btnIRRemoveUser = new QPushButton(tr("Rimuovi l'utente selezionato"));
+    connect(btnIRRemoveUser, SIGNAL(clicked()), this, SLOT(deleteUserFromNetworkClicked())); 
+    
+    btnIRAddUser->setEnabled(false);
+    btnIRRemoveUser->setEnabled(false);
+
+    InsRemUserButtonGroup->addWidget(btnIRAddUser);
+    InsRemUserButtonGroup->addWidget(btnIRRemoveUser);
+
+    InsRemUserGroup = new QHBoxLayout;
+    InsRemUserGroup->addLayout(InsRemUserList0Layout);
+    InsRemUserGroup->addLayout(InsRemUserList1Layout);
+    InsRemUserGroup->addLayout(InsRemUserList2Layout);
+    InsRemUserGroup->addLayout(InsRemUserButtonGroup);
+    
+    InsRemUserGroupBox->setLayout(InsRemUserGroup);
+    InsRemUserGroupBox->setStyleSheet(groupBoxStyle);
 
     //3 - Following e Follower
     followerGroupBox = new QGroupBox(tr("Inserimento, rimozione e visualizzazione di un utente in una rete"));
@@ -215,8 +232,12 @@ NetworkManager::NetworkManager(QWidget *parent)
     
     gul0netOpLabel = new QLabel(tr("Seleziona rete A"));
     gul0netOp = new QListWidget();
+    connect(gul0netOp,SIGNAL(itemSelectionChanged()), this, SLOT(setOperationNetButtonStatus()));
+    connect(gul0netOp, SIGNAL(itemClicked(QListWidgetItem*)), this, SLOT(setOperationNetButtonStatus()));
     gul1netOpLabel = new QLabel(tr("Seleziona rete B"));
     gul1netOp = new QListWidget();
+    connect(gul1netOp,SIGNAL(itemSelectionChanged()), this, SLOT(setOperationNetButtonStatus()));
+    connect(gul1netOp, SIGNAL(itemClicked(QListWidgetItem*)), this, SLOT(setOperationNetButtonStatus()));
     gul2netOpLabel = new QLabel(tr("Output"));
     gul2netOp = new QListWidget();
 
@@ -228,9 +249,13 @@ NetworkManager::NetworkManager(QWidget *parent)
     netOpOutputLayout->addWidget(gul2netOp);
     
     btnGetUnion = new QPushButton(tr("A + B"));
+    connect(btnGetUnion, SIGNAL(clicked()), this, SLOT(calculateUnion()));
     btnGetIntersection = new QPushButton(tr("Intersezione di A in B"));
+    connect(btnGetIntersection, SIGNAL(clicked()), this, SLOT(calculateIntersection()));    
     btnGetRelativeComplement = new QPushButton(tr("Complemento relativo di A in B"));
+    connect(btnGetRelativeComplement, SIGNAL(clicked()), this, SLOT(calculateRelativeComplement()));    
     btnGetSymmetricDifference = new QPushButton(tr("Differenza simmetrica di A in B"));
+    connect(btnGetSymmetricDifference, SIGNAL(clicked()), this, SLOT(calculateSymmetricDifference()));
 
     netOpButtonGroup->addWidget(btnGetUnion);
     netOpButtonGroup->addWidget(btnGetIntersection);
@@ -251,7 +276,7 @@ NetworkManager::NetworkManager(QWidget *parent)
     
     layout->addLayout(backButtonGroup);
     layout->addLayout(createUserNetGroup);
-    layout->addWidget(insRemViewUserGroupBox);
+    layout->addWidget(InsRemUserGroupBox);
     layout->addWidget(followerGroupBox);
     layout->addWidget(netOpGroupBox);
 
@@ -261,10 +286,17 @@ NetworkManager::NetworkManager(QWidget *parent)
     connect(backButton, SIGNAL(clicked()), this, SLOT(handleBackButton()));
     
     //disabilito i bottoni che all'inizio non posso usare
-    btnModifyUser->setEnabled(false);
-    btnRemoveUser->setEnabled(false);
+    disableButtons();
 }
 
+ //data una QListWidget*, ritorna la posizione del suo primo elemento
+int NetworkManager::getSelectedRow(QListWidget* qwl) {
+    if (qwl->currentRow() < 0) {return -1;} 
+
+    QListWidgetItem *selected = qwl->selectedItems().first();
+    return qwl->row(selected);
+    
+}
 
 void NetworkManager::handleBackButton() {
     emit networkManagerCloseSignal();
@@ -272,9 +304,72 @@ void NetworkManager::handleBackButton() {
 }
 
 NetworkManager::~NetworkManager() {   
-if (controller != nullptr)
-    delete controller;
+    if (controller != nullptr)
+        delete controller;
 }
+
+void NetworkManager::setInsRemButtonStatus() {
+    qDebug() << "gulInsRemUser->currentRow(): " << gulInsRemUser->currentRow(); 
+    qDebug() << "getSelectedRow(netInsRemUser): " << getSelectedRow(netInsRemUser);
+    qDebug() << "netInsRemUser->currentRow(): " << netInsRemUser->currentRow();
+    qDebug() << "getSelectedRow(gulInsRemUser): " << getSelectedRow(gulInsRemUser);
+    qDebug() << "============";
+        
+    if (gulInsRemUser->currentRow() > -1 && 
+        netInsRemUser->currentRow() > -1 &&
+        getSelectedRow(gulInsRemUser) == gulInsRemUser->currentRow() &&
+        getSelectedRow(netInsRemUser) == netInsRemUser->currentRow()
+    ) {
+        btnIRAddUser->setEnabled(true);
+    } else {
+        btnIRAddUser->setEnabled(false);
+        btnIRRemoveUser->setEnabled(false);
+    }
+}
+
+
+void NetworkManager::setOperationNetButtonStatus() { //TODONOW
+    qDebug() << "gul0netOp->currentRow(): " << gul0netOp->currentRow(); 
+    qDebug() << "getSelectedRow(gul0netOp): " << getSelectedRow(gul0netOp);
+    qDebug() << "gul1netOp->currentRow(): " << gul1netOp->currentRow();
+    qDebug() << "getSelectedRow(gul1netOp): " << getSelectedRow(gul1netOp);
+    qDebug() << "============";
+        
+    if (gul0netOp->currentRow() > -1 && 
+        gul1netOp->currentRow() > -1 &&
+        getSelectedRow(gul0netOp) == gul0netOp->currentRow() &&
+        getSelectedRow(gul1netOp) == gul1netOp->currentRow()
+    ) {
+        btnGetUnion->setEnabled(true);
+        btnGetIntersection->setEnabled(true);
+        btnGetRelativeComplement->setEnabled(true);
+        btnGetSymmetricDifference->setEnabled(true);
+    } else {
+        btnGetUnion->setEnabled(false);
+        btnGetIntersection->setEnabled(false);
+        btnGetRelativeComplement->setEnabled(false);
+        btnGetSymmetricDifference->setEnabled(false);
+    }
+}
+
+void NetworkManager::disableButtons() {
+    qDebug() << "Disabilito i bottoni dei box 2-4";
+    //2
+    btnIRAddUser->setEnabled(false);
+    btnIRRemoveUser->setEnabled(false);
+
+    //3 - Following e Follower
+    btnGetFollower->setEnabled(false);
+    btnGetFollowed->setEnabled(false);
+    btnAddFollower->setEnabled(false);
+    btnRemoveFollower->setEnabled(false);
+
+    //4-Operazioni tra matrici
+    btnGetUnion->setEnabled(false);
+    btnGetIntersection->setEnabled(false);
+    btnGetRelativeComplement->setEnabled(false);
+    btnGetSymmetricDifference->setEnabled(false);
+} 
 
 //slots createUser
 
@@ -288,7 +383,7 @@ void NetworkManager::createGlobalUserClicked() {
     bool resCreate = controller->createGlobalUser(username,name,surname);
     if (resCreate) {
         gulCreateUser->addItem(username);
-        gulInsRemViewUser->addItem(username);
+        gulInsRemUser->addItem(username);
         resetGlobalUserData();
         // TODO : emetto un segnale che ho inserito un utente, la userGlobalList è variata
     } else {
@@ -325,9 +420,10 @@ void NetworkManager::modifyGlobalUserDataClicked() {
 void NetworkManager::deleteGlobalUserClicked() {
     controller->deleteUser(gulCreateUser->currentRow());
     gulCreateUser->takeItem(gulCreateUser->currentRow());
-    gulInsRemViewUser->takeItem(gulCreateUser->currentRow());
+    gulInsRemUser->takeItem(gulCreateUser->currentRow());
     
     resetGlobalUserData();
+    disableButtons();
 }
 
 void NetworkManager::resetGlobalUserData() {    
@@ -352,7 +448,7 @@ void NetworkManager::createNetClicked() {
     if (resCreate) {
         gulCreateNet->addItem(netname);
         //2
-        netInsRemViewUser->addItem(netname);
+        netInsRemUser->addItem(netname);
         //3
         gulFollowerNet->addItem(netname);
         //4
@@ -383,14 +479,15 @@ void NetworkManager::modifyNetNameClicked() {
 
     bool resRename = controller->renameNet(gulCreateNet->currentRow(),netname);
     if (resRename) {
-        (gulCreateNet->item(gulCreateNet->currentRow()))->setText(netname);
+        int posNetModify = gulCreateNet->currentRow();
+        (gulCreateNet->item(posNetModify))->setText(netname);
         //2
-        (netInsRemViewUser->item(gulCreateNet->currentRow()))->setText(netname);
+        (netInsRemUser->item(posNetModify))->setText(netname);
         //3
-        (gulFollowerNet->item(gulCreateNet->currentRow()))->setText(netname);
+        (gulFollowerNet->item(posNetModify))->setText(netname);
         //4
-        (gul0netOp->item(gulCreateNet->currentRow()))->setText(netname);
-        (gul1netOp->item(gulCreateNet->currentRow()))->setText(netname);
+        (gul0netOp->item(posNetModify))->setText(netname);
+        (gul1netOp->item(posNetModify))->setText(netname);
         
         resetNetData();
         // TODO : emetto un segnale che ho inserito una rete, la netGlobalList è variata
@@ -402,17 +499,20 @@ void NetworkManager::modifyNetNameClicked() {
 }        
 
 void NetworkManager::deleteNetClicked() {
-    controller->deleteNet(gulCreateNet->currentRow());
-    gulCreateNet->takeItem(gulCreateNet->currentRow());
+    int posNetDelete = gulCreateNet->currentRow();
+    
+    controller->deleteNet(posNetDelete);
+    gulCreateNet->takeItem(posNetDelete);
     //2
-    netInsRemViewUser->takeItem(gulCreateNet->currentRow());
+    netInsRemUser->takeItem(posNetDelete);
     //3
-    gulFollowerNet->takeItem(gulCreateNet->currentRow());
+    gulFollowerNet->takeItem(posNetDelete);
     //4
-    gul0netOp->takeItem(gulCreateNet->currentRow());
-    gul1netOp->takeItem(gulCreateNet->currentRow());
+    gul0netOp->takeItem(posNetDelete);
+    gul1netOp->takeItem(posNetDelete);
     
     resetNetData();
+    disableButtons();
 }
     
 void NetworkManager::resetNetData() {
@@ -427,21 +527,104 @@ void NetworkManager::resetNetData() {
 
 
 void NetworkManager::addUserToNetwork() {
-qDebug() << "add user to network";
-    if (controller->addUserToNetwork(gulInsRemViewUser->currentRow(), netInsRemViewUser->currentRow())) {
-        netUserInsRemViewUser->addItem(gulInsRemViewUser->currentItem()->text());
+    qDebug() << "add user to network";
+    int userPos = gulInsRemUser->currentRow();
+    int netPos = netInsRemUser->currentRow();
+    qDebug() << "gulInsRemUser->currentRow():" << userPos;
+    qDebug() << "netInsRemUser->currentRow():" << netPos;
+    
+    int row = getSelectedRow(netInsRemUser);
+    qDebug() << "netInsRemUser selected row:" << row;
+    
+    
+    if (controller->addUserToNetwork(netPos, userPos)) {
+        showNetworkUser();
     }
 }
 
 void NetworkManager::showNetworkUser() {
-    QStringList users = controller->getNetworkUsers(netInsRemViewUser->currentRow());
+    QStringList users = controller->getNetworkUsers(netInsRemUser->currentRow());
     
-    netUserInsRemViewUser->clear();
-    
+    netUserInsRemUser->clear();
+
     foreach (const QString &strUser, users) {
-        netUserInsRemViewUser->addItem(strUser);
+        netUserInsRemUser->addItem(strUser);
     }
 }
+
+void NetworkManager::selectedUserNetwork() {
+    btnIRRemoveUser->setEnabled(true);
+}
+
+void NetworkManager::deleteUserFromNetworkClicked() {
+    qDebug() << "delete user from network";
+    
+    int posNet = netInsRemUser->currentRow();
+    qDebug()  << "Posizione rete da eliminare: " << posNet;
+    
+    QString username = netUserInsRemUser->selectedItems().first()->text(); 
+        
+    qDebug() << "Username da eliminare dalla rete: " << username;
+    
+    netUserInsRemUser->takeItem(netUserInsRemUser->currentRow());
+    controller->removeUserFromNetwork(posNet, username);
+    
+    btnIRRemoveUser->setEnabled(false);
+    //TODO aggiorno la visualizzazione 
+}
+
+void NetworkManager::calculateUnion() {
+    int posNetA = gul0netOp->currentRow();
+    int posNetB = gul1netOp->currentRow();
+    
+    QStringList res = controller->calculateUnion(posNetA,posNetB);
+    
+    gul2netOp->clear();
+    
+    foreach (const QString &str, res) {
+        gul2netOp->addItem(str);
+    }
+}
+
+void NetworkManager::calculateIntersection() {
+    int posNetA = gul0netOp->currentRow();
+    int posNetB = gul1netOp->currentRow();
+    
+    QStringList res = controller->calculateIntersection(posNetA,posNetB);
+    
+    gul2netOp->clear();
+    
+    foreach (const QString &str, res) {
+        gul2netOp->addItem(str);
+    }
+}
+
+void NetworkManager::calculateRelativeComplement() {
+    int posNetA = gul0netOp->currentRow();
+    int posNetB = gul1netOp->currentRow();
+    
+    QStringList res = controller->calculateRelativeComplement(posNetA,posNetB);
+    
+    gul2netOp->clear();
+    
+    foreach (const QString &str, res) {
+        gul2netOp->addItem(str);
+    }
+}
+
+void NetworkManager::calculateSymmetricDifference() {
+    int posNetA = gul0netOp->currentRow();
+    int posNetB = gul1netOp->currentRow();
+    
+    QStringList res = controller->calculateSymmetricDifference(posNetA,posNetB);
+    
+    gul2netOp->clear();
+    
+    foreach (const QString &str, res) {
+        gul2netOp->addItem(str);
+    }
+}
+
 
 /*
 

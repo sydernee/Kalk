@@ -113,4 +113,58 @@ QStringList NetworkController::getNetworkUsers(int pos) {
     
     return res;
 }
+
+
+void NetworkController::removeUserFromNetwork(int posNet,QString username) {
+    netlist[posNet]->removeUser(username);
+}
+
+QStringList NetworkController::calculateUnion(int posNetA, int posNetB) {
+    QSet<QSharedPointer<User>> userset = netlist[posNetA]->getUnion(*(netlist[posNetB]));
+
+    QStringList res;
+    
+    foreach (QSharedPointer<User> usr, userset) {
+        res << usr->getUsername();
+    }
+
+    return res;
+}
+
+QStringList NetworkController::calculateIntersection(int posNetA, int posNetB) {
+    QSet<QSharedPointer<User>> userset = netlist[posNetA]->getIntersection(*(netlist[posNetB]));
+    //TODO unpack function
+    QStringList res;
+    
+    foreach (QSharedPointer<User> usr, userset) {
+        res << usr->getUsername();
+    }
+
+    return res;
+}
+
+QStringList NetworkController::calculateRelativeComplement(int posNetA, int posNetB) {
+    QSet<QSharedPointer<User>> userset = netlist[posNetA]->getRelativeComplement(*(netlist[posNetB]));
+
+    QStringList res;
+    
+    foreach (QSharedPointer<User> usr, userset) {
+        res << usr->getUsername();
+    }
+
+    return res;
+}
+
+QStringList NetworkController::calculateSymmetricDifference(int posNetA, int posNetB) {
+    QSet<QSharedPointer<User>> userset = netlist[posNetA]->getSymmetricDifference(*(netlist[posNetB]));
+
+    QStringList res;
+    
+    foreach (QSharedPointer<User> usr, userset) {
+        res << usr->getUsername();
+    }
+
+    return res;
+}
+
 //()

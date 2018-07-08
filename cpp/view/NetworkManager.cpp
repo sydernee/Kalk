@@ -182,41 +182,58 @@ NetworkManager::NetworkManager(QWidget *parent)
     InsRemUserGroupBox->setStyleSheet(groupBoxStyle);
 
     //3 - Following e Follower
-    followerGroupBox = new QGroupBox(tr("Inserimento, rimozione e visualizzazione di un utente in una rete"));
+    followerGroupBox = new QGroupBox(tr("Gestione follower degli utenti"));
     gulFollowerNetLayout = new QVBoxLayout;
+    gulFollowerNetUserLayout = new QVBoxLayout;
     gulFollowerLayout = new QVBoxLayout;
-    gulFollowerOutputLayout = new QVBoxLayout;
+    gulFollowedLayout = new QVBoxLayout;
+    gulFollowerSelUserLayout = new QVBoxLayout;
     gulFollowerButtonGroup = new QVBoxLayout;
     
     gulFollowerNetLabel = new QLabel(tr("Reti disponibili"));
     gulFollowerNet = new QListWidget();
-    gulFollowerLabel = new QLabel(tr("Utenti della rete"));
-    gulFollower = new QListWidget();    
-    gulFollowerOutputLabel = new QLabel(tr("Follower"));
-    gulFollowerOutput = new QListWidget();
-
+    connect(gulFollowerNet, SIGNAL(itemClicked(QListWidgetItem*)), this, SLOT(showFollowerNetworks()));
+    gulFollowerNetUserLabel = new QLabel(tr("Utenti della rete"));
+    gulFollowerNetUser = new QListWidget();    
+    connect(gulFollowerNetUser,SIGNAL(itemSelectionChanged()), this, SLOT(setNewFollowerButtonStatus()));
+    connect(gulFollowerNetUser, SIGNAL(itemClicked(QListWidgetItem*)), this, SLOT(setNewFollowerButtonStatus())); 
+    connect(gulFollowerNetUser, SIGNAL(itemClicked(QListWidgetItem*)), this, SLOT(showFollower()));
+    connect(gulFollowerNetUser, SIGNAL(itemClicked(QListWidgetItem*)), this, SLOT(showFollowed()));
+    gulFollowerLabel = new QLabel(tr("Utenti che ti seguono"));
+    gulFollower = new QListWidget();
+    connect(gulFollower, SIGNAL(itemClicked(QListWidgetItem*)), this, SLOT(userFollowerClicked())); 
+    gulFollowedLabel = new QLabel(tr("Utenti che segui"));
+    gulFollowed = new QListWidget();
+    gulFollowerSelUserLabel = new QLabel(tr("Utenti selezionabili"));
+    gulFollowerSelUser = new QListWidget();
+    connect(gulFollowerSelUser,SIGNAL(itemSelectionChanged()), this, SLOT(setNewFollowerButtonStatus()));
+    connect(gulFollowerSelUser, SIGNAL(itemClicked(QListWidgetItem*)), this, SLOT(setNewFollowerButtonStatus()));
 
     gulFollowerNetLayout->addWidget(gulFollowerNetLabel);
     gulFollowerNetLayout->addWidget(gulFollowerNet);
+    gulFollowerNetUserLayout->addWidget(gulFollowerNetUserLabel);
+    gulFollowerNetUserLayout->addWidget(gulFollowerNetUser);
     gulFollowerLayout->addWidget(gulFollowerLabel);
     gulFollowerLayout->addWidget(gulFollower);
-    gulFollowerOutputLayout->addWidget(gulFollowerOutputLabel);
-    gulFollowerOutputLayout->addWidget(gulFollowerOutput);
+    gulFollowedLayout->addWidget(gulFollowedLabel);
+    gulFollowedLayout->addWidget(gulFollowed);
+    gulFollowerSelUserLayout->addWidget(gulFollowerSelUserLabel);
+    gulFollowerSelUserLayout->addWidget(gulFollowerSelUser);
     
-    btnGetFollower = new QPushButton(tr("Visualizza i follower"));
-    btnGetFollowed = new QPushButton(tr("Visualizza i followed"));
-    btnAddFollower = new QPushButton(tr("Aggiungi come follower "));
-    btnRemoveFollower = new QPushButton(tr("Rimuovi il follower")); //attivo solo quando sto visualizzando i follower
+    btnAddFollower = new QPushButton(tr("Segui l'utente "));
+    connect(btnAddFollower, SIGNAL(clicked()), this, SLOT(addFollowerClicked()));
+    btnRemoveFollower = new QPushButton(tr("Smetti di seguire")); //attivo solo quando sto visualizzando i follower
+    connect(btnRemoveFollower, SIGNAL(clicked()), this, SLOT(removeFollowerClicked()));
 
-    gulFollowerButtonGroup->addWidget(btnGetFollower);
-    gulFollowerButtonGroup->addWidget(btnGetFollowed);
     gulFollowerButtonGroup->addWidget(btnAddFollower);
     gulFollowerButtonGroup->addWidget(btnRemoveFollower);
 
     followerGroup = new QHBoxLayout;
     followerGroup->addLayout(gulFollowerNetLayout);
+    followerGroup->addLayout(gulFollowerNetUserLayout);
     followerGroup->addLayout(gulFollowerLayout);
-    followerGroup->addLayout(gulFollowerOutputLayout);
+    followerGroup->addLayout(gulFollowedLayout);
+    followerGroup->addLayout(gulFollowerSelUserLayout);        
     followerGroup->addLayout(gulFollowerButtonGroup);
     
     followerGroupBox->setLayout(followerGroup);
@@ -359,8 +376,6 @@ void NetworkManager::disableButtons() {
     btnIRRemoveUser->setEnabled(false);
 
     //3 - Following e Follower
-    btnGetFollower->setEnabled(false);
-    btnGetFollowed->setEnabled(false);
     btnAddFollower->setEnabled(false);
     btnRemoveFollower->setEnabled(false);
 
@@ -553,6 +568,7 @@ void NetworkManager::showNetworkUser() {
 }
 
 void NetworkManager::selectedUserNetwork() {
+    btnIRAddUser->setEnabled(false);
     btnIRRemoveUser->setEnabled(true);
 }
 
@@ -625,6 +641,95 @@ void NetworkManager::calculateSymmetricDifference() {
     }
 }
 
+
+void NetworkManager::showFollowerNetworks() { 
+    qDebug() << gulFollowerNet->currentRow();
+    QStringList users = controller->getNetworkUsers(gulFollowerNet->currentRow());
+    
+    gulFollowerNetUser->clear();
+    gulFollower->clear();
+    gulFollowed->clear();
+    gulFollowerSelUser->clear();
+  
+    foreach (auto strUser, users) {
+        gulFollowerNetUser->addItem(strUser);
+        
+    }
+}
+
+void NetworkManager::setNewFollowerButtonStatus() {
+    qDebug() << "gulFollowerNetUser->currentRow(): " << gulFollowerNetUser->currentRow(); 
+    qDebug() << "getSelectedRow(gulFollowerNetUser): " << getSelectedRow(gulFollowerNetUser);
+    qDebug() << "gulFollowerSelUser->currentRow(): " << gulFollowerSelUser->currentRow();
+    qDebug() << "getSelectedRow(gulFollowerSelUser): " << getSelectedRow(gulFollowerSelUser);
+    qDebug() << "============";
+        
+    if (gulFollowerNetUser->currentRow() > -1 && 
+        gulFollowerSelUser->currentRow() > -1 &&
+        getSelectedRow(gulFollowerNetUser) == gulFollowerNetUser->currentRow() &&
+        getSelectedRow(gulFollowerSelUser) == gulFollowerSelUser->currentRow()
+    ) {
+        btnAddFollower->setEnabled(true);
+    } else {
+        btnAddFollower->setEnabled(false);
+        btnRemoveFollower->setEnabled(false);
+    }
+}
+
+void NetworkManager::addFollowerClicked() {
+    QString followerName = gulFollowerNetUser->selectedItems().first()->text();
+    QString followedName      = gulFollowerSelUser->selectedItems().first()->text();
+    int netPos           = gulFollowerNet->currentRow();
+    
+    controller->addFollower(followerName, followedName, netPos);
+    
+    showFollower();
+    showFollowed();
+    
+    btnAddFollower->setEnabled(false);
+    btnRemoveFollower->setEnabled(false);
+}
+
+void NetworkManager::showFollower() {
+    int netPos           = gulFollowerNet->currentRow(); 
+    QStringList follower = controller->getFollower(netPos,gulFollowerNetUser->selectedItems().first()->text());
+    
+    gulFollower->clear();
+
+    foreach (auto strUser, follower) {
+        gulFollower->addItem(strUser);
+    }
+}
+
+void NetworkManager::showFollowed() {
+    int netPos           = gulFollowerNet->currentRow(); 
+    QStringList followed = controller->getFollowed(netPos,gulFollowerNetUser->selectedItems().first()->text());
+    
+    gulFollowed->clear();
+
+    foreach (auto strUser, followed) {
+        gulFollowed->addItem(strUser);
+    }
+}
+
+void NetworkManager::userFollowerClicked() {
+    btnAddFollower->setEnabled(false);
+    btnRemoveFollower->setEnabled(true);
+}
+
+void NetworkManager::removeFollowerClicked() {
+    QString followerName = gulFollowerNetUser->selectedItems().first()->text();
+    QString followedName      = gulFollower->selectedItems().first()->text();
+    int netPos           = gulFollowerNet->currentRow();
+
+    controller->removeFollower(followerName, followedName, netPos);
+
+    showFollower();
+    showFollowed();
+    
+    btnAddFollower->setEnabled(false);
+    btnRemoveFollower->setEnabled(false);
+}
 
 /*
 

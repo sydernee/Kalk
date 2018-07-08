@@ -100,19 +100,24 @@ private:
     //3 - Following e Follower
     QGroupBox* followerGroupBox;
     QVBoxLayout* gulFollowerNetLayout;
+    QVBoxLayout* gulFollowerNetUserLayout;
     QVBoxLayout* gulFollowerLayout;
-    QVBoxLayout* gulFollowerOutputLayout;
+    QVBoxLayout* gulFollowedLayout;
+    QVBoxLayout* gulFollowerSelUserLayout;
     QVBoxLayout* gulFollowerButtonGroup;
     
+ 
     QLabel* gulFollowerNetLabel;
     QListWidget* gulFollowerNet;
+    QLabel* gulFollowerNetUserLabel;
+    QListWidget* gulFollowerNetUser;
     QLabel* gulFollowerLabel;
-    QListWidget* gulFollower;    
-    QLabel* gulFollowerOutputLabel;
-    QListWidget* gulFollowerOutput;
+    QListWidget* gulFollower;
+    QLabel* gulFollowedLabel;
+    QListWidget* gulFollowed;
+    QLabel* gulFollowerSelUserLabel;
+    QListWidget* gulFollowerSelUser;
 
-    QPushButton* btnGetFollower;
-    QPushButton* btnGetFollowed;
     QPushButton* btnAddFollower;
     QPushButton* btnRemoveFollower;
 
@@ -184,6 +189,19 @@ public slots:
     virtual void calculateIntersection();    
     virtual void calculateRelativeComplement();    
     virtual void calculateSymmetricDifference();    
+    
+    virtual void showFollowerNetworks();
+    
+    virtual void setNewFollowerButtonStatus();
+    
+    virtual void addFollowerClicked();
+    
+    virtual void showFollower();
+    virtual void showFollowed();
+    
+    virtual void userFollowerClicked();
+    
+    virtual void removeFollowerClicked();
     
 };
 #endif //NETWORKMANAGER_H

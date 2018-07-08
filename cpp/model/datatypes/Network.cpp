@@ -59,6 +59,7 @@ void Network::removeUser(const QString u) {
 void Network::addFollower(QSharedPointer<User> follower, QSharedPointer<User> followed) {
     if (isUserOfTheNetwork(follower) && isUserOfTheNetwork(followed)) {
         following.append(qMakePair(follower,followed));
+        qDebug() << "Ora " << follower->getUsername() << " segue " << followed->getUsername();
     }
 }
 
@@ -69,6 +70,7 @@ void Network::removeFollower(QSharedPointer<User> follower, QSharedPointer<User>
         if ((it->first == follower) && (it->second == followed)) {
             it = following.erase(it);
             found = true;
+            qDebug() << follower->getUsername() << " non segue più " << followed->getUsername();
         } else {
             ++it;
         }

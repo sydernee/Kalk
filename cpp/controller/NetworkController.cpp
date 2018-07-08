@@ -40,7 +40,6 @@ QVector<QString> NetworkController::getUserData(int pos) {
     
     return res;
 }
-//QVector<QString> NetworkController::getUserData(QString); TODO 
 
 void NetworkController::setUserData(int pos, QString name, QString surname) { //modifica i dati di un user data la sua pos nel model
     qDebug() << "Modifico i dati di " << gUsers[pos]->getUsername();    
@@ -76,8 +75,6 @@ bool NetworkController::createNet(QString netname) {
     return true;
 }
 
-//void NetworkController::setUserData(int, QString, QString); TODO //modifica i dati di un user dato il suo username, name e surname
-
 QString NetworkController::getNetName(int pos) const {
     qDebug() << "Carico il nome della rete " << pos << ": " << netlist[pos]->getName(); 
     return netlist[pos]->getName();   
@@ -106,7 +103,7 @@ QStringList NetworkController::getNetworkUsers(int pos) {
     
     QSet<QSharedPointer<User>>  users = netlist[pos]->getUsers();
     
-
+    qDebug() << "HERE";
     for (auto it = users.cbegin(); it != users.cend(); ++it) {
         res << (*it)->getUsername();
     }
@@ -119,52 +116,99 @@ void NetworkController::removeUserFromNetwork(int posNet,QString username) {
     netlist[posNet]->removeUser(username);
 }
 
-QStringList NetworkController::calculateUnion(int posNetA, int posNetB) {
+QStringList NetworkController::calculateUnion(int posNetA, int posNetB) const {
     QSet<QSharedPointer<User>> userset = netlist[posNetA]->getUnion(*(netlist[posNetB]));
 
     QStringList res;
     
-    foreach (QSharedPointer<User> usr, userset) {
+    foreach (auto usr, userset) {
         res << usr->getUsername();
     }
 
     return res;
 }
 
-QStringList NetworkController::calculateIntersection(int posNetA, int posNetB) {
+QStringList NetworkController::calculateIntersection(int posNetA, int posNetB) const {
     QSet<QSharedPointer<User>> userset = netlist[posNetA]->getIntersection(*(netlist[posNetB]));
-    //TODO unpack function
     QStringList res;
     
-    foreach (QSharedPointer<User> usr, userset) {
+    foreach (auto usr, userset) {
         res << usr->getUsername();
     }
 
     return res;
 }
 
-QStringList NetworkController::calculateRelativeComplement(int posNetA, int posNetB) {
+QStringList NetworkController::calculateRelativeComplement(int posNetA, int posNetB) const {
     QSet<QSharedPointer<User>> userset = netlist[posNetA]->getRelativeComplement(*(netlist[posNetB]));
 
     QStringList res;
     
-    foreach (QSharedPointer<User> usr, userset) {
+    foreach (auto usr, userset) {
         res << usr->getUsername();
     }
 
     return res;
 }
 
-QStringList NetworkController::calculateSymmetricDifference(int posNetA, int posNetB) {
+QStringList NetworkController::calculateSymmetricDifference(int posNetA, int posNetB) const {
     QSet<QSharedPointer<User>> userset = netlist[posNetA]->getSymmetricDifference(*(netlist[posNetB]));
 
     QStringList res;
     
-    foreach (QSharedPointer<User> usr, userset) {
+    foreach (auto usr, userset) {
         res << usr->getUsername();
     }
 
     return res;
 }
 
+QSharedPointer<User> NetworkController::getUserSmartPtrByUsername(QString username) const {
+    bool found = false;
+    QSharedPointer<User> res;
+    for (auto it = gUsers.cbegin(); it != gUsers.cend() && !found; ++it) {
+        if ((*it)->getUsername() == username) {
+            found = true;
+            res = *it;
+        }
+    }
+    return res;
+}
+
+void NetworkController::addFollower(QString followerName, QString followedName, int netPos) {
+    netlist[netPos]->addFollower(getUserSmartPtrByUsername(followerName), getUserSmartPtrByUsername(followedName));
+}
+
+QStringList NetworkController::getFollower(int netPos, QString username) const {
+    QSet<QSharedPointer<User>> userset = netlist[netPos]->getFollower(getUserSmartPtrByUsername(username));
+    
+    QStringList res;
+    
+    qDebug() << "stampo follower";
+    
+    foreach (auto usr, userset) {
+        qDebug() << username << " segue " << usr->getUsername();
+        res << usr->getUsername();
+    }
+
+    return res;
+}
+
+QStringList NetworkController::getFollowed(int netPos, QString username) const {
+    QSet<QSharedPointer<User>> userset = netlist[netPos]->getFollowed(getUserSmartPtrByUsername(username));
+    
+        qDebug() << "stampo followed";
+    QStringList res;
+    
+    foreach (auto usr, userset) {
+        qDebug() << username << " è seguito da " << usr->getUsername();
+        res << usr->getUsername();
+    }
+
+    return res;
+}
+
+void NetworkController::removeFollower(QString followerName,QString  followedName, int netPos) {
+    netlist[netPos]->removeFollower(getUserSmartPtrByUsername(followerName), getUserSmartPtrByUsername(followedName));
+}
 //()

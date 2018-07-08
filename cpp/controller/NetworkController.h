@@ -29,10 +29,8 @@ public:
     virtual bool createGlobalUser(QString,QString,QString); //ritorna false se esiste un utente con lo stesso username
     
     virtual QVector<QString> getUserData(int); //ritorna i dati di un user data la sua pos nel model
-    //virtual QVector<QString> getUserData(QString); TODO //ritorna i dati di un user dato il suo username
     
     virtual void setUserData(int, QString, QString); //modifica i dati di un user data la sua pos nel model
-    //void setUserData(int, QString, QString); TODO //modifica i dati di un user dato il suo username, name e surname
     
     virtual void deleteUser(int); //data la posizione di un utente all'interno del model, lo elimina
 
@@ -54,12 +52,17 @@ public:
     virtual void removeUserFromNetwork(int,QString); //data la posizione di una rete all'interno del model e la username di un utente, rimuove l'utente
     
     
-    virtual QStringList calculateUnion(int, int);
-    virtual QStringList calculateIntersection(int, int);
-    virtual QStringList calculateRelativeComplement(int, int);
-    virtual QStringList calculateSymmetricDifference(int, int);
+    virtual QStringList calculateUnion(int, int) const; 
+    virtual QStringList calculateIntersection(int, int) const;
+    virtual QStringList calculateRelativeComplement(int, int) const;
+    virtual QStringList calculateSymmetricDifference(int, int) const;
     
+    virtual QSharedPointer<User> getUserSmartPtrByUsername(QString) const; //dato un username, ritorna un QSharedPointer all'utente associato
+    virtual void addFollower(QString, QString, int);
+    virtual QStringList getFollower(int, QString) const;
+    virtual QStringList getFollowed(int, QString) const;
     
+    virtual void removeFollower(QString, QString, int);
 };
 
 //()

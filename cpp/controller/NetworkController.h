@@ -6,10 +6,12 @@
 #include "../view/NetworkManager.h"
 
 #include <QString>
+#include <QStringList>
 #include <QDebug>
 #include <QSharedPointer>
 #include <QList>
 #include <QVector>
+#include <QSet>
 
 class NetworkManager;
 //()
@@ -42,7 +44,12 @@ public:
     bool renameNet(int,QString);//data la posizione di una rete nel model, cambia il nome della rete 
     //con il valore passato sse non è già in uso. Ritorna l'esito della modifica
     
-    void deleteNet(int pos); //data la posizione di una rete all'interno del model, la elimina
+    void deleteNet(int); //data la posizione di una rete all'interno del model, la elimina
+    
+    bool addUserToNetwork(int,int); //data la posizione di una rete e di un user all'interno del model, aggiunge l'utente alla rete. 
+                                    // ritorna true sse user già presente nella rete
+                                    
+    QStringList getNetworkUsers(int); //data la posizione di una rete all'interno del model, ritorna i suoi utenti
 };
 
 //()

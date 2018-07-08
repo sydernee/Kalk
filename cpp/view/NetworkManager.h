@@ -19,6 +19,7 @@
 #include <QPushButton>
 
 #include <QVector>
+#include <QStringList>
 
 
 class NetworkController;
@@ -76,7 +77,71 @@ private:
     //layout per la creazione di reti e user
     QHBoxLayout* createUserNetGroup;
 
+    //2 - Inserimento, rimozione e visualizzazione di un utente in una rete
+    QGroupBox* insRemViewUserGroupBox;
+    QVBoxLayout* insRemViewUserList0Layout;
+    QVBoxLayout* insRemViewUserList1Layout;
+    QVBoxLayout* insRemViewUserList2Layout;
+    QVBoxLayout* insRemViewUserButtonGroup;
+    
+    QLabel* netInsRemViewUserLabel;
+    QListWidget* netInsRemViewUser;
+    QLabel* netUserInsRemViewUserLabel;
+    QListWidget* netUserInsRemViewUser;
+    QLabel* gulInsRemViewUserLabel;
+    QListWidget* gulInsRemViewUser;
+    
+    QPushButton* btnIRVAddUser;
+    QPushButton* btnIRVRemoveUser;
+    QPushButton* btnIRVViewProfile;
 
+    QHBoxLayout* insRemViewUserGroup;
+    
+    //3 - Following e Follower
+    QGroupBox* followerGroupBox;
+    QVBoxLayout* gulFollowerNetLayout;
+    QVBoxLayout* gulFollowerLayout;
+    QVBoxLayout* gulFollowerOutputLayout;
+    QVBoxLayout* gulFollowerButtonGroup;
+    
+    QLabel* gulFollowerNetLabel;
+    QListWidget* gulFollowerNet;
+    QLabel* gulFollowerLabel;
+    QListWidget* gulFollower;    
+    QLabel* gulFollowerOutputLabel;
+    QListWidget* gulFollowerOutput;
+
+    QPushButton* btnGetFollower;
+    QPushButton* btnGetFollowed;
+    QPushButton* btnAddFollower;
+    QPushButton* btnRemoveFollower;
+
+    QHBoxLayout* followerGroup;
+
+    //4-Operazioni tra matrici
+
+    QGroupBox* netOpGroupBox;
+    QVBoxLayout* netOpList0Layout;
+    QVBoxLayout* netOpList1Layout;
+    QVBoxLayout* netOpOutputLayout;
+    QVBoxLayout* netOpButtonGroup;
+    
+    QLabel* gul0netOpLabel;
+    QListWidget* gul0netOp;
+    QLabel* gul1netOpLabel;
+    QListWidget* gul1netOp;
+    QLabel* gul2netOpLabel;
+    QListWidget* gul2netOp;
+ 
+    QPushButton* btnGetUnion;
+    QPushButton* btnGetIntersection;
+    QPushButton* btnGetRelativeComplement;
+    QPushButton* btnGetSymmetricDifference;
+
+    QHBoxLayout* netOpGroup;
+
+    // set layout
+    QVBoxLayout *layout;
 
 public:
     explicit NetworkManager(QWidget *parent = nullptr);
@@ -100,5 +165,8 @@ public slots:
     void showNetName(QListWidgetItem*);
     void deleteNetClicked();          
     void resetNetData();        
+    
+    void addUserToNetwork();
+    void showNetworkUser();
 };
 #endif //NETWORKMANAGER_H

@@ -49,7 +49,14 @@ void NetworkController::setUserData(int pos, QString name, QString surname) { //
 }
 
 void NetworkController::deleteUser(int pos) {
+    //elimino user da tutte le reti in cui è presente
+    for (auto it = netlist.cbegin(); it!=netlist.cend(); ++it) {
+        (*it)->removeUser(gUsers[pos]);
+    }
+    
+    //rimuovo l'utente
     gUsers.removeAt(pos);
+    
 }
 
 bool NetworkController::existNet(QString netname) const {
@@ -85,5 +92,25 @@ bool NetworkController::renameNet(int pos, QString netname) {
 
 void NetworkController::deleteNet(int pos) {
     netlist.removeAt(pos);
+}
+
+bool NetworkController::addUserToNetwork(int posNet, int posUser){
+    if (netlist[posNet]->isUserOfTheNetwork(gUsers[posUser])) {return false;}
+    
+    netlist[posNet]->addUser(gUsers[posUser]); 
+    return true;
+}
+
+QStringList NetworkController::getNetworkUsers(int pos) {
+    QStringList res;
+    
+    QSet<QSharedPointer<User>>  users = netlist[pos]->getUsers();
+    
+
+    for (auto it = users.cbegin(); it != users.cend(); ++it) {
+        res << (*it)->getUsername();
+    }
+    
+    return res;
 }
 //()

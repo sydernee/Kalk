@@ -19,6 +19,7 @@ unsigned int Network::size() const {
 void Network::addUser(QSharedPointer<User> u) {
     if (!isUserOfTheNetwork(u)) {
        userlist.append(u);
+       qDebug() << "Aggiunto " << u->getUsername() << "alla rete " << getName();
     }
 }
 

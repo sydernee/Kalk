@@ -33,7 +33,6 @@ MatrixBuilder::MatrixBuilder(QWidget *parent)
     hblayout0->addWidget(matrixSelection);
 
     QHBoxLayout *backButtonGroup = new QHBoxLayout;
-    //memory leak?
     QSpacerItem *spacer = new QSpacerItem(0, 0, QSizePolicy::Expanding, QSizePolicy::Minimum);
     backButtonGroup->addItem(spacer);
     backButtonGroup->addWidget(backButton);

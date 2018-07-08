@@ -1,7 +1,7 @@
 package kalkException;
 
 public class TooFewArgumentsException extends RuntimeException {
-	private static final long serialVersionUID = 1L; //????
+	private static final long serialVersionUID = 1L;
 	
 	public TooFewArgumentsException() {
 		super();

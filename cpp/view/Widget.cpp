@@ -8,7 +8,6 @@
 
 Widget::Widget(QWidget *parent)
     : QWidget(parent),
-//      keypad(new Keypad(this)),
       createMatrixKalk(new QPushButton("MatrixKalk", this)),
       createNetworkKalk(new QPushButton("NetworkKalk", this))
 {

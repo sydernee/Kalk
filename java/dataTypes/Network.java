@@ -2,7 +2,6 @@ package dataTypes;
 
 import kalkException.*;
 import java.util.AbstractMap;
-//import java.util.AbstractMap.SimpleEntry;
 import java.util.List;
 import java.util.LinkedList;
 import java.util.HashSet;

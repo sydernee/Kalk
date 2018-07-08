@@ -1,7 +1,6 @@
 #-------------------------------------------------
 #
 # Project created by QtCreator 2018-06-04T13:47:47
-# Improved by Timmmmmmmmmmmmmmmy
 #
 #-------------------------------------------------
 
@@ -80,5 +79,5 @@ HEADERS += \
     exceptions/InvalidMatrixTypeException.h \
     exceptions/InvalidLayoutException.h
 
-RESOURCES += \
-    resources.qrc
+# RESOURCES += \
+#    resources.qrc

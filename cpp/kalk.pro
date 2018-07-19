@@ -79,6 +79,3 @@ HEADERS += \
     exceptions/NullPointerException.h \
     exceptions/InvalidMatrixTypeException.h \
     exceptions/InvalidLayoutException.h
-
-RESOURCES += \
-    resources.qrc

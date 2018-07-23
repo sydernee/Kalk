@@ -1,15 +1,18 @@
 Feedback sul progetto
 ===================== 
-In seguito si riporta il feedback(commentato ove ritenuto necessario) lasciato dal professor Ranzato sul progetto.
+In seguito si riporta il feedback (commentato, ove ritenuto necessario, per motivare le scelte
+effettuate messe in discussione) lasciato dal professor Ranzato sul progetto.
 
 Correttezza
 -----------
 > Nelle classi c'è un puntatore a `MatrixController` che viene impostato al tipo giusto 
 (`MatrixController`, `SquareMatrixController`, etc) che richiama a sua volta i metodi `sum` e
-subtract di `MatrixController` (non ridefiniti) che loro volta chiamano il metodo
+`subtract` di `MatrixController` (non ridefiniti) che loro volta chiamano il metodo
 `operator+` e `operator-` di `Matrix`. Perché ridefinire tali metodi in `SquareMatrix` e `SparseMatrix`?
 
-TODO
+L'errore qui è stato probabilmente non ridefinire (o, più logicamente, overridare) i metodi `sum` e `subtract` 
+rispettivamente in
+`SquareMatrixController` e `SparseMatrixController`.
 
 Orientazione agli oggetti
 -------------------------
@@ -18,10 +21,12 @@ Orientazione agli oggetti
 La scelta di dichiarare, ove sensato, virtuali i metodi deriva dalla 
 [open-world assumption](https://en.wikipedia.org/wiki/Open-world_assumption).
 
->`operator+` e `operator-` sono definite direttamente, ma non utilizzano logica virtuale: come
+> `operator+` e `operator-` sono definite direttamente, ma non utilizzano logica virtuale: come
 può funzionare il polimorfismo su di esse?
 
-TODO
+Una *best practice* del C++ prevede che la ridefinizione di tali operatori avvenga come *funzioni esterne*
+alla classe. Un riscontro si può avere in
+[questo thread](https://stackoverflow.com/questions/4421706/what-are-the-basic-rules-and-idioms-for-operator-overloading).
 
 > Oltre a questo, c'è molta duplicazione di codice tra le diverse implementazioni di queste funzioni
 

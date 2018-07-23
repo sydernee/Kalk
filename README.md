@@ -4,15 +4,15 @@ Il progetto è stato sviluppato da [Timoty Granziero](https://github.com/Vashy) 
 
 
 <!--- TOC --->
-1. [Introduzione](README.md#Introduzione)
-1. [Specifiche di progetto](README.md#Specifiche-di-progetto)
-1. [Compilazione ed esecuzione](README.md#Compilazione-ed-esecuzione)
-   1. [C++](README.md#C%2B%2B)
-   1. [Java](README.md#Java)
-1. [Manuale utente](README.md#Manuale-utente)
-1. [Feedback del docente e problemi noti](README.md#Feedback-del-docente-e-problemi-noti)
-1. [Segnalazione malfunzionamenti](README.md#Segnalazione-malfunzionamenti)
-1. [Licenza](README.md#Licenza)
+1. [Introduzione](README.md#introduzione)
+1. [Specifiche di progetto](README.md#specifiche-di-progetto)
+1. [Compilazione ed esecuzione](README.md#compilazione-ed-esecuzione)
+   1. [C++](README.md#c)
+   1. [Java](README.md#java)
+1. [Manuale utente](README.md#manuale-utente)
+1. [Feedback del docente e problemi noti](README.md#feedback-del-docente-e-problemi-noti)
+1. [Segnalazione malfunzionamenti](README.md#segnalazione-malfunzionamenti)
+1. [Licenza](README.md#licenza)
 
 
 Introduzione

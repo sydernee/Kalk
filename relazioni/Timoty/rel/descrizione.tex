@@ -175,8 +175,10 @@ metodi per il calcolo delle operazioni (i relativi slot) sono definiti come \tex
 \subsubsection{NetworkKalk}
 Per \texttt{NetworkKalk} tutte le operazioni vengono gestite attraverso un'unica grande finestra (classe \texttt{NetworkManager}), che permette di 
 effettuare tutte le operazioni implementate:
-è possibile creare e rimuovere utenti e reti, aggiungere o rimuovere un utente da una rete, aggiungere un utente creato a una rete.\par
-Infine, nel pannello in fondo, è possibile effettuare le operazioni insiemistiche tra due reti: unione, intersezione, complemento relativo e differenza simmetrica.
+è possibile creare e rimuovere utenti e reti, aggiungere o rimuovere un utente da una rete, aggiungere un utente creato a una rete e aggiungere e visualizzare i follower di un utente in una rete.\par
+Infine, nel pannello in fondo, è possibile effettuare le operazioni insiemistiche tra due reti: unione, intersezione, complemento relativo e differenza simmetrica.\par
+Per non sforare le ore a disposizione per il progetto, non è supportata la possibilità di 
+salvare in memoria le informazioni su utenti e reti.
 
 \subsection{Controller}
 
@@ -196,6 +198,13 @@ I metodi \texttt{getMatrix()}, \texttt{setMatrix()} e \texttt{buildMatrix()} son
 \texttt{SparseMatrixController} per restituire un oggetto (allocato nello heap) del tipo dinamico adeguato.\par
 I metodi di che si occupano di interfacciarsi con il modello, invece, non sono virtuali: questo perchè restituiscono un oggetto 
 temporaneo e non un riferimento: nelle classi derivate andrebbe persa dell'informazione.
+
+\subsubsection{NetworkController}
+Il controller si occupa di effettuare tutte le operazioni sui dati (reti e utenti) sulla view, 
+senza farla interagire direttamente con il modello.
+\medskip
+
+Praticamente tutte le funzioni di Network (view e controller) sono dichiarate virtuali.
 
 \subsection{Eccezioni}
 

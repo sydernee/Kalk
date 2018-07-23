@@ -44,7 +44,7 @@ Per compilare il progetto in *Java*, compilare i sorgenti *java* dalla directory
 del progetto con il comando 
 
 ```bash
-    javac kalkException/*.java dataTypes/*.java}
+    javac kalkException/*.java dataTypes/*.java
 ```
 
 Dopodiché eseguire lo script della classe *Use* invocando il comando (sempre dalla cartella java)

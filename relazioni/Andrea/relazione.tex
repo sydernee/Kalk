@@ -1,0 +1,156 @@
+\include{config}
+
+\begin{document}
+    \input{titlepage}
+    \clearpage
+    
+    \tableofcontents
+    \clearpage
+
+\section{Introduzione}
+Per il progetto didattico di programmazione ad oggetti, è stato sviluppato il software \textit{Kalk}:
+una calcolatrice che supporta l'uso di diversi tipi di dato, a scelta dello studente. Il progetto
+è stato sviluppato in coppia con Timoty Granziero. \par
+
+Sono stati individuati i seguenti tipi di calcolo:
+    \begin{itemize}
+        \item \texttt{Matrix}, da cui derivano \texttt{SquareMatrix}
+        e \texttt{SparseMatrix};
+        \item \texttt{Network}, che usa la classe \texttt{User}.
+    \end{itemize}
+
+\noindent{}Il progetto, come da specifica, è stato sviluppato in C++ e Java.
+
+\section{Compilazione ed esecuzione}
+\subsection{C\texttt{++}} 
+Per compilare il progetto in \texttt{C++}, è stato fornito il file \texttt{kalk.pro}
+all'interno della cartella \textbf{cpp}. Posizionarsi all'interno di quella cartella ed eseguire il comando
+\texttt{qmake} per generare il Makefile, poi \texttt{make} per compilare i sorgenti. A questo punto, sar\`a presente
+un eseguibile denominato \texttt{kalk}; è sufficiente eseguirlo con il comando \texttt{./kalk} (mentre si è posizionati
+all'interno della cartella cpp) per lanciare l'applicativo.
+
+\subsection{Java} 
+Per compilare il progetto in \texttt{Java}, compilare i sorgenti \texttt{java} dalla directory \textbf{java}
+del progetto con il comando 
+\begin{center}
+    \texttt{javac kalkException/*.java dataTypes/*.java} \par
+\end{center} 
+Dopodichè eseguire lo script della classe \texttt{Use} invocando il comando (sempre dalla cartella java)
+\begin{center}
+    \texttt{java dataTypes.Use}
+\end{center}
+
+   
+\section{Ambiente di sviluppo}
+Per lo sviluppo del software, ho scelto di utilizzare sia la macchina virtuale fornita dai tecnici di
+laboratorio che i PC del dipartimento, e quindi il \textbf{Sistema Operativo} Ubuntu 16.04, \textbf{compilatore}
+GCC 5.4.0, QT 5.7 e Java 8.
+
+\subsection{Editor}
+Per lo sviluppo del software utilizzato, nel mio caso, è stato il semplice editor \textbf{gedit}, in coppia con 
+il plugin \textbf{wakatime}, il quale permette di misurare esattamente il tempo trascorso utilizzando l'editor:
+tale software è disponibile anche per altri editor e IDE, purtroppo non per QtCreator.
+
+\subsection{Sistema di versionamento}
+Per la condivisione dei file versionabili all'interno del gruppo, è stato scelto l'uso del sistema di versionamento
+Git e la piattaforma di Github.
+
+\section{Tempo di sviluppo} 
+Al fine di completare lo sviluppo del software, si sono rese necessarie, da parte mia, approssimativamente di 55 ore:
+30 per la parte del modello e le restanti per l'interfaccia.
+ 
+
+\subsection{Suddivisione del lavoro progettuale}
+La suddivisione del lavoro è stata la seguente:
+\begin{itemize}
+    \item \textbf{Andrea}:
+    \begin{itemize}
+        \item Contributo allo sviluppo e al debugging della gerarchia \texttt{Matrix} in \texttt{C++};
+        \item Gerarchia \texttt{Network} in \texttt{C++} e \texttt{Java};
+        \item sviluppo della GUI di \texttt{Network}, usando le QT.
+    \end{itemize}
+    \item \textbf{Timoty}:
+    \begin{itemize}
+        \item Sviluppo della gerarchia di \texttt{Matrix} in \texttt{C++} e \texttt{Java};
+        \item GUI di \texttt{Matrix}, usando le QT.
+    \end{itemize}
+\end{itemize}
+
+
+\section{Tipi di dato sviluppati e scelte progettuali}
+Si è deciso, in comune accordo, di adottare il design pattern MVC: esso separa il modello,
+dal controller e dalla vista: la struttura delle cartelle rispecchia tale scelta.
+
+\subsection{Modello}
+La classe datatype è la classe base astratta a capo della gerarchia della parte logica del modello:
+ogni classe che è stata intesa come tipo di dato deriva da essa.
+
+Lo sviluppo del modello è avvenuto in maniera completamente separata dalla vista e dal controller,
+quindi non subisce da essi nessuna influenza.
+
+\subsubsection{Matrix}
+Modella una matrice algebrica di dimensione qualsiasi: le operazioni consentite sono quelle classiche
+di una matrice, tra cui: il calcolo della somma, differenza, il prodotto per scalare e tra matrici, trasposta.
+
+\subsubsection{SquareMatrix}
+La classe modella una matrice quadrata, derivando da Matrix.
+In aggiunta a Matrix, permette il calcolo del determinante, il minore della matrice e di determinare se la matrice è triangolare superiore,
+triangolare inferiore, diagonale o simmetrica.
+Oltre a questo, permete di generare una SquareMatrix di zeri o identità, base alla dimensione stabilita.
+
+\subsubsection{SparseMatrix}
+SparseMatrix è un'altra classe derivata da Matrix. Una matrice sparsa è una normale matrice con buona parte delle 
+celle con valore nullo (0). Aggiunge i campi sparsity, al fine di calcolare la sparsità della matrice
+in maniera più efficiente.
+Permette inoltre di calcolare la densità della matrice e di ottenere le righe e le colonne non a zero della matrice
+
+\subsection{Polimorfismo in Matrix}
+
+
+    Si è deciso, nella definizione degli operatori binari, di privilegiare la commutatività, quindi dovendo dichiarare
+    esternamente gli operatori, piuttosto che optare per il polimorfismo.    
+
+    Per il resto, gran parte delle funzioni sono dichiarate come virtual, anche dove non era necessario effettuare l'override.
+
+\subsubsection{Network}
+Network modella un social network, rappresentandone gli utenti e i connessioni tra di loro, alias follow.
+Nello sviluppo della classe è stato sfruttato il framework Qt, in particolare per la costruzione delle tuple
+follower e followed e l'uso dei puntatori smart.
+
+ Le funzioni fornite dalla classe sono:
+ \begin{itemize}
+     \item \texttt{size()} restituisce il numero di utenti nella rete;
+     \item \texttt{addUser()} aggiunge un utente alla rete (se non già presente, altrimenti lancia un'eccezione);
+     \item \texttt{isUserOfTheNetwork()} restituisce un booleano che è \texttt{true} se e solo se l'utente è presente
+     nella rete;
+     \item \texttt{removeUser()} rimuove un utente con un determinato \texttt{username};
+     \item \texttt{addFollower()} aggiunge una coppia (\texttt{QPair}) di puntatori a utenti a \texttt{followed} (il primo segue
+     il secondo);
+     \item \texttt{removeFollower()} rimuove una coppia da \texttt{following};
+     \item \texttt{isFollowerOf()} verifica se il primo \texttt{User} segue il secondo;
+     \item \texttt{getFollower()} restituisce un contenitore (\texttt{QSet}) con i puntatori a utenti seguiti da un certo \texttt{User};
+     \item \texttt{getFollowed()} restituisce un contenitore (\texttt{QSet}) con i puntatori a utenti che seguono un certo \texttt{User}.
+ \end{itemize}
+
+Infine sono presenti una serie di operazioni insiemistiche tra due \texttt{Network}: 
+\begin{itemize}
+    \item \texttt{getUnion()} restituisce un \texttt{QSet} in cui sono presenti i puntatori a tutti gli utenti
+    in comune e non tra le due reti;
+    \item \texttt{getIntersection()} restituisce un \texttt{QSet} in cui sono presenti i puntatori a tutti gli 
+    utenti in comune tra le due reti;
+    \item \texttt{getRelativeComplement()} restituisce un \texttt{QSet} che è il complemento relativo tra gli utenti 
+    delle due reti;
+    \item \texttt{getSymmetricDifference()} restituisce un \texttt{QSet} che è la differenza simmetrica tra gli utenti
+    delle due reti.
+\end{itemize}
+
+
+\section{Java}
+Le classi in java rappresentano essenzialmente il modello di kalk: lo sviluppo è stato, tutto sommato, abbastanza agevole.
+
+\section{Osservazioni e difficoltà}
+Le due principali difficoltà nel progetto sono state l'individuazione di un numero sufficiente di un tipo sensato di 
+tipi di dato e lo studio della libreria Qt: data la sua vastità, è facile perdersi nella sua documentazione senza
+arrivare a una conclusione, in particolare per quanto riguarda il design pattern MV.
+
+\end{document}

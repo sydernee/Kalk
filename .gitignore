@@ -61,6 +61,21 @@ target_wrapper.*
 # QtCreator
 *.autosave
 
-
-
 Makefile
+
+# immagini
+*.jpeg
+*.jpg
+*.png
+
+# Tagged Image File Format
+*.tif
+*.tiff
+
+# Scalable Vector Graphics
+*.svg
+*.svgz
+
+# Portable Document Format
+*.dvi
+*.pdf

@@ -12,7 +12,7 @@ Correttezza
 
 L'errore qui è stato probabilmente non ridefinire (o, più logicamente, overridare) i metodi `sum` e `subtract` 
 rispettivamente in
-[SquareMatrixController](https://github.com/sydernee/Kalk/blob/master/cpp/controller/SquareMatrixController.h) e [SparseMatrixController](https://github.com/sydernee/Kalk/blob/master/cpp/controller/SparseMatrixController.h).
+[SquareMatrixController](cpp/controller/SquareMatrixController.h) e [SparseMatrixController](cpp/controller/SparseMatrixController.h).
 
 Orientazione agli oggetti
 -------------------------
